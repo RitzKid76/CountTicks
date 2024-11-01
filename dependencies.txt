@@ -1,0 +1,2 @@
+mclib <spigot-api-.*>
+plugin WorldEdit
