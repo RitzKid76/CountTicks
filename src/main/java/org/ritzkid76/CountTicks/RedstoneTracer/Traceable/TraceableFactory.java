@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.SolidBlock;
 
@@ -29,6 +30,8 @@ public class TraceableFactory {
         try {
             Class<?> clazz = Class.forName(className);
             if(!Traceable.class.isAssignableFrom(clazz)) throw new IllegalArgumentException(className + " is not a valid extension of Traceable");
+
+            Debug.log(blockName);
 
             return (Traceable) clazz.getConstructor(
                 BlockData.class,

@@ -5,6 +5,7 @@ import org.bukkit.block.data.BlockData;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.Connection;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionDirection;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionSetFactory;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.PowerType;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
@@ -12,14 +13,14 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
 import java.util.Set;
 
 public class Comparator extends Traceable {
-    public static final Set<Connection> inputs = Set.of(
-        new Connection(ConnectionDirection.NORTH, PowerType.ANY),
-        new Connection(ConnectionDirection.EAST, PowerType.SOFT),
-        new Connection(ConnectionDirection.WEST, PowerType.SOFT)
-    );
-    public static final Set<Connection> outputs = Set.of(
-        new Connection(ConnectionDirection.NORTH, PowerType.HARD, new GameTickDelay(2))
-    );
+    public static final Set<Connection> inputs = new ConnectionSetFactory()
+        .add(ConnectionDirection.NORTH, PowerType.ANY)
+        .add(ConnectionDirection.EAST, PowerType.SOFT)
+        .add(ConnectionDirection.WEST, PowerType.SOFT)
+    .get();
+    public static final Set<Connection> outputs = new ConnectionSetFactory()
+        .add(ConnectionDirection.NORTH, PowerType.HARD, new GameTickDelay(2))
+    .get();
 
     public Comparator(BlockData data, BlockVector3 position) {
         super(inputs, outputs, data, position);

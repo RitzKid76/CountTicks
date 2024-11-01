@@ -3,6 +3,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphNode;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
@@ -85,6 +86,7 @@ public abstract class Traceable {
             PowerType connectedTraceableInputPower = outputConnection.powerType;
             try {
                 Traceable connectedTraceable = getTraceableFromConnectionDirection(outputConnection.connectionDirection);
+                Debug.log(connectedTraceable.delay() + " ");
 
                 if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0) continue; // no reason to have this connection if the input power is none
                 processDependentOutputPowers(connectedTraceable, connectedTraceableInputPower);
