@@ -17,7 +17,7 @@ public class Repeater extends Traceable {
         .add(ConnectionDirection.NORTH, PowerType.ANY)
     .get();
     public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.HARD, new GameTickDelay(2))
+        .add(ConnectionDirection.NORTH, PowerType.HARD)
     .get();
 
     public Repeater(BlockData data, BlockVector3 position) {

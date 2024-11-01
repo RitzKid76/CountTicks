@@ -18,22 +18,12 @@ public class ConnectionSetFactory {
         return this;
     }
 
-    public ConnectionSetFactory add(EnumSet<ConnectionDirection> directions, PowerType type, GameTickDelay delay) {
-        for(ConnectionDirection direction : directions) {
-            connections.add(new Connection(direction, type, delay));
-        }
-        return this;
-    }
 
     public ConnectionSetFactory add(Set<Connection> direction) {
         connections.addAll(direction);
         return this;
     }
 
-    public ConnectionSetFactory add(ConnectionDirection direction, PowerType type, GameTickDelay delay) {
-        this.connections.add(new Connection(direction, type, delay));
-        return this;
-    }
     public ConnectionSetFactory add(ConnectionDirection direction, PowerType type) {
         this.connections.add(new Connection(direction, type));
         return this;

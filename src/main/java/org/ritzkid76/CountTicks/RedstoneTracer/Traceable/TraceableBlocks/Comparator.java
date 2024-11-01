@@ -19,7 +19,7 @@ public class Comparator extends Traceable {
         .add(ConnectionDirection.WEST, PowerType.SOFT)
     .get();
     public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.HARD, new GameTickDelay(2))
+        .add(ConnectionDirection.NORTH, PowerType.HARD)
     .get();
 
     public Comparator(BlockData data, BlockVector3 position) {
