@@ -27,4 +27,8 @@ public class Connection {
     }
 
     public void updatePowerType(PowerType newType) { powerType = newType; }
+
+    public String toString() {
+        return "{" + connectionDirection + "|" + powerType + "}";
+    }
 }
