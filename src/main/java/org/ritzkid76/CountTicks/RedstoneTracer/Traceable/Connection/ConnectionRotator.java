@@ -79,6 +79,7 @@ public class ConnectionRotator {
             default -> {}
         }
 
+        if(rotatedType == null) return connection;
         return connection.updateDirection(rotatedType);
     }
 
