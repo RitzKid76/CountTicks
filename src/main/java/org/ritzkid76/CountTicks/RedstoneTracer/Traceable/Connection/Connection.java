@@ -1,33 +1,3 @@
-//package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
-//
-//import org.bukkit.block.BlockFace;
-//import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
-//
-//public record Connection(
-//    ConnectionDirection connectionDirection,
-//    PowerType powerType,
-//    GameTickDelay gameTickDelay
-//) {
-//    public Connection(ConnectionDirection cd, PowerType pt) { this(cd, pt, new GameTickDelay(0)); }
-//
-//    public boolean isCompatableWith(Connection other) {
-//        return (
-//            PowerType.compare(powerType, other.powerType) <= 0 &&
-//            connectionDirection == other.connectionDirection
-//        );
-//    }
-//
-//    public BlockFace toBlockFace() {
-//        return ConnectionDirection.toBlockFace(connectionDirection);
-//    }
-//
-//    public Connection updateDirection(ConnectionDirection direction) {
-//        return new Connection(direction, powerType, gameTickDelay);
-//    }
-//
-//    public void updatePowerType(PowerType newType) { powerType = newType; }
-//}
-
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
 
 import org.bukkit.block.BlockFace;
