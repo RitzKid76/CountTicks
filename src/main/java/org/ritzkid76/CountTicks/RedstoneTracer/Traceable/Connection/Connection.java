@@ -1,7 +1,6 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
 
 import org.bukkit.block.BlockFace;
-import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 
 public class Connection {
     public ConnectionDirection connectionDirection;

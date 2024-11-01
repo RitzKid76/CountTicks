@@ -1,13 +1,11 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
 
-import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ConnectionSetFactory {
-    private Set<Connection> connections = new HashSet<>();
+    private final Set<Connection> connections = new HashSet<>();
 
     public ConnectionSetFactory() {}
 
