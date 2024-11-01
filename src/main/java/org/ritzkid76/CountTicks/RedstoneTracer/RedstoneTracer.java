@@ -2,7 +2,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.World;
-import org.ritzkid76.CountTicks.CountTicksCommand;
+import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
@@ -62,7 +62,7 @@ public class RedstoneTracer {
             queue.addAll(candidates);
         }
 
-        if(iterations <= 0) CountTicksCommand.sendDebugMessage("ITERATION LIMIT EXCEEDED." , "WARNING");
+        if(iterations <= 0) Debug.log("ITERATION LIMIT EXCEEDED." , "WARNING");
     }
 
     public RedstoneTracerResult getPath(BlockVector3 endPoint) {
