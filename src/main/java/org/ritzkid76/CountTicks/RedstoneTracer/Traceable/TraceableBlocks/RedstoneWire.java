@@ -52,7 +52,8 @@ public class RedstoneWire extends Traceable {
 
             return
                 noConnection(blockDataConnection) ||
-                diagonalBlocked(connection.connectionDirection);
+                diagonalBlocked(connection.connectionDirection) ||
+                diagonalDiode(connection.connectionDirection);
         }
 
         return false; // dont need to filter inputs since the redstone shape isnt always correlated
@@ -77,5 +78,13 @@ public class RedstoneWire extends Traceable {
         BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
 
         return BlockUtils.isSolidBlock(RedstoneTracer.getTracerWorld(), testPosition);
+    }
+
+    private boolean diagonalDiode(ConnectionDirection direction) {
+        if(!ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction)) return false;
+
+        BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
+
+        return !BlockUtils.isSolidBlock(RedstoneTracer.getTracerWorld(), supportBlock);
     }
 }
