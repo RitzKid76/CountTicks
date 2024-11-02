@@ -3,7 +3,6 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphNode;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
@@ -24,11 +23,11 @@ public abstract class Traceable {
         BlockFace direction = data.direction();
         GameTickDelay delay = data.gameTickDelay();
 
-        inputs = processConnections(new HashSet<>(in), ConnectionType.INPUTS, direction);
-        outputs = processConnections(new HashSet<>(out), ConnectionType.OUTPUTS, direction);
-
         position = pos;
         gameTickDelay = delay;
+
+        inputs = processConnections(new HashSet<>(in), ConnectionType.INPUTS, direction);
+        outputs = processConnections(new HashSet<>(out), ConnectionType.OUTPUTS, direction);
     }
 
     private Set<Connection> processConnections(Set<Connection> connections, ConnectionType type, BlockFace direction) {
@@ -45,22 +44,11 @@ public abstract class Traceable {
         return gameTickDelay;
     }
 
-    public Traceable getTraceableFromConnectionDirection(ConnectionDirection connectionType) {
-        BlockVector3 target = getPosition();
-
-        switch (connectionType) {
-            case ConnectionDirection c when ConnectionDirection.UPWARD.contains(c) -> target = target.add(BlockVector3.UNIT_Y);
-            case ConnectionDirection c when ConnectionDirection.DOWNWARD.contains(c) -> target = target.add(BlockVector3.UNIT_MINUS_Y);
-            default -> {}
-        }
-
-        switch (connectionType) {
-            case ConnectionDirection c when ConnectionDirection.NORTHERN.contains(c) -> target = target.add(BlockVector3.UNIT_MINUS_Z);
-            case ConnectionDirection c when ConnectionDirection.EASTERN.contains(c) -> target = target.add(BlockVector3.UNIT_X);
-            case ConnectionDirection c when ConnectionDirection.SOUTHERN.contains(c) -> target = target.add(BlockVector3.UNIT_Z);
-            case ConnectionDirection c when ConnectionDirection.WESTERN.contains(c) -> target = target.add(BlockVector3.UNIT_MINUS_X);
-            default -> {}
-        }
+    private Traceable getTraceableFromConnectionDirection(ConnectionDirection connectionType) {
+        BlockVector3 target = ConnectionDirection.positionFromConnectionDirection(
+            position,
+            connectionType
+        );
 
         return TraceableFactory.traceableFromBlockVector3(target);
     }
@@ -86,7 +74,6 @@ public abstract class Traceable {
             PowerType connectedTraceableInputPower = outputConnection.powerType;
             try {
                 Traceable connectedTraceable = getTraceableFromConnectionDirection(outputConnection.connectionDirection);
-                Debug.log(connectedTraceable.delay() + " ");
 
                 if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0) continue; // no reason to have this connection if the input power is none
                 processDependentOutputPowers(connectedTraceable, connectedTraceableInputPower);

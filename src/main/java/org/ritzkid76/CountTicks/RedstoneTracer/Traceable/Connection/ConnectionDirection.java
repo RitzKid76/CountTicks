@@ -1,5 +1,6 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
 
+import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
 
 import java.util.EnumSet;
@@ -33,7 +34,37 @@ public enum ConnectionDirection {
             case ConnectionDirection c when WESTERN.contains(c) -> { return BlockFace.WEST; }
             case ConnectionDirection c when UPWARD.contains(c) -> { return BlockFace.UP; }
             case ConnectionDirection c when DOWNWARD.contains(c) -> { return BlockFace.DOWN; }
-            default -> { return null; } // literally impossible, but IDEs and Java disagree
+            default -> { return null; }
+        }
+    }
+    
+    public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
+        BlockVector3 offset = BlockVector3.ZERO;
+
+        switch (direction) {
+            case ConnectionDirection c when UPWARD.contains(c) -> offset = offset.add(BlockVector3.UNIT_Y);
+            case ConnectionDirection c when DOWNWARD.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_Y);
+            default -> {}
+        }
+
+        switch (direction) {
+            case ConnectionDirection c when NORTHERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_Z);
+            case ConnectionDirection c when EASTERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_X);
+            case ConnectionDirection c when SOUTHERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_Z);
+            case ConnectionDirection c when WESTERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_X);
+            default -> {}
+        }
+
+        return offset.add(origin);
+    }
+
+    public static ConnectionDirection toCardinalDirection(ConnectionDirection direction) {
+        switch(direction) {
+            case ConnectionDirection c when NORTHERN.contains(c) -> { return NORTH; }
+            case ConnectionDirection c when EASTERN.contains(c) -> { return EAST; }
+            case ConnectionDirection c when SOUTHERN.contains(c) -> { return SOUTH; }
+            case ConnectionDirection c when WESTERN.contains(c) -> { return WEST; }
+            default -> { return null; }
         }
     }
 }

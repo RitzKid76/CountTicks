@@ -1,22 +1,18 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.SolidBlock;
 
 public class TraceableFactory {
 
-    private static Block blockFromBlockVector3(World world, BlockVector3 blockVector) {
-        Location location = new Location(world, blockVector.x(), blockVector.y(), blockVector.z());
-        return location.getBlock();
-    }
+
     public static Traceable traceableFromBlockVector3(BlockVector3 blockVector) {
-        Block block = blockFromBlockVector3(RedstoneTracer.getTracerWorld(), blockVector);
+        Block block = BlockUtils.blockFromBlockVector3(RedstoneTracer.getTracerWorld(), blockVector);
         BlockData blockData = block.getBlockData();
         Material blockType = block.getType();
 
@@ -41,7 +37,7 @@ public class TraceableFactory {
     }
 
     private static Traceable attemptSolidBlockCreation(BlockData blockData, BlockVector3 position) {
-        if(!blockData.isOccluding()) throw new RuntimeException(); // catch transparent blocks
+        if(!BlockUtils.isSolidBlock(blockData)) throw new RuntimeException(); // catch transparent blocks
         return new SolidBlock(blockData, position);
     }
 

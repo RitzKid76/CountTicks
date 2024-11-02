@@ -3,6 +3,8 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
+import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
@@ -46,14 +48,34 @@ public class RedstoneWire extends Traceable {
         if(type == ConnectionType.OUTPUTS) {
             org.bukkit.block.data.type.RedstoneWire.Connection blockDataConnection = data.get(connection.toBlockFace());
 
-            if(blockDataConnection == null) return false; // keep downward connection
+            if(blockDataConnection == null) return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
 
-            switch(blockDataConnection) {
-                case UP, SIDE-> { return false; }
-                default -> { return true; }
-            }
+            return
+                noConnection(blockDataConnection) ||
+                diagonalBlocked(connection.connectionDirection);
         }
 
         return false; // dont need to filter inputs since the redstone shape isnt always correlated
+    }
+
+    private static boolean noConnection(org.bukkit.block.data.type.RedstoneWire.Connection connection) {
+        switch(connection) {
+            case UP, SIDE-> { return false; }
+            default -> { return true; }
+        }
+    }
+
+    private boolean diagonalBlocked(ConnectionDirection direction) {
+        ConnectionDirection testDirection;
+
+        switch(direction) {
+            case ConnectionDirection c when ConnectionDirection.UPWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.UP;
+            case ConnectionDirection c when ConnectionDirection.DOWNWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.toCardinalDirection(direction);
+            default -> { return false; }
+        }
+
+        BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
+
+        return BlockUtils.isSolidBlock(RedstoneTracer.getTracerWorld(), testPosition);
     }
 }
