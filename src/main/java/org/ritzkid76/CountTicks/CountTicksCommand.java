@@ -8,6 +8,8 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
@@ -19,24 +21,20 @@ import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
-
-    private static final String commandPrefix =
-            ChatColor.BLUE + "[" +
-            ChatColor.AQUA + "CountTicks" +
-            ChatColor.BLUE + "] " +
-            ChatColor.RESET;
-
     public World world;
 
     @Override
     public void onLoad() {
+        // TODO run JavaLoaderBukkitProject.getPlugin().init() to generate a config file.
+        // then use that file later for messages instead of Message.java
+
         // Register an event listener.
     //    this.getPlugin().getServer().getPluginManager().registerEvents(new Listener() {
 
     //    }, this.getPlugin());
 
         // Print feedback.
-        Bukkit.getConsoleSender().sendMessage(commandPrefix + ChatColor.GREEN + "Loaded.");
+        Bukkit.getConsoleSender().sendMessage(Message.LOADED.get());
     }
 
     @Override
@@ -45,7 +43,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
         // HandlerList.unregisterAll(this.getPlugin());
 
         // Print feedback.
-        Bukkit.getConsoleSender().sendMessage(commandPrefix + ChatColor.RED + "Unloaded.");
+        Bukkit.getConsoleSender().sendMessage(Message.UNLOADED.get());
     }
 
     @Override
@@ -54,13 +52,14 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
     }
 
 	  public static void sendChatMessage(CommandSender sender, String message) {
-		sender.sendMessage(commandPrefix + message);
+		sender.sendMessage(message);
 	}
+	  public static void sendChatMessage(CommandSender sender, Message message) { sender.sendMessage(message.get()); }
 
     @Override
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
-            sendChatMessage(sender, "This command can only be used by players!");
+            sendChatMessage(sender, Message.CONSOLE_USE);
             return true;
         }
 
@@ -75,7 +74,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
             pos1 = selection[0];
             pos2 = selection[1];
         } catch (Exception e) {
-            sendChatMessage(player, "Please select a start point (pos1) and end point (pos2).");
+            sendChatMessage(player, Message.NO_SELECTION);
             return true;
         }
 
@@ -108,7 +107,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
                         .setUsageMessage("TODO")
                         .setPermission("javaloader.countticks.counttickscommand")
                         .setPermissionMessage("You do not have permission to use this command.")
-                        .setAliases("count", "ticks", "ct")
+                        .setAliases("ct")
                         .setExecutor(this)
                         .setTabCompleter(this)
         };
