@@ -28,8 +28,6 @@ public class RedstoneWallTorch extends Traceable {
     public TraceableBlockData applyBlockData(BlockData blockData) {
         org.bukkit.block.data.type.RedstoneWallTorch redstoneWallTorch = (org.bukkit.block.data.type.RedstoneWallTorch) blockData;
 
-        Debug.log(outputs.toString());
-
         return new TraceableBlockData(
             redstoneWallTorch.getFacing(),
             new GameTickDelay(2)
