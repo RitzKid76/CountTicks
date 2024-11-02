@@ -19,9 +19,9 @@ public class RedstoneTracer {
         return tracerWorld;
     }
 
-    private RedstoneTracerGraph graph;
-    private Set<BlockVector3> visited = new HashSet<>();
-    private PriorityQueue<Traceable> queue = new PriorityQueue<>(
+    private final RedstoneTracerGraph graph;
+    private final Set<BlockVector3> visited = new HashSet<>();
+    private final PriorityQueue<Traceable> queue = new PriorityQueue<>(
         Comparator.comparing(t -> !isPriority(t))
     );
 
@@ -46,7 +46,6 @@ public class RedstoneTracer {
             invalidSelection = true;
             return;
         }
-
 
         int iterations = 2000; //safety measure in case i fuck up
         while (!queue.isEmpty() && iterations-- > 0) {

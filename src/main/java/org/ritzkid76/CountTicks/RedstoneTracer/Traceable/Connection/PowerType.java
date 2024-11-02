@@ -15,5 +15,5 @@ public enum PowerType {
 
     public int getOrder() { return order; }
 
-    public static int compare(PowerType p1, PowerType p2) { return Integer.compare(p1.getOrder(), p2.getOrder()); }
+    public int compare(PowerType p) { return Integer.compare(getOrder(), p.getOrder()); }
 }
