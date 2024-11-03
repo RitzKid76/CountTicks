@@ -1,0 +1,19 @@
+arguments:
+- argument: mining
+  options:
+    - argument: cobblestone
+      options:
+        - argument: furnace
+        - argument: stone
+    - argument: ore
+
+- argument: placing
+  options:
+    - argument: planks
+      options:
+        - argument: crafting_table
+        - argument: test
+    - argument: stone
+      options:
+        - argument: stone_cutter
+        - argument: smooth_stone

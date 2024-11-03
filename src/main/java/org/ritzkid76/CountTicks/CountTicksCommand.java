@@ -1,26 +1,26 @@
 package org.ritzkid76.CountTicks;
 
-import java.util.List;
-
+import com.sk89q.worldedit.math.BlockVector3;
+import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
+import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.ritzkid76.CountTicks.Message.Message;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
+import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
+import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerResult;
+import org.ritzkid76.CountTicks.TabCompletion.SyntaxHandler;
 
-import com.sk89q.worldedit.math.BlockVector3;
-
-import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
-import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
+import java.io.File;
+import java.util.List;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
+    private SyntaxHandler syntaxHandler;
+
     public World world;
 
     @Override
@@ -34,8 +34,14 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
     //    }, this.getPlugin());
 
         // Print feedback.
+
+        File dataFolder = getPlugin().getDataFolder();
+        syntaxHandler = new SyntaxHandler(dataFolder);
+
         Bukkit.getConsoleSender().sendMessage(Message.LOADED.get());
     }
+
+
 
     @Override
     public void onUnload() {
@@ -95,9 +101,15 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
         return true;
     }
 
+    // i am aware that there is a .setTabCompleter() function, but i prefer this for now. i can change it later
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        return null;
+    public List<String> onTabComplete(
+        CommandSender sender,
+        Command command,
+        String label,
+        String[] args
+    ) {
+        return syntaxHandler.onTabComplete(sender, command, label, args);
     }
 
     @Override
