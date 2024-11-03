@@ -47,7 +47,7 @@ public class RedstoneTracer {
             return;
         }
 
-        int iterations = 2000; //safety measure in case i fuck up
+        int iterations = 200000; //safety measure in case i fuck up
         while (!queue.isEmpty() && iterations-- > 0) {
             Traceable current = queue.remove();
             BlockVector3 currentPos = current.getPosition();
