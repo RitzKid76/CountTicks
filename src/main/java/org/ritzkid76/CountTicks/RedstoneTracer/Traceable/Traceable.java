@@ -67,13 +67,6 @@ public abstract class Traceable {
         }
     }
 
-    private void processDependentOutputSignalStrengths(Traceable traceable, SignalStrength inputSS) {
-        for(Connection connection : traceable.outputs) {
-            SignalStrength outputSS = connection.signalStrength;
-            if(outputSS == SignalStrength.INPUT_DEPENDENT) traceable.getInputDependentSignalStrength(connection, inputSS);
-        }
-    }
-
     public Set<Traceable> getNeighbors() {
         Set<Traceable> result = new HashSet<>();
 
@@ -103,8 +96,5 @@ public abstract class Traceable {
             case SOFT -> connection.updatePowerType(PowerType.WEAK);
             default-> connection.updatePowerType(PowerType.NONE);
         }
-    }
-    public void getInputDependentSignalStrength(Connection connection, SignalStrength ss) {
-        connection.signalStrength.decrement();
     }
 }

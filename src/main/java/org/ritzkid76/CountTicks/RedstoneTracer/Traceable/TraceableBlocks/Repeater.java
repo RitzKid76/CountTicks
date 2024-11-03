@@ -3,7 +3,10 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.block.data.BlockData;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
-import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.Connection;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionDirection;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionSetFactory;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.PowerType;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
 
@@ -14,7 +17,7 @@ public class Repeater extends Traceable {
         .add(ConnectionDirection.NORTH, PowerType.ANY)
     .get();
     public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.HARD, SignalStrength.MAX)
+        .add(ConnectionDirection.NORTH, PowerType.HARD)
     .get();
 
     public Repeater(BlockData data, BlockVector3 position) {

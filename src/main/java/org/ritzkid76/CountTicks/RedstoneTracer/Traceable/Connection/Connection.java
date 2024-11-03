@@ -5,18 +5,16 @@ import org.bukkit.block.BlockFace;
 public class Connection {
     public ConnectionDirection connectionDirection;
     public PowerType powerType;
-    public SignalStrength signalStrength;
 
-    public Connection(ConnectionDirection direction, PowerType type, SignalStrength ss) {
+    public Connection(ConnectionDirection direction, PowerType type) {
         connectionDirection = direction;
         powerType = type;
-        signalStrength = ss;
     }
 
     public boolean isCompatableWith(Connection other) {
         return (
             powerType.compare(other.powerType) <= 0 &&
-            connectionDirection == other.connectionDirection
+                connectionDirection == other.connectionDirection
         );
     }
 
@@ -25,8 +23,9 @@ public class Connection {
     }
 
     public Connection updateDirection(ConnectionDirection direction) {
-        return new Connection(direction, powerType, signalStrength);
+        return new Connection(direction, powerType);
     }
+
     public void updatePowerType(PowerType newType) { powerType = newType; }
 
     public String toString() {
