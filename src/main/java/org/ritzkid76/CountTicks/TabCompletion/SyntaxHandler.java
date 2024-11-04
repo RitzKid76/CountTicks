@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.ritzkid76.CountTicks.Debug;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class SyntaxHandler implements TabCompleter {
         }
     }
 
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+    private List<String> getTabCompletionList (String[] args) {
         try {
             SyntaxEntry tree = options;
 
@@ -59,5 +60,16 @@ public class SyntaxHandler implements TabCompleter {
             return output;
         } catch (Exception ignored) {}
         return null;
+    }
+
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
+
+    public boolean isValidSyntax(String[] args) {
+        List<String> tabCompletion = getTabCompletionList(args);
+
+        if(tabCompletion == null) return false;
+        if(tabCompletion.isEmpty()) return false;
+
+        return true;
     }
 }

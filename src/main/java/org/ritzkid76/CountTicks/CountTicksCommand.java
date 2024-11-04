@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
@@ -17,9 +18,12 @@ import org.ritzkid76.CountTicks.TabCompletion.SyntaxHandler;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
     private SyntaxHandler syntaxHandler;
+    private PlayerDataContainer playerDataContainer;
+    private ArgumentParser parser;
 
     public World world;
 
@@ -33,22 +37,20 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
     //    }, this.getPlugin());
 
-        // Print feedback.
-
         File dataFolder = getPlugin().getDataFolder();
         syntaxHandler = new SyntaxHandler(dataFolder);
+        parser = new ArgumentParser(syntaxHandler);
+
+        playerDataContainer = new PlayerDataContainer();
 
         Bukkit.getConsoleSender().sendMessage(Message.LOADED.get());
     }
-
-
 
     @Override
     public void onUnload() {
         // Unregister all listeners from this project.
         // HandlerList.unregisterAll(this.getPlugin());
 
-        // Print feedback.
         Bukkit.getConsoleSender().sendMessage(Message.UNLOADED.get());
     }
 
@@ -57,10 +59,10 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
         return "0.0.1-SNAPSHOT";
     }
 
-	  public static void sendChatMessage(CommandSender sender, String message) {
+    public static void sendChatMessage(CommandSender sender, String message) {
 		sender.sendMessage(message);
 	}
-	  public static void sendChatMessage(CommandSender sender, Message message) { sender.sendMessage(message.get()); }
+    public static void sendChatMessage(CommandSender sender, Message message) { sender.sendMessage(message.get()); }
 
     @Override
     public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {

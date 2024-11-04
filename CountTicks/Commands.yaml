@@ -1,19 +1,10 @@
-arguments:
-- argument: mining
-  options:
-    - argument: cobblestone
-      options:
-        - argument: furnace
-        - argument: stone
-    - argument: ore
+#needs ability to:
+# define a search region
 
-- argument: placing
-  options:
-    - argument: planks
-      options:
-        - argument: crafting_table
-        - argument: test
-    - argument: stone
-      options:
-        - argument: stone_cutter
-        - argument: smooth_stone
+args:
+  - arg: scan                 # populates the RedstoneTracerGraph
+  - arg: inspector            # for raycasted inspection mode
+    options:
+      - arg: start
+      - arg: stop
+  - arg: set_region           # defines the region to scan inside
