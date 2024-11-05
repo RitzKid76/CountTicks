@@ -1,7 +1,7 @@
 args:
-  - arg: scan			# populates the RedstoneTracerGraph
-  - arg: inspector		# for raycasted inspection mode
-	options:
-	  - arg: start
-	  - arg: stop
-  - arg: set_region		# defines the region to scan inside
+  - arg: scan      # populates the RedstoneTracerGraph
+  - arg: inspector    # for raycasted inspection mode
+    options:
+    - arg: start
+    - arg: stop
+  - arg: set_region    # defines the region to scan inside

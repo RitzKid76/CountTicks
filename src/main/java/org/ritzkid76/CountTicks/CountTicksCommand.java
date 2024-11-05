@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
@@ -46,7 +47,9 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
 		playerDataContainer = new PlayerDataContainer();
 
-		Bukkit.getConsoleSender().sendMessage(Message.LOADED.get());
+		MessageSender.populateOptions(dataFolder);
+
+		MessageSender.sendConsoleMessage(Message.LOADED);
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		// Unregister all listeners from this project.
 		// HandlerList.unregisterAll(this.getPlugin());
 
-		Bukkit.getConsoleSender().sendMessage(Message.UNLOADED.get());
+		MessageSender.sendConsoleMessage(Message.UNLOADED);
 	}
 
 	@Override

@@ -3,8 +3,11 @@ package org.ritzkid76.CountTicks.SyntaxHandling;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.WorldEditSelection;
+import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
@@ -50,18 +53,19 @@ public class ArgumentParser {
 		// Debug.log("Options are:\n" + usageGenerator.usage());
 		//TODO temp remap to redstone tracer
 		WorldEditSelection selection = playerData.getSelection();
+		Player player = playerData.getPlayer();
 
 		if(!playerData.hasScanned()) {
-			Debug.log("no scanned build");
+			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
 			return true;
 		}
 		RedstoneTracerGraphPath path = playerData.getFastestPath(selection.getSecondPosition());
-
+		
 		switch(path.result()) {
 			case RedstoneTracerPathResult.PATH_FOUND -> Debug.log(path.totalGameTicks()/2 + "t");
-			case RedstoneTracerPathResult.NO_PATH -> Debug.log("no path");
-			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> { Debug.log("unscanned location"); }
-			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> { Debug.log("out of bounds"); }
+			case RedstoneTracerPathResult.NO_PATH -> MessageSender.sendMessage(player, Message.NO_PATH);
+			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
+			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 		}
 
 		return true;
@@ -69,17 +73,15 @@ public class ArgumentParser {
 
 	private boolean scan(String[] args, PlayerData playerData) {
 		WorldEditSelection selection = playerData.getSelection();
+		Player player = playerData.getPlayer();
 		
 		BlockVector3 origin = selection.getFirstPosition();
 		if(origin == null) {
-			Debug.log("no first position found");
+			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
 			return true;
 		}
 
-		if(!playerData.scan(origin)) {
-			Debug.log("could not scan at selected position");
-		}
-
+		playerData.scan(origin);
 		return true;
 	}
 	
@@ -90,11 +92,14 @@ public class ArgumentParser {
 	
 	private boolean set_region(String[] args, PlayerData playerData) {
 		Region region = playerData.updateRegion();
+		Player player = playerData.getPlayer();
+
 		if(region == null) {
-			Debug.log("null region");
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
 			return true;
 		}
 
+		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, region.toString());
 		return true;
 	}
 }

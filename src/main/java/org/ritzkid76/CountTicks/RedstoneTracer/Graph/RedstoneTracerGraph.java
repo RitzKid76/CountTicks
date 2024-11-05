@@ -162,7 +162,6 @@ public class RedstoneTracerGraph {
 		while (!queue.isEmpty() && iterations-- > 0) {
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();
-			Debug.log(currentPos.toString());
 
 			visited.add(currentPos);
 

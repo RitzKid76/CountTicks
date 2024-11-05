@@ -2,13 +2,21 @@ package org.ritzkid76.CountTicks.Message;
 
 import org.bukkit.ChatColor;
 
-// JavaLoader does not extend , so i made this instead :P
 public enum Message {
-	LOADED(MessageType.INFO, ChatColor.GREEN + "Loaded."),
-	UNLOADED(MessageType.INFO, ChatColor.RED + "Unloaded."),
+	LOADED(MessageType.INFO),
+	UNLOADED(MessageType.INFO),
 
-	CONSOLE_USE(MessageType.ERROR, "This command can only be used by players!"),
-	NO_SELECTION(MessageType.ERROR, "Please select a start point (pos1) and end point (pos2).");
+	CONSOLE_USE(MessageType.ERROR),
+
+	SET_SCAN_REGION(MessageType.INFO),
+	SCAN_COMPLETE(MessageType.INFO),
+	NO_SCANNED_BUILD(MessageType.ERROR),
+	NO_SCAN_REGION(MessageType.ERROR),
+	NO_START_SELECTED(MessageType.ERROR),
+	INVALID_START(MessageType.ERROR),
+	UNSCANNED_LOCATION(MessageType.ERROR),
+	OUT_OF_BOUNDS(MessageType.ERROR),
+	NO_PATH(MessageType.ERROR);
 
 	private final String message;
 	private final MessageType type;
@@ -29,9 +37,9 @@ public enum Message {
 		ChatColor.DARK_RED + "] " +
 		ChatColor.RESET;
 
-	Message(MessageType mt, String m) {
+	Message(MessageType mt) {
 		type = mt;
-		message = m;
+		message = MessageSender.getMessage(name().toLowerCase());
 	}
 
 	public String get() { return commandPrefix + formatMessage(); }

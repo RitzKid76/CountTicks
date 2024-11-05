@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 
@@ -37,23 +39,24 @@ public class PlayerData {
 		return playerRegion;
 	}
 
-	public boolean scan(BlockVector3 origin) {
+	public void scan(BlockVector3 origin) {
 		try {
 			graph = new RedstoneTracerGraph(origin, playerRegion);
 			if(!graph.trace()) {
-				Debug.log("start position is not traceable");
-				return true;
+				MessageSender.sendMessage(player, Message.INVALID_START);
+				return;
 			}
 		} catch (NullPointerException e) {
-			Debug.log("no scan region defined");
-			return true;
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+			return;
 		} catch (PositionOutOfRegionBounds e) {
-			Debug.log("start position outside of defined region");
-			return true;
+			MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+			return;
 		}
 		
 		hasScanned = true;
-		return true;
+		MessageSender.sendMessage(player, Message.SCAN_COMPLETE);
+		return;
 	}
 
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
