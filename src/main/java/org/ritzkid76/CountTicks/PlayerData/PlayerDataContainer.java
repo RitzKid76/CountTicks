@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerDataContainer {
-    private Map<UUID, PlayerData> players;
+	private Map<UUID, PlayerData> players;
 
-    public PlayerDataContainer() { players = new HashMap<>(); }
+	public PlayerDataContainer() { players = new HashMap<>(); }
 
-    public PlayerData get(Player player) {
-        UUID uuid = player.getUniqueId();
-        players.putIfAbsent(uuid, new PlayerData(player));
+	public PlayerData get(Player player) {
+		UUID uuid = player.getUniqueId();
+		players.putIfAbsent(uuid, new PlayerData(player));
 
-        return players.get(uuid);
-    }
+		return players.get(uuid);
+	}
 }

@@ -15,24 +15,24 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
 import java.util.Set;
 
 public class Repeater extends Traceable {
-    public static final Set<Connection> inputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.ANY)
-    .get();
-    public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.HARD)
-    .get();
+	public static final Set<Connection> inputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.ANY)
+	.get();
+	public static final Set<Connection> outputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.HARD)
+	.get();
 
-    public Repeater(BlockData data, BlockVector3 position, World world) {
-        super(inputs, outputs, data, position, world);
-    }
+	public Repeater(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 
-    @Override
-    public TraceableBlockData applyBlockData(BlockData blockData) {
-        org.bukkit.block.data.type.Repeater repeater = (org.bukkit.block.data.type.Repeater) blockData;
+	@Override
+	public TraceableBlockData applyBlockData(BlockData blockData) {
+		org.bukkit.block.data.type.Repeater repeater = (org.bukkit.block.data.type.Repeater) blockData;
 
-        return new TraceableBlockData(
-            repeater.getFacing().getOppositeFace(),
-            new GameTickDelay(repeater.getDelay() * 2)
-        );
-    }
+		return new TraceableBlockData(
+			repeater.getFacing().getOppositeFace(),
+			new GameTickDelay(repeater.getDelay() * 2)
+		);
+	}
 }

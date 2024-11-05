@@ -15,26 +15,26 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
 import java.util.Set;
 
 public class RedstoneWallTorch extends Traceable {
-    public static final Set<Connection> inputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.ANY)
-    .get();
-    public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.SOFT)
-        .add(ConnectionDirection.EAST, PowerType.SOFT)
-        .add(ConnectionDirection.WEST, PowerType.SOFT)
-        .add(ConnectionDirection.DOWN, PowerType.SOFT)
-        .add(ConnectionDirection.UP, PowerType.HARD)
-    .get();
+	public static final Set<Connection> inputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.ANY)
+	.get();
+	public static final Set<Connection> outputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.SOFT)
+		.add(ConnectionDirection.EAST, PowerType.SOFT)
+		.add(ConnectionDirection.WEST, PowerType.SOFT)
+		.add(ConnectionDirection.DOWN, PowerType.SOFT)
+		.add(ConnectionDirection.UP, PowerType.HARD)
+	.get();
 
-    public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
+	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
 
-    @Override
-    public TraceableBlockData applyBlockData(BlockData blockData) {
-        org.bukkit.block.data.type.RedstoneWallTorch redstoneWallTorch = (org.bukkit.block.data.type.RedstoneWallTorch) blockData;
+	@Override
+	public TraceableBlockData applyBlockData(BlockData blockData) {
+		org.bukkit.block.data.type.RedstoneWallTorch redstoneWallTorch = (org.bukkit.block.data.type.RedstoneWallTorch) blockData;
 
-        return new TraceableBlockData(
-            redstoneWallTorch.getFacing(),
-            new GameTickDelay(2)
-        );
-    }
+		return new TraceableBlockData(
+			redstoneWallTorch.getFacing(),
+			new GameTickDelay(2)
+		);
+	}
 }

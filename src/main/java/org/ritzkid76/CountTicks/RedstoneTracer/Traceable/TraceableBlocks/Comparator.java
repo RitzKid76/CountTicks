@@ -15,26 +15,26 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
 import java.util.Set;
 
 public class Comparator extends Traceable {
-    public static final Set<Connection> inputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.ANY)
-        .add(ConnectionDirection.EAST, PowerType.SOFT)
-        .add(ConnectionDirection.WEST, PowerType.SOFT)
-    .get();
-    public static final Set<Connection> outputs = new ConnectionSetFactory()
-        .add(ConnectionDirection.NORTH, PowerType.HARD)
-    .get();
+	public static final Set<Connection> inputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.ANY)
+		.add(ConnectionDirection.EAST, PowerType.SOFT)
+		.add(ConnectionDirection.WEST, PowerType.SOFT)
+	.get();
+	public static final Set<Connection> outputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.NORTH, PowerType.HARD)
+	.get();
 
-    public Comparator(BlockData data, BlockVector3 position, World world) {
-        super(inputs, outputs, data, position, world);
-    }
+	public Comparator(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 
-    @Override
-    public TraceableBlockData applyBlockData(BlockData blockData) {
-        org.bukkit.block.data.type.Comparator comparator = (org.bukkit.block.data.type.Comparator) blockData;
+	@Override
+	public TraceableBlockData applyBlockData(BlockData blockData) {
+		org.bukkit.block.data.type.Comparator comparator = (org.bukkit.block.data.type.Comparator) blockData;
 
-        return new TraceableBlockData(
-            comparator.getFacing().getOppositeFace(),
-            new GameTickDelay(2)
-        );
-    }
+		return new TraceableBlockData(
+			comparator.getFacing().getOppositeFace(),
+			new GameTickDelay(2)
+		);
+	}
 }

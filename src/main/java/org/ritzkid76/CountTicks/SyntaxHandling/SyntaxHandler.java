@@ -12,66 +12,66 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 public class SyntaxHandler implements TabCompleter {
-    private final SyntaxEntry options;
+	private final SyntaxEntry options;
 
-    public SyntaxHandler(File dataFolder) {
-        options = new SyntaxEntry();
+	public SyntaxHandler(File dataFolder) {
+		options = new SyntaxEntry();
 
-        File yamlFile = new File(dataFolder, "Commands.yaml");
-        FileConfiguration yamlConfig = YamlConfiguration.loadConfiguration(yamlFile);
+		File yamlFile = new File(dataFolder, "Commands.yaml");
+		FileConfiguration yamlConfig = YamlConfiguration.loadConfiguration(yamlFile);
 
-        populateOptions(yamlConfig.getValues(false), options);
-    }
+		populateOptions(yamlConfig.getValues(false), options);
+	}
 
-    @SuppressWarnings("unchecked")
-    private void populateOptions(Map<String, Object> commands, SyntaxEntry entry) {
-        SyntaxEntry focus = entry;
+	@SuppressWarnings("unchecked")
+	private void populateOptions(Map<String, Object> commands, SyntaxEntry entry) {
+		SyntaxEntry focus = entry;
 
-        for(Object value : commands.values()) {
-            switch(value) {
-                case ArrayList<?> list -> {
-                    for(Object o : list) {
-                        populateOptions((Map<String, Object>) o, focus);
-                    }
-                }
-                case String s -> focus = entry.add(s);
-                default -> {}
-            }
-        }
-    }
+		for(Object value : commands.values()) {
+			switch(value) {
+				case ArrayList<?> list -> {
+					for(Object o : list) {
+						populateOptions((Map<String, Object>) o, focus);
+					}
+				}
+				case String s -> focus = entry.add(s);
+				default -> {}
+			}
+		}
+	}
 
-    private List<String> getTabCompletionList (String[] args) {
-        SyntaxEntry tree = options;
+	private List<String> getTabCompletionList (String[] args) {
+		SyntaxEntry tree = options;
 
-        try {
-            for(int i = 0; i < args.length - 1; i++) {
-                tree = tree.get(args[i]);
-            }
+		try {
+			for(int i = 0; i < args.length - 1; i++) {
+				tree = tree.get(args[i]);
+			}
 
-            String current = args[args.length - 1];
-            List<String> candidates = tree.keys();
-            List<String> output = new ArrayList<>();
+			String current = args[args.length - 1];
+			List<String> candidates = tree.keys();
+			List<String> output = new ArrayList<>();
 
-            for(String candidate : candidates) {
-                if(candidate.toLowerCase().startsWith(current.toLowerCase())) output.add(candidate);
-            }
+			for(String candidate : candidates) {
+				if(candidate.toLowerCase().startsWith(current.toLowerCase())) output.add(candidate);
+			}
 
-            return output;
-        } 
-        catch (NullPointerException e) { return null; }
-        catch (Exception e) { throw new RuntimeException(e); }
-    }
+			return output;
+		} 
+		catch (NullPointerException e) { return null; }
+		catch (Exception e) { throw new RuntimeException(e); }
+	}
 
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
 
-    public boolean isValidSyntax(String[] args) {
-        List<String> tabCompletion = getTabCompletionList(args);
+	public boolean isValidSyntax(String[] args) {
+		List<String> tabCompletion = getTabCompletionList(args);
 
-        if(tabCompletion == null) return false;
-        if(tabCompletion.isEmpty()) return false;
+		if(tabCompletion == null) return false;
+		if(tabCompletion.isEmpty()) return false;
 
-        return true;
-    }
+		return true;
+	}
 
-    public SyntaxEntry getOptionsRoot() { return options; }
+	public SyntaxEntry getOptionsRoot() { return options; }
 }

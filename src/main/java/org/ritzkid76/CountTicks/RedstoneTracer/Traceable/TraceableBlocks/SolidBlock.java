@@ -14,10 +14,10 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.PowerType;
 import com.sk89q.worldedit.math.BlockVector3;
 
 public class SolidBlock extends Traceable {
-    public static final Set<Connection> inputs = createConnectionSet(PowerType.SOFT, ConnectionDirection.AXIAL);
-    public static final Set<Connection> outputs = createConnectionSet(PowerType.INPUT_DEPENDENT, ConnectionDirection.AXIAL);
+	public static final Set<Connection> inputs = createConnectionSet(PowerType.SOFT, ConnectionDirection.AXIAL);
+	public static final Set<Connection> outputs = createConnectionSet(PowerType.INPUT_DEPENDENT, ConnectionDirection.AXIAL);
 
-    public SolidBlock(BlockData data, BlockVector3 position, World world) {
-        super(inputs, outputs, data, position, world);
-    }
+	public SolidBlock(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 }
