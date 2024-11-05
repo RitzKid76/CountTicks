@@ -54,7 +54,7 @@ public class PlayerData {
 		}
 		
 		hasScanned = true;
-		MessageSender.sendMessage(player, Message.SCAN_COMPLETE);
+		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
 		return;
 	}
 

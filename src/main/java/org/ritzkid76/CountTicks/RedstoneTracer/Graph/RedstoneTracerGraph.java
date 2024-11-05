@@ -29,6 +29,8 @@ public class RedstoneTracerGraph {
 	private Region bounds;
 	private World world;
 
+	private int totalScanned;
+
 	private final Set<BlockVector3> visited = new HashSet<>();
 	private final PriorityQueue<Traceable> queue = new PriorityQueue<>(
 		Comparator.comparing(t -> !isPriority(t))
@@ -39,6 +41,8 @@ public class RedstoneTracerGraph {
 	public RedstoneTracerGraph(BlockVector3 origin, Region bounds) { 
 		this.origin = origin; 
 		this.bounds = bounds;
+
+		totalScanned = 0;
 
 		world = Bukkit.getWorld(bounds.getWorld().getName());
 		
@@ -162,6 +166,7 @@ public class RedstoneTracerGraph {
 		while (!queue.isEmpty() && iterations-- > 0) {
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();
+			totalScanned++;
 
 			visited.add(currentPos);
 
@@ -183,4 +188,6 @@ public class RedstoneTracerGraph {
 			visited.contains(pos) ||
 			!posInBounds(pos);
 	}
+
+	public int totalScanned() { return totalScanned; }
 }
