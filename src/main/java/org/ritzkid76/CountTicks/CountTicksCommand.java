@@ -3,7 +3,6 @@ package org.ritzkid76.CountTicks;
 import java.io.File;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,7 +17,6 @@ import org.ritzkid76.CountTicks.SyntaxHandling.UsageGenerator;
 
 import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
-import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
 	private SyntaxHandler syntaxHandler;
@@ -30,15 +28,10 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
 	@Override
 	public void onLoad() {
-		// TODO run JavaLoaderBukkitProject.getPlugin().init() to generate a config file.
-		// then use that file later for messages instead of Message.java
-
 		// Register an event listener.
 	//	this.getPlugin().getServer().getPluginManager().registerEvents(new Listener() {
 
 	//	}, this.getPlugin());
-
-		JavaLoaderBukkitProjectPlugin plugin = getPlugin();
 
 		File dataFolder = getPlugin().getDataFolder();
 		syntaxHandler = new SyntaxHandler(dataFolder);
