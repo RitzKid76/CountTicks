@@ -1,7 +1,8 @@
 package org.ritzkid76.CountTicks.RedstoneTracer;
 
-public enum RedstoneTracerResultType {
+public enum RedstoneTracerPathResult {
     NO_PATH,
     PATH_FOUND,
-    INVALID_SELECTION
+    UNSCANNED_LOCATION,
+    OUT_OF_BOUNDS
 }

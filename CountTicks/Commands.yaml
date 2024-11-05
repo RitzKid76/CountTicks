@@ -1,6 +1,3 @@
-#needs ability to:
-# define a search region
-
 args:
   - arg: scan                 # populates the RedstoneTracerGraph
   - arg: inspector            # for raycasted inspection mode

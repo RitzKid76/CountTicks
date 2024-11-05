@@ -1,29 +1,29 @@
 package org.ritzkid76.CountTicks;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
-import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
+import java.io.File;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
-import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
-import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerResult;
-import org.ritzkid76.CountTicks.TabCompletion.SyntaxHandler;
+import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
+import org.ritzkid76.CountTicks.SyntaxHandling.SyntaxHandler;
+import org.ritzkid76.CountTicks.SyntaxHandling.UsageGenerator;
 
-import java.io.File;
-import java.util.List;
-import java.util.UUID;
+import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
+import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
+import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
     private SyntaxHandler syntaxHandler;
     private PlayerDataContainer playerDataContainer;
     private ArgumentParser parser;
+    private UsageGenerator usageGenerator;
 
     public World world;
 
@@ -37,9 +37,12 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
     //    }, this.getPlugin());
 
+        JavaLoaderBukkitProjectPlugin plugin = getPlugin();
+
         File dataFolder = getPlugin().getDataFolder();
         syntaxHandler = new SyntaxHandler(dataFolder);
-        parser = new ArgumentParser(syntaxHandler);
+        usageGenerator = new UsageGenerator(syntaxHandler);
+        parser = new ArgumentParser(syntaxHandler, usageGenerator);
 
         playerDataContainer = new PlayerDataContainer();
 
@@ -71,36 +74,8 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
             return true;
         }
 
-        world = player.getWorld();
-        BlockVector3 pos1;
-        BlockVector3 pos2;
-
-        WorldEditSelection worldEditSelection = new WorldEditSelection(world, player);
-
-        try {
-            BlockVector3[] selection = worldEditSelection.getSelection();
-            pos1 = selection[0];
-            pos2 = selection[1];
-        } catch (Exception e) {
-            sendChatMessage(player, Message.NO_SELECTION);
-            return true;
-        }
-
-        RedstoneTracerResult tracerReturn = new RedstoneTracer(world, pos1).getPath(pos2);
-
-
-        switch(tracerReturn.type()) {
-            case PATH_FOUND -> {
-                sendChatMessage(player, "Path found.");
-                RedstoneTracerGraph graph = tracerReturn.graph();
-                RedstoneTracerGraphPath path = graph.fastestPath(pos2);
-                Debug.log(player, path.gameTickDelay() + "", "delay");
-            }
-            case NO_PATH -> sendChatMessage(player, "No path found.");
-            case INVALID_SELECTION -> sendChatMessage(player, "Be sure that the start and end positions are valid redstone components.");
-        }
-
-        return true;
+        PlayerData playerData = playerDataContainer.get(player);
+        return parser.run(args, playerData);
     }
 
     // i am aware that there is a .setTabCompleter() function, but i prefer this for now. i can change it later

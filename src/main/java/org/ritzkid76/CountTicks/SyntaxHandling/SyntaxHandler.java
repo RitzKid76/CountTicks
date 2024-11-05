@@ -1,16 +1,15 @@
-package org.ritzkid76.CountTicks.TabCompletion;
+package org.ritzkid76.CountTicks.SyntaxHandling;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.ritzkid76.CountTicks.Debug;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class SyntaxHandler implements TabCompleter {
     private final SyntaxEntry options;
@@ -42,9 +41,9 @@ public class SyntaxHandler implements TabCompleter {
     }
 
     private List<String> getTabCompletionList (String[] args) {
-        try {
-            SyntaxEntry tree = options;
+        SyntaxEntry tree = options;
 
+        try {
             for(int i = 0; i < args.length - 1; i++) {
                 tree = tree.get(args[i]);
             }
@@ -58,8 +57,9 @@ public class SyntaxHandler implements TabCompleter {
             }
 
             return output;
-        } catch (Exception ignored) {}
-        return null;
+        } 
+        catch (NullPointerException e) { return null; }
+        catch (Exception e) { throw new RuntimeException(e); }
     }
 
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
@@ -72,4 +72,6 @@ public class SyntaxHandler implements TabCompleter {
 
         return true;
     }
+
+    public SyntaxEntry getOptionsRoot() { return options; }
 }

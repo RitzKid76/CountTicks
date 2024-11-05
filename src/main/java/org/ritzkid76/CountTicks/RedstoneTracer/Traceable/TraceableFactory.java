@@ -1,44 +1,49 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 
-import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.Exceptions.NonTraceableTypeException;
 import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.SolidBlock;
 
+import com.sk89q.worldedit.math.BlockVector3;
+
 public class TraceableFactory {
-
-
-    public static Traceable traceableFromBlockVector3(BlockVector3 blockVector) {
-        Block block = BlockUtils.blockFromBlockVector3(RedstoneTracer.getTracerWorld(), blockVector);
+    public static Traceable traceableFromBlockVector3(World world, BlockVector3 blockVector) {
+        Block block = BlockUtils.blockFromBlockVector3(world, blockVector);
         BlockData blockData = block.getBlockData();
         Material blockType = block.getType();
 
-        return TraceableFactory.createTraceable(blockType.toString(), blockData, blockVector);
+        try {
+            return TraceableFactory.createTraceable(blockType.toString(), blockData, blockVector, world);
+        } catch(NonTraceableTypeException e) { return null; }
     }
 
-    public static Traceable createTraceable(String blockName, BlockData blockData, BlockVector3 position) {
+    public static Traceable createTraceable(String blockName, BlockData blockData, BlockVector3 position, World world) {
         String className = classNameFromBlockName(blockName);
 
         try {
             Class<?> clazz = Class.forName(className);
-            if(!Traceable.class.isAssignableFrom(clazz)) throw new IllegalArgumentException(className + " is not a valid extension of Traceable");
 
             return (Traceable) clazz.getConstructor(
                 BlockData.class,
-                BlockVector3.class
+                BlockVector3.class,
+                World.class
             ).newInstance(
                 blockData,
-                position
+                position,
+                world
             );
-        } catch (Exception e) { return attemptSolidBlockCreation(blockData, position); }
+        } 
+        catch (ClassNotFoundException e) { return attemptSolidBlockCreation(blockData, position, world); }
+        catch (Exception e) { throw new RuntimeException(e); }
     }
 
-    private static Traceable attemptSolidBlockCreation(BlockData blockData, BlockVector3 position) {
-        if(!BlockUtils.isSolidBlock(blockData)) throw new RuntimeException(); // catch transparent blocks
-        return new SolidBlock(blockData, position);
+    private static Traceable attemptSolidBlockCreation(BlockData blockData, BlockVector3 position, World world) {
+        if(!BlockUtils.isSolidBlock(blockData)) throw new NonTraceableTypeException(); // catch transparent blocks
+        return new SolidBlock(blockData, position, world);
     }
 
     private static String classNameFromBlockName(String blockName) {

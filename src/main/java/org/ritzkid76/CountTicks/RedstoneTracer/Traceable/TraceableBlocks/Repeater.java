@@ -1,6 +1,8 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 
 import com.sk89q.worldedit.math.BlockVector3;
+
+import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.Connection;
@@ -20,8 +22,8 @@ public class Repeater extends Traceable {
         .add(ConnectionDirection.NORTH, PowerType.HARD)
     .get();
 
-    public Repeater(BlockData data, BlockVector3 position) {
-        super(inputs, outputs, data, position);
+    public Repeater(BlockData data, BlockVector3 position, World world) {
+        super(inputs, outputs, data, position, world);
     }
 
     @Override

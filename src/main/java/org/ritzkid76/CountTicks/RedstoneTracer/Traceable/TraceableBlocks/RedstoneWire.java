@@ -1,10 +1,11 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 
 import com.sk89q.worldedit.math.BlockVector3;
+
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracer;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
@@ -26,7 +27,7 @@ public class RedstoneWire extends Traceable {
 
     private Map<BlockFace, org.bukkit.block.data.type.RedstoneWire.Connection> data;
 
-    public RedstoneWire(BlockData data, BlockVector3 position) { super(inputs, outputs, data, position); }
+    public RedstoneWire(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
 
     @Override
     public TraceableBlockData applyBlockData(BlockData blockData) {
@@ -40,8 +41,6 @@ public class RedstoneWire extends Traceable {
 
         return new TraceableBlockData();
     }
-
-    // TODO filter invalid connections through blocks on diagonals
 
     @Override
     public boolean filterConnection(Connection connection, ConnectionType type) {
@@ -77,7 +76,7 @@ public class RedstoneWire extends Traceable {
 
         BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
 
-        return BlockUtils.isSolidBlock(RedstoneTracer.getTracerWorld(), testPosition);
+        return BlockUtils.isSolidBlock(world, testPosition);
     }
 
     private boolean diagonalDiode(ConnectionDirection direction) {
@@ -85,6 +84,6 @@ public class RedstoneWire extends Traceable {
 
         BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
 
-        return !BlockUtils.isSolidBlock(RedstoneTracer.getTracerWorld(), supportBlock);
+        return !BlockUtils.isSolidBlock(world, supportBlock);
     }
 }

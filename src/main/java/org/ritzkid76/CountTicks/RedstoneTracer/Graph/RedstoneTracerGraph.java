@@ -1,17 +1,49 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Graph;
 
-import com.sk89q.worldedit.math.BlockVector3;
-import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
-import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Set;
 
-import java.util.*;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.ritzkid76.CountTicks.Debug;
+import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
+import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
+import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
+
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.Region;
 
 public class RedstoneTracerGraph {
     private Map<BlockVector3, RedstoneTracerGraphNode> positionToNode = new HashMap<>();
     private Set<BlockVector3> contents = new HashSet<>();
     private BlockVector3 origin;
+    private Region bounds;
+    private World world;
 
-    public RedstoneTracerGraph(BlockVector3 origin) { this.origin = origin; }
+    private final Set<BlockVector3> visited = new HashSet<>();
+    private final PriorityQueue<Traceable> queue = new PriorityQueue<>(
+        Comparator.comparing(t -> !isPriority(t))
+    );
+
+    private boolean isPriority(Traceable t) { return t.delay() == 0; }
+
+    public RedstoneTracerGraph(BlockVector3 origin, Region bounds) { 
+        this.origin = origin; 
+        this.bounds = bounds;
+
+        world = Bukkit.getWorld(bounds.getWorld().getName());
+        
+        if(!posInBounds(origin)) throw new PositionOutOfRegionBounds();
+    }
 
     private void linkChild(RedstoneTracerGraphNode node, BlockVector3 pos) {
         contents.add(pos);
@@ -52,7 +84,8 @@ public class RedstoneTracerGraph {
     }
 
     public RedstoneTracerGraphPath fastestPath(BlockVector3 destination) {
-        if(!contains(destination)) return new RedstoneTracerGraphPath(new LinkedList<>(), null);
+        if(!contains(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.UNSCANNED_LOCATION);
+        if(!posInBounds(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.OUT_OF_BOUNDS);
 
         return djikstra(positionToNode.get(destination));
     }
@@ -73,8 +106,10 @@ public class RedstoneTracerGraph {
             RedstoneTracerGraphPath currentPath = queue.poll();
             RedstoneTracerGraphNode currentNode = currentPath.path().getLast();
 
-            if(!visited.add(currentNode)) continue;
-            if(currentNode.position == origin) return currentPath;
+            if(!visited.add(currentNode)) 
+                continue;
+            if(currentNode.position == origin) 
+                return currentPath.pathFound();
 
             for(BlockVector3 inputPos : currentNode.inputs.connections) {
                 RedstoneTracerGraphNode inputNode = positionToNode.get(inputPos);
@@ -94,6 +129,8 @@ public class RedstoneTracerGraph {
         return new RedstoneTracerGraphPath(new LinkedList<>(), null);
     }
 
+    public boolean posInBounds(BlockVector3 pos) { return bounds.contains(pos); }
+
     public String toString() {
         StringBuilder output = new StringBuilder().append("\n");
 
@@ -108,5 +145,43 @@ public class RedstoneTracerGraph {
         }
 
         return output.toString();
+    }
+
+    public boolean trace() {
+        Traceable startTraceable;
+
+        try {
+            startTraceable = TraceableFactory.traceableFromBlockVector3(world, origin);
+            if(startTraceable == null) throw new NonTraceableStartPositionException();
+
+            queue.add(startTraceable);
+        } 
+        catch (NonTraceableStartPositionException e) { return false; }
+
+        int iterations = 200000; //safety measure in case i fuck up
+        while (!queue.isEmpty() && iterations-- > 0) {
+            Traceable current = queue.remove();
+            BlockVector3 currentPos = current.getPosition();
+            Debug.log(currentPos.toString());
+
+            visited.add(currentPos);
+
+            Set<Traceable> candidates = current.getNeighbors(world);
+            add(current, candidates, isPriority(current));
+
+            candidates.removeIf(this::candidateRemoval);
+            queue.addAll(candidates);
+        }
+
+        if(iterations <= 0) Debug.log("ITERATION LIMIT EXCEEDED." , "WARNING");
+
+        return true;
+    }
+
+    private boolean candidateRemoval(Traceable candidate) {
+        BlockVector3 pos = candidate.getPosition();
+        return
+            visited.contains(pos) ||
+            !posInBounds(pos);
     }
 }

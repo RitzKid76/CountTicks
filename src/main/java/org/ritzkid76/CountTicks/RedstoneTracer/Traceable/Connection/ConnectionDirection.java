@@ -1,9 +1,10 @@
 package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection;
 
-import com.sk89q.worldedit.math.BlockVector3;
+import java.util.EnumSet;
+
 import org.bukkit.block.BlockFace;
 
-import java.util.EnumSet;
+import com.sk89q.worldedit.math.BlockVector3;
 
 public enum ConnectionDirection {
     UP, DOWN, NORTH, EAST, SOUTH, WEST,
