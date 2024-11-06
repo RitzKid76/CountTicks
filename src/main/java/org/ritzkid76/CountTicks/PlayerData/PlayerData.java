@@ -1,8 +1,17 @@
 package org.ritzkid76.CountTicks.PlayerData;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.WorldEditSelection;
+import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
+import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
@@ -19,6 +28,7 @@ public class PlayerData {
 	private WorldEditSelection selection;
 
 	private boolean hasScanned;
+	private boolean isScanning;
 
 	public PlayerData(Player p) {
 		player = p;
@@ -38,25 +48,72 @@ public class PlayerData {
 		return playerRegion;
 	}
 
-	public void scan(BlockVector3 origin) {
-		try {
-			graph = new RedstoneTracerGraph(origin, playerRegion);
-			if(!graph.trace()) {
-				MessageSender.sendMessage(player, Message.INVALID_START);
-				return;
-			}
-		} catch (NullPointerException e) {
-			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
-			return;
-		} catch (PositionOutOfRegionBounds e) {
-			MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+	public boolean isScanning() { return isScanning; }
+
+	private void executeScan() {
+		isScanning = true;
+
+		CompletableFuture.supplyAsync(() -> {
+			return graph.trace();
+		}).thenAccept(traceResult -> {
+			executeScanCallback(traceResult);
+		}).exceptionally(e -> {
+			throw new RuntimeException(e);
+		});
+	}
+	private void executeScanCallback(boolean success) {
+		isScanning = false;
+
+		if(!success) {
+			MessageSender.sendMessage(player, Message.INVALID_START);
 			return;
 		}
-		
+
 		hasScanned = true;
 		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
 		return;
 	}
+
+	public void scan(BlockVector3 origin) {
+		if(isScanning) return;
+
+		try {
+			graph = new RedstoneTracerGraph(origin, playerRegion);
+		} catch (PositionOutOfRegionBounds e) {
+			MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+			return;
+		} catch (BoundsUndefinedException e) {
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+			return;
+		}
+
+		MessageSender.sendMessage(player, Message.ATTEMPTING_SCAN);
+		executeScan();
+	}
+	// public void scan(BlockVector3 origin) {
+	// 	try {
+	// 		graph = new RedstoneTracerGraph(origin, playerRegion);
+
+	// 		MessageSender.sendMessage(player, Message.ATTEMPTING_SCAN);
+	// 		executeScan();
+
+	// 		if(!graph.trace()) {
+	// 			MessageSender.sendMessage(player, Message.INVALID_START);
+	// 			return;
+	// 		}
+	// 	} catch (NullPointerException e) {
+	// 		MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+	// 		return;
+	// 	} catch (PositionOutOfRegionBounds e) {
+	// 		MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+	// 		return;
+	// 	} catch (Exception e) {
+	// 		throw new RuntimeException(e);
+	// 	}
+	// 	hasScanned = true;
+	// 	MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
+	// 	return;
+	// }
 
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
 

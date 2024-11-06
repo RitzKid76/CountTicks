@@ -10,6 +10,8 @@ public enum Message {
 
 	SET_SCAN_REGION(MessageType.INFO),
 	SCAN_COMPLETE(MessageType.INFO),
+	ATTEMPTING_SCAN(MessageType.INFO),
+	ALREADY_SCANNING(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR),
 	NO_SCAN_REGION(MessageType.ERROR),
 	NO_START_SELECTED(MessageType.ERROR),

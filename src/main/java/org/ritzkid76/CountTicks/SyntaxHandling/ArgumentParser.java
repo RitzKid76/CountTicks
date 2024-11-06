@@ -72,8 +72,13 @@ public class ArgumentParser {
 	}
 
 	private boolean scan(String[] args, PlayerData playerData) {
-		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
+		if(playerData.isScanning()) {
+			MessageSender.sendMessage(player, Message.ALREADY_SCANNING);
+			return true;
+		}
+
+		WorldEditSelection selection = playerData.getSelection();
 		
 		BlockVector3 origin = selection.getFirstPosition();
 		if(origin == null) {
@@ -82,6 +87,7 @@ public class ArgumentParser {
 		}
 
 		playerData.scan(origin);
+
 		return true;
 	}
 	

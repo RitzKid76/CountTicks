@@ -12,6 +12,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.ritzkid76.CountTicks.Debug;
+import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
@@ -29,8 +30,6 @@ public class RedstoneTracerGraph {
 	private Region bounds;
 	private World world;
 
-	private int totalScanned;
-
 	private final Set<BlockVector3> visited = new HashSet<>();
 	private final PriorityQueue<Traceable> queue = new PriorityQueue<>(
 		Comparator.comparing(t -> !isPriority(t))
@@ -41,12 +40,13 @@ public class RedstoneTracerGraph {
 	public RedstoneTracerGraph(BlockVector3 origin, Region bounds) { 
 		this.origin = origin; 
 		this.bounds = bounds;
-
-		totalScanned = 0;
+		
+		if(bounds == null)
+			throw new BoundsUndefinedException();
+		if(!posInBounds(origin)) 
+			throw new PositionOutOfRegionBounds();
 
 		world = Bukkit.getWorld(bounds.getWorld().getName());
-		
-		if(!posInBounds(origin)) throw new PositionOutOfRegionBounds();
 	}
 
 	private void linkChild(RedstoneTracerGraphNode node, BlockVector3 pos) {
@@ -166,7 +166,6 @@ public class RedstoneTracerGraph {
 		while (!queue.isEmpty() && iterations-- > 0) {
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();
-			totalScanned++;
 
 			visited.add(currentPos);
 
@@ -189,5 +188,6 @@ public class RedstoneTracerGraph {
 			!posInBounds(pos);
 	}
 
-	public int totalScanned() { return totalScanned; }
+	public int totalScanned() { return visited.size(); }
+	public BlockVector3 getOrigin() { return origin; }
 }
