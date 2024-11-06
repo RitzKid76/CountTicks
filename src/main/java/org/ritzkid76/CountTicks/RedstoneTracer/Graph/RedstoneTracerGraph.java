@@ -15,6 +15,7 @@ import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.Exceptions.ScanCanceledException;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
@@ -162,6 +163,8 @@ public class RedstoneTracerGraph {
 
 		int iterations = 200000; //safety measure in case i fuck up
 		while (!queue.isEmpty() && iterations-- > 0) {
+			if(wasCanceled()) throw new ScanCanceledException();
+
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();
 
@@ -177,6 +180,10 @@ public class RedstoneTracerGraph {
 		if(iterations <= 0) Debug.log("ITERATION LIMIT EXCEEDED." , "WARNING");
 
 		return true;
+	}
+
+	private boolean wasCanceled() {
+		return Thread.currentThread().isInterrupted();
 	}
 
 	private boolean candidateRemoval(Traceable candidate) {

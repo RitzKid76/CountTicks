@@ -49,6 +49,8 @@ public class ArgumentParser {
 		catch (Exception e) { throw new RuntimeException(e); }
 	}
 
+	//TODO check for isScanning() to block mutation of region and other scan dependencies
+
 	private boolean help(String[] args, PlayerData playerData) {
 		// Debug.log("Options are:\n" + usageGenerator.usage());
 		//TODO temp remap to redstone tracer
@@ -73,6 +75,16 @@ public class ArgumentParser {
 
 	private boolean scan(String[] args, PlayerData playerData) {
 		Player player = playerData.getPlayer();
+
+		if(args.length > 0) {
+			if(playerData.isScanning()) {
+				playerData.terminateScan();
+				MessageSender.sendMessage(player, Message.CANCELED_SCAN);
+			} else 
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
+			return true;
+		}
+
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.ALREADY_SCANNING);
 			return true;

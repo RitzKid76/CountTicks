@@ -32,7 +32,7 @@ public class MessageSender {
     }
 
     public static String getMessage(String message) {
-        return messages.getOrDefault(message, message); 
+        return messages.getOrDefault(message, "&cunformatted: " + message); 
     }
 
     public static void sendConsoleMessage(Message message) { sendMessage(Bukkit.getConsoleSender(), message); }
