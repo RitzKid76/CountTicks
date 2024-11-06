@@ -1,5 +1,6 @@
 package org.ritzkid76.CountTicks.PlayerData;
 
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -14,33 +15,34 @@ import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
+import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 
 public class PlayerData {
-	private Player player;
+	private UUID uuid;
 	private CuboidRegion playerRegion;
 	private RedstoneTracerGraph graph;
 	private WorldEditSelection selection;
 
-	private boolean hasScanned;
 	private ExecutorService scanExecutor;
 	private Future<?> scanStatus;
 
 	private ExecutorService inspectExecutor;
 	private Future<?> inspectStatus;
 
-	public PlayerData(Player p) {
-		player = p;
-		selection = new WorldEditSelection(p);
+	public PlayerData(UUID u) {
+		uuid = u;
+		selection = new WorldEditSelection(getPlayer());
 	}
 
-	public Player getPlayer() { return player; }
-	public World getWorld() { return player.getWorld(); }
+	public Player getPlayer() {
+		return Bukkit.getPlayer(uuid);
+	}
+	public World getWorld() { return getPlayer().getWorld(); }
 	public WorldEditSelection getSelection() { return selection; }
 	public CuboidRegion getRegion() { return playerRegion; }
 
@@ -61,18 +63,23 @@ public class PlayerData {
 		return !inspectStatus.isDone();
 	}
 
-	private void scanCallback(boolean success) {
+	private void scanCallback(boolean success, Runnable returnTo) {
+		Player player = getPlayer();
+
 		if(!success) {
 			MessageSender.sendMessage(player, Message.INVALID_START);
 			return;
 		}
 
-		hasScanned = true;
 		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
-		return;
+		
+		if(returnTo == null) return;
+		returnTo.run();
 	}
 	public void terminateScan() { terminateScan(false); }
 	public void terminateScan(boolean silent) {
+		Player player = getPlayer();
+
 		if(!isScanning()) {
 			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
 			return;
@@ -80,7 +87,11 @@ public class PlayerData {
 		scanExecutor.shutdownNow();
 		if(!silent) MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
-	public void scan(BlockVector3 origin) {
+
+	public void scan(BlockVector3 origin) { scan(origin, null); }
+	private void scan(BlockVector3 origin, Runnable returnTo) {
+		Player player = getPlayer();
+
 		try {
 			graph = new RedstoneTracerGraph(origin, playerRegion);
 		} catch (PositionOutOfRegionBounds e) {
@@ -95,13 +106,15 @@ public class PlayerData {
 		scanExecutor = Executors.newSingleThreadExecutor();
 		scanStatus = scanExecutor.submit(() -> {
 			try{
-				scanCallback(graph.trace());
+				scanCallback(graph.trace(), returnTo);
 			} catch (ThreadCanceledException e) {}
 		});
 	}
 	
 	public void terminateInspect() { terminateInspect(false); }
 	public void terminateInspect(boolean silent) {
+		Player player = getPlayer();
+
 		if(!isInspecting()) {
 			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
@@ -109,14 +122,12 @@ public class PlayerData {
 		inspectExecutor.shutdownNow();
 		if(!silent) MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
+
 	public void inspect() {
-		if(!hasScanned) {
-			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
-			return;
-		}
-		
+		Player player = getPlayer();
+
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
-		
+
 		inspectExecutor = Executors.newSingleThreadExecutor();
 		inspectStatus = inspectExecutor.submit(() -> {
 			BlockVector3 lastViewBlock = null;
@@ -132,22 +143,42 @@ public class PlayerData {
 				}
 				lastViewBlock = viewedBlock;
 				
-				RedstoneTracerGraphPath path = graph.fastestPath(viewedBlock);
-				
-				switch(path.result()) {
-					case RedstoneTracerPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY, path.delay()/2 + "");
-					case RedstoneTracerPathResult.NO_PATH -> MessageSender.sendSubtitle(player, Message.NO_PATH);
-					case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendSubtitle(player, Message.UNSCANNED_LOCATION);
-					case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendSubtitle(player, Message.OUT_OF_BOUNDS);
-				}
-					
+				ArgumentParser.sendInspectorMessageSubtitle(player, graph.fastestPath(viewedBlock));
 			}
 		});
+	}
+	
+	private BlockVector3 callbackEndpoint;
+	private void countCallback() {
+		ArgumentParser.sendInspectorMessage(getPlayer(), graph.fastestPath(callbackEndpoint));
+	}
+	public void count(BlockVector3 start, BlockVector3 end) {
+		callbackEndpoint = end;
+
+		if(scanValidation(start, this::countCallback)) return;
+		countCallback();
+	}
+
+	private boolean scanValidation(BlockVector3 origin, Runnable callback) {
+		if(!hasScanned()) {
+			scan(origin, callback);
+			return true;
+		}
+		if(graph.getOrigin() != origin) {
+			MessageSender.sendMessage(getPlayer(), Message.START_CHANGED);
+			scan(origin, this::countCallback);
+			return true;
+		}
+
+		return false;
 	}
 
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
 
-	public boolean hasScanned() { return hasScanned; }
+	public boolean hasScanned() { 
+		if(graph == null) return false;
+		return graph.totalScanned() > 0; 
+	}
 
 	public void shutdown() {
 		terminateScan(true);

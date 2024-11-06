@@ -45,13 +45,17 @@ public class MessageSender {
         return message;
     }
 
-    public static void sendConsoleMessage(Message message) { sendMessage(Bukkit.getConsoleSender(), message); }
+    public static void sendConsoleMessage(Message message) { sendConsoleMessage(message.get()); }
+    public static void sendConsoleMessage(String message) { sendMessage(Bukkit.getConsoleSender(), message); }
+
     public static void sendMessage(CommandSender sender, Message message) { sendMessage(sender, message.get()); }
     public static void sendMessage(CommandSender sender, String message) {
         sender.sendMessage(colorize(message));
+        // Debug.log(message);
     }
     public static void sendMessage(CommandSender sender, Message message, String... replacements) {
         sendMessage(sender, getReplacementString(message.get(), replacements));
+        // Debug.log(message.get());
     }
 
     public static void sendSubtitle(CommandSender sender, Message message) { sendSubtitle(sender, message.getClean()); }

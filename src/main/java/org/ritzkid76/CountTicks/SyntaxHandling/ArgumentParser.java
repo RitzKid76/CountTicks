@@ -25,7 +25,7 @@ public class ArgumentParser {
 	}
 
 	public boolean run(String[] args, PlayerData playerData) {
-		if(args.length == 0) return help(args, playerData);
+		if(args.length == 0) return count(args, playerData);
 
 		if(!syntaxHandler.isValidSyntax(args)) return false;
 
@@ -49,27 +49,31 @@ public class ArgumentParser {
 		catch (Exception e) { throw new RuntimeException(e); }
 	}
 
-	//TODO check for isScanning() to block mutation of region and other scan dependencies
-
-
-	private boolean help(String[] args, PlayerData playerData) {
-		// Debug.log("Options are:\n" + usageGenerator.usage());
-		//TODO temp remap to redstone tracer
+	private boolean count(String[] args, PlayerData playerData) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
-		if(!playerData.hasScanned()) {
-			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
+		if(playerData.isScanning()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
 			return true;
 		}
-		RedstoneTracerGraphPath path = playerData.getFastestPath(selection.getSecondPosition());
-		
-		switch(path.result()) {
-			case RedstoneTracerPathResult.PATH_FOUND -> Debug.log(path.delay()/2 + "t");
-			case RedstoneTracerPathResult.NO_PATH -> MessageSender.sendMessage(player, Message.NO_PATH);
-			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
-			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+		if(playerData.isInspecting()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			return true;
 		}
+
+		BlockVector3 startPosition = selection.getFirstPosition();
+		if(startPosition == null) {
+			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
+			return true;
+		}
+		BlockVector3 endPosition = selection.getSecondPosition();
+		if(endPosition == null) {
+			MessageSender.sendMessage(player, Message.NO_END_SELECTED);
+			return true;
+		}
+
+		playerData.count(startPosition, endPosition);
 
 		return true;
 	}
@@ -126,7 +130,7 @@ public class ArgumentParser {
 		return true;
 	}
 	
-	private boolean set_region(String[] args, PlayerData playerData) {
+	private boolean define_region(String[] args, PlayerData playerData) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
@@ -141,5 +145,22 @@ public class ArgumentParser {
 
 		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, region.toString());
 		return true;
+	}
+
+	
+	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
+		switch(path.result()) {
+			case RedstoneTracerPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, path.delay()/2 + "");
+			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendSubtitle(player, Message.UNSCANNED_LOCATION_SHORT);
+			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendSubtitle(player, Message.OUT_OF_BOUNDS_SHORT);
+		}
+	}
+
+	public static void sendInspectorMessage(Player player, RedstoneTracerGraphPath path) {
+		switch(path.result()) {
+			case RedstoneTracerPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, path.delay()/2 + "");
+			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
+			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+		}
 	}
 }

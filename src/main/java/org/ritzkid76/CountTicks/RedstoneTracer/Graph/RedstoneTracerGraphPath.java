@@ -9,7 +9,7 @@ public record RedstoneTracerGraphPath(RedstoneTracerPathResult result, LinkedLis
 	public int delay() { return gameTickDelay.gameTicks; }
 
 	public RedstoneTracerGraphPath(RedstoneTracerPathResult r) { this(r, null, null); }
-	public RedstoneTracerGraphPath(LinkedList<RedstoneTracerGraphNode> p, GameTickDelay delay) { this(RedstoneTracerPathResult.NO_PATH, p, delay); }
+	public RedstoneTracerGraphPath(LinkedList<RedstoneTracerGraphNode> p, GameTickDelay delay) { this(null, p, delay); }
 
 	public RedstoneTracerGraphPath pathFound() { return new RedstoneTracerGraphPath(RedstoneTracerPathResult.PATH_FOUND, path, gameTickDelay); }
 }

@@ -7,16 +7,20 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
+import org.ritzkid76.CountTicks.PlayerData.PlayerEventListener;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
 import org.ritzkid76.CountTicks.SyntaxHandling.SyntaxHandler;
 import org.ritzkid76.CountTicks.SyntaxHandling.UsageGenerator;
 
 import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
+import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
 	private SyntaxHandler syntaxHandler;
@@ -28,17 +32,12 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
 	@Override
 	public void onLoad() {
-		// Register an event listener.
-	//	this.getPlugin().getServer().getPluginManager().registerEvents(new Listener() {
-
-	//	}, this.getPlugin());
+		enableListeners();
 
 		File dataFolder = getPlugin().getDataFolder();
 		syntaxHandler = new SyntaxHandler(dataFolder);
 		usageGenerator = new UsageGenerator(syntaxHandler);
 		parser = new ArgumentParser(syntaxHandler, usageGenerator);
-
-		playerDataContainer = new PlayerDataContainer();
 
 		MessageSender.populateOptions(dataFolder);
 
@@ -47,12 +46,23 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
 	@Override
 	public void onUnload() {
-		// Unregister all listeners from this project.
-		// HandlerList.unregisterAll(this.getPlugin());
+		disableListeners();
 
-		playerDataContainer.shutdown();
+		PlayerDataContainer.shutdown();
 
 		MessageSender.sendConsoleMessage(Message.UNLOADED);
+	}
+
+	private void addListener(Listener l) {
+		JavaLoaderBukkitProjectPlugin plugin = getPlugin();
+		plugin.getServer().getPluginManager().registerEvents(l, plugin);
+	}
+
+	private void enableListeners() {
+		addListener(new PlayerEventListener());
+	}
+	private void disableListeners() {
+		HandlerList.unregisterAll(getPlugin());
 	}
 
 	@Override
@@ -72,7 +82,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 			return true;
 		}
 
-		PlayerData playerData = playerDataContainer.get(player);
+		PlayerData playerData = PlayerDataContainer.get(player);
 		return parser.run(args, playerData);
 	}
 

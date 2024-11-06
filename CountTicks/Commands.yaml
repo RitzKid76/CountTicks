@@ -6,4 +6,4 @@ args:
     options:
     - arg: start
     - arg: stop
-  - arg: set_region    # defines the region to scan inside
+  - arg: define_region    # defines the region to scan inside

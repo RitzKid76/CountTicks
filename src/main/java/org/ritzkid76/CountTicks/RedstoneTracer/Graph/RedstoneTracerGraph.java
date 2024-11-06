@@ -193,7 +193,6 @@ public class RedstoneTracerGraph {
 			!posInBounds(pos);
 	}
 
-	// TODO remove visited and origin temp functions
 	public int totalScanned() { return visited.size(); }
 	public Set<BlockVector3> getVisited() { return visited; }
 	public BlockVector3 getOrigin() { return origin; }
