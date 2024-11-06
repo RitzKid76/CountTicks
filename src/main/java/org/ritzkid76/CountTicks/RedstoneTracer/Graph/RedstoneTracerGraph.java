@@ -31,9 +31,7 @@ public class RedstoneTracerGraph {
 	private World world;
 
 	private final Set<BlockVector3> visited = new HashSet<>();
-	private final PriorityQueue<Traceable> queue = new PriorityQueue<>(
-		Comparator.comparing(t -> !isPriority(t))
-	);
+	private final BooleanQueue<Traceable> queue = new BooleanQueue<>(this::isPriority);
 
 	private boolean isPriority(Traceable t) { return t.delay() == 0; }
 
@@ -188,6 +186,8 @@ public class RedstoneTracerGraph {
 			!posInBounds(pos);
 	}
 
+	// TODO remove visited and origin temp functions
 	public int totalScanned() { return visited.size(); }
+	public Set<BlockVector3> getVisited() { return visited; }
 	public BlockVector3 getOrigin() { return origin; }
 }
