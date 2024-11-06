@@ -110,10 +110,6 @@ public class PlayerData {
 		if(!silent) MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 	public void inspect() {
-		if(isInspecting()) {
-			MessageSender.sendMessage(player, Message.ALREADY_INSPECTING);
-			return;
-		}
 		if(!hasScanned) {
 			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
 			return;

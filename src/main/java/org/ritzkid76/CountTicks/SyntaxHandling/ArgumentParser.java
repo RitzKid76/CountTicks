@@ -51,6 +51,7 @@ public class ArgumentParser {
 
 	//TODO check for isScanning() to block mutation of region and other scan dependencies
 
+
 	private boolean help(String[] args, PlayerData playerData) {
 		// Debug.log("Options are:\n" + usageGenerator.usage());
 		//TODO temp remap to redstone tracer
@@ -85,6 +86,10 @@ public class ArgumentParser {
 			MessageSender.sendMessage(player, Message.ALREADY_SCANNING);
 			return true;
 		}
+		if(playerData.isInspecting()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			return true;
+		}
 
 		WorldEditSelection selection = playerData.getSelection();
 		
@@ -101,8 +106,21 @@ public class ArgumentParser {
 	
 	private boolean inspector(String[] args, PlayerData playerData) {
 		if(args.length == 0) return false;
+
 		switch(args[0]) {
-			case "start" -> playerData.inspect();
+			case "start" -> {
+				Player player = playerData.getPlayer();
+				if(playerData.isScanning()) {
+					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+					return true;
+				}
+				if(playerData.isInspecting()) {
+					MessageSender.sendMessage(player, Message.ALREADY_INSPECTING);
+					return true;
+				}
+
+				playerData.inspect();
+			}
 			case "stop" -> playerData.terminateInspect();
 		}
 		return true;
