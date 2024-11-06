@@ -78,7 +78,7 @@ public class PlayerData {
 			return;
 		};
 		scanExecutor.shutdownNow();
-		if(!silent) MessageSender.sendMessage(player, Message.CANCELED_SCAN);
+		if(!silent) MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 	public void scan(BlockVector3 origin) {
 		try {
@@ -91,7 +91,7 @@ public class PlayerData {
 			return;
 		}
 		
-		MessageSender.sendMessage(player, Message.ATTEMPTING_SCAN);
+		MessageSender.sendMessage(player, Message.START_SCAN);
 		scanExecutor = Executors.newSingleThreadExecutor();
 		scanStatus = scanExecutor.submit(() -> {
 			try{
