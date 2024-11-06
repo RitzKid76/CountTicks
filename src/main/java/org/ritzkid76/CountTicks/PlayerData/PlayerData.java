@@ -91,6 +91,7 @@ public class PlayerData {
 			return;
 		}
 		
+		MessageSender.sendMessage(player, Message.ATTEMPTING_SCAN);
 		scanExecutor = Executors.newSingleThreadExecutor();
 		scanStatus = scanExecutor.submit(() -> {
 			try{

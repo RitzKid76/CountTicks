@@ -12,6 +12,7 @@ public enum Message {
 	SCAN_COMPLETE(MessageType.INFO),
 	CANCELED_SCAN(MessageType.INFO),
 	SCAN_IN_PROGRESS(MessageType.INFO),
+	ATTEMPTING_SCAN(MessageType.INFO),
 	ALREADY_SCANNING(MessageType.ERROR),
 	NO_ACTIVE_SCAN(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR),
