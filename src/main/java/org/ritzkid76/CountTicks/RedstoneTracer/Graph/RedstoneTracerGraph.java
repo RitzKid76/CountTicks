@@ -87,8 +87,8 @@ public class RedstoneTracerGraph {
 	}
 
 	public RedstoneTracerGraphPath fastestPath(BlockVector3 destination) {
-		if(!contains(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.UNSCANNED_LOCATION);
 		if(!posInBounds(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.OUT_OF_BOUNDS);
+		if(!contains(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.UNSCANNED_LOCATION);
 
 		return djikstra(positionToNode.get(destination));
 	}

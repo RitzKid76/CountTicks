@@ -129,7 +129,7 @@ public class PlayerData {
 					viewedBlock.equals(lastViewBlock)
 				) {
 					continue;
-				};
+				}
 				lastViewBlock = viewedBlock;
 				
 				RedstoneTracerGraphPath path = graph.fastestPath(viewedBlock);
