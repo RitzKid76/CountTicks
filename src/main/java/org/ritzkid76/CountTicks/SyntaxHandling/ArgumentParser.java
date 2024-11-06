@@ -64,7 +64,7 @@ public class ArgumentParser {
 		RedstoneTracerGraphPath path = playerData.getFastestPath(selection.getSecondPosition());
 		
 		switch(path.result()) {
-			case RedstoneTracerPathResult.PATH_FOUND -> Debug.log(path.totalGameTicks()/2 + "t");
+			case RedstoneTracerPathResult.PATH_FOUND -> Debug.log(path.delay()/2 + "t");
 			case RedstoneTracerPathResult.NO_PATH -> MessageSender.sendMessage(player, Message.NO_PATH);
 			case RedstoneTracerPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
 			case RedstoneTracerPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
@@ -77,11 +77,7 @@ public class ArgumentParser {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
-			if(playerData.isScanning()) {
-				playerData.terminateScan();
-				MessageSender.sendMessage(player, Message.CANCELED_SCAN);
-			} else 
-				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
+			playerData.terminateScan();
 			return true;
 		}
 
@@ -104,13 +100,21 @@ public class ArgumentParser {
 	}
 	
 	private boolean inspector(String[] args, PlayerData playerData) {
-		Debug.log("inspector");
+		if(args.length == 0) return false;
+		switch(args[0]) {
+			case "start" -> playerData.inspect();
+			case "stop" -> playerData.terminateInspect();
+		}
 		return true;
 	}
 	
 	private boolean set_region(String[] args, PlayerData playerData) {
-		Region region = playerData.updateRegion();
 		Player player = playerData.getPlayer();
+		if(playerData.isScanning()) {
+			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
+		}
+
+		Region region = playerData.updateRegion();
 
 		if(region == null) {
 			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);

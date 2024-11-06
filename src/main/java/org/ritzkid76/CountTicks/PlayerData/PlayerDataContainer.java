@@ -17,4 +17,10 @@ public class PlayerDataContainer {
 
 		return players.get(uuid);
 	}
+
+	public void shutdown() {
+		for(PlayerData playerData : players.values()) {
+			playerData.shutdown();
+		}
+	}
 }

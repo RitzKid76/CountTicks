@@ -9,6 +9,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.ritzkid76.CountTicks.Debug;
 
 public class MessageSender {
     private static final Map<String, String> messages = new HashMap<>();
@@ -35,18 +37,30 @@ public class MessageSender {
         return messages.getOrDefault(message, "&cunformatted: " + message); 
     }
 
+    private static String getReplacementString(String message, String... replacements) {
+        for(String replacement : replacements) {
+            message = message.replaceFirst("\\$", replacement);
+        }
+
+        return message;
+    }
+
     public static void sendConsoleMessage(Message message) { sendMessage(Bukkit.getConsoleSender(), message); }
     public static void sendMessage(CommandSender sender, Message message) { sendMessage(sender, message.get()); }
     public static void sendMessage(CommandSender sender, String message) {
         sender.sendMessage(colorize(message));
     }
     public static void sendMessage(CommandSender sender, Message message, String... replacements) {
-        String msg = message.get();
-        
-        for(String replacement : replacements) {
-            msg = msg.replaceFirst("\\$", replacement);
-        }
+        sendMessage(sender, getReplacementString(message.get(), replacements));
+    }
 
-        sendMessage(sender, msg);
+    public static void sendSubtitle(CommandSender sender, Message message) { sendSubtitle(sender, message.getClean()); }
+    public static void sendSubtitle(CommandSender sender, String message) {
+        Player player = (Player) sender;
+        player.resetTitle();
+        player.sendTitle("", colorize(message), 0, 40, 20);
+    }
+    public static void sendSubtitle(CommandSender sender, Message message, String... replacements) {
+        sendSubtitle(sender, getReplacementString(message.getClean(), replacements));
     }
 }

@@ -15,7 +15,7 @@ import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
-import org.ritzkid76.CountTicks.Exceptions.ScanCanceledException;
+import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
@@ -95,7 +95,7 @@ public class RedstoneTracerGraph {
 
 	private RedstoneTracerGraphPath djikstra(RedstoneTracerGraphNode destination) {
 		PriorityQueue<RedstoneTracerGraphPath> queue = new PriorityQueue<>(
-			Comparator.comparingInt(RedstoneTracerGraphPath::totalGameTicks)
+			Comparator.comparingInt(RedstoneTracerGraphPath::delay)
 		);
 		Set<RedstoneTracerGraphNode> visited = new HashSet<>();
 
@@ -120,7 +120,7 @@ public class RedstoneTracerGraph {
 
 				RedstoneTracerGraphPath newPath = new RedstoneTracerGraphPath(
 					new LinkedList<>(currentPath.path()),
-					new GameTickDelay(currentPath.totalGameTicks())
+					new GameTickDelay(currentPath.delay())
 				);
 				newPath.path().add(inputNode);
 				newPath.gameTickDelay().add(inputNodeDelay);
@@ -163,7 +163,7 @@ public class RedstoneTracerGraph {
 
 		int iterations = 200000; //safety measure in case i fuck up
 		while (!queue.isEmpty() && iterations-- > 0) {
-			if(wasCanceled()) throw new ScanCanceledException();
+			if(wasCanceled()) throw new ThreadCanceledException();
 
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();

@@ -50,6 +50,8 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		// Unregister all listeners from this project.
 		// HandlerList.unregisterAll(this.getPlugin());
 
+		playerDataContainer.shutdown();
+
 		MessageSender.sendConsoleMessage(Message.UNLOADED);
 	}
 

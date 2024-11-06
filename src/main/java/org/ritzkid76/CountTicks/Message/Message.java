@@ -10,8 +10,8 @@ public enum Message {
 
 	SET_SCAN_REGION(MessageType.INFO),
 	SCAN_COMPLETE(MessageType.INFO),
-	ATTEMPTING_SCAN(MessageType.INFO),
 	CANCELED_SCAN(MessageType.INFO),
+	SCAN_IN_PROGRESS(MessageType.INFO),
 	ALREADY_SCANNING(MessageType.ERROR),
 	NO_ACTIVE_SCAN(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR),
@@ -20,8 +20,16 @@ public enum Message {
 	INVALID_START(MessageType.ERROR),
 	UNSCANNED_LOCATION(MessageType.ERROR),
 	OUT_OF_BOUNDS(MessageType.ERROR),
-	NO_PATH(MessageType.ERROR);
+	NO_PATH(MessageType.ERROR),
 
+	START_INSPECT_MODE(MessageType.INFO),
+	STOP_INSPECT_MODE(MessageType.INFO),
+	DELAY(MessageType.INFO),
+	NO_ACTIVE_INSPECTION(MessageType.ERROR),
+	ALREADY_INSPECTING(MessageType.ERROR);
+
+
+	
 	private final String message;
 	private final MessageType type;
 
@@ -47,6 +55,7 @@ public enum Message {
 	}
 
 	public String get() { return commandPrefix + formatMessage(); }
+	public String getClean() { return formatMessage(); }
 
 	private String formatMessage() {
 		switch(type) {
