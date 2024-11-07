@@ -24,8 +24,8 @@ currently_scanning: "There is a scan in progress. \nCancel it with &3/countticks
 
 start_inspect_mode: "Started inspect mode."
 stop_inspect_mode: "Stopped inspect mode."
-delay_short: "Total delay: &b$&3t&r."
-delay: "&b$&3t"
+delay_short: "&b$&3t"
+delay: "Total delay: &b$&3t&r."
 no_active_inspection: "There is no inspection in progress."
 already_inspecting: "Inspection already in progress."
 currently_inspecting: "Inspection mode in use. \nDisable it with &3/countticks inspector stop&r."

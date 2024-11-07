@@ -1,8 +1,8 @@
 args:
-  - arg: scan      # populates the RedstoneTracerGraph
+  - arg: scan             # populates the RedstoneTracerGraph
     options:
     - arg: terminate
-  - arg: inspector    # for raycasted inspection mode
+  - arg: inspector        # for raycasted inspection mode
     options:
     - arg: start
     - arg: stop
