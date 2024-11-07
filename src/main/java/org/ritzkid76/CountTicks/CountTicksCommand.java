@@ -15,19 +15,12 @@ import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
 import org.ritzkid76.CountTicks.PlayerData.PlayerEventListener;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
-import org.ritzkid76.CountTicks.SyntaxHandling.SyntaxHandler;
-import org.ritzkid76.CountTicks.SyntaxHandling.UsageGenerator;
 
 import io.github.pieter12345.javaloader.bukkit.BukkitCommand;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
-	private SyntaxHandler syntaxHandler;
-	private PlayerDataContainer playerDataContainer;
-	private ArgumentParser parser;
-	private UsageGenerator usageGenerator;
-
 	public World world;
 
 	@Override
@@ -35,10 +28,8 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		enableListeners();
 
 		File dataFolder = getPlugin().getDataFolder();
-		syntaxHandler = new SyntaxHandler(dataFolder);
-		usageGenerator = new UsageGenerator(syntaxHandler);
-		parser = new ArgumentParser(syntaxHandler, usageGenerator);
-
+		
+		ArgumentParser.setDataFolder(dataFolder);
 		MessageSender.populateOptions(dataFolder);
 
 		MessageSender.sendConsoleMessage(Message.LOADED);
@@ -83,7 +74,9 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		}
 
 		PlayerData playerData = PlayerDataContainer.get(player);
-		return parser.run(args, playerData);
+		ArgumentParser.run(args, playerData);
+
+		return true; // dont want to use the bukkit default useage
 	}
 
 	// i am aware that there is a .setTabCompleter() function, but i prefer this for now. i can change it later
@@ -94,14 +87,14 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		String label,
 		String[] args
 	) {
-		return syntaxHandler.onTabComplete(sender, command, label, args);
+		return ArgumentParser.onTabComplete(sender, command, label, args);
 	}
 
 	@Override
 	public BukkitCommand[] getCommands() {
 		return new BukkitCommand[]{
 				new BukkitCommand("countticks")
-						.setUsageMessage("TODO")
+						.setUsageMessage("this should not happen .,;,;,.")
 						.setPermission("javaloader.countticks.counttickscommand")
 						.setPermissionMessage("You do not have permission to use this command.")
 						.setAliases("ct")

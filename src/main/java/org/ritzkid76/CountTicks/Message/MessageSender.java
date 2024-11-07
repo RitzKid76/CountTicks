@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.ritzkid76.CountTicks.Debug;
 
 public class MessageSender {
     private static final Map<String, String> messages = new HashMap<>();

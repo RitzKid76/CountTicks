@@ -5,6 +5,8 @@ console_use: "This command can only be used by players!"
 no_start_selected: "No scan start defined.\nUses &3pos1&r."
 no_end_selected: "No scan end defined.\nUses &3pos2&r."
 start_changed: "Rescanning due to change in start position."
+invalid_syntax: "Invalid syntax. \n Use &3$&r."
+help: "List of commands:\n&b$&r"
 
 set_scan_region: "Defined the scan region to\n&3$"
 scan_complete: "Scan completed with &3$&r blocks scanned."

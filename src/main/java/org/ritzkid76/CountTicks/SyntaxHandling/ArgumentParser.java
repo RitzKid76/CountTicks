@@ -1,8 +1,12 @@
 package org.ritzkid76.CountTicks.SyntaxHandling;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Debug;
 import org.ritzkid76.CountTicks.WorldEditSelection;
@@ -16,83 +20,103 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
-	private SyntaxHandler syntaxHandler;
-	private UsageGenerator usageGenerator;
+	private static SyntaxHandler syntaxHandler;
 
-	public ArgumentParser(SyntaxHandler handler, UsageGenerator usage) {
-		syntaxHandler = handler;
-		usageGenerator = usage;
+	public static void setDataFolder(File dataFolder) {
+		syntaxHandler = new SyntaxHandler(dataFolder);
 	}
 
-	public boolean run(String[] args, PlayerData playerData) {
-		if(args.length == 0) return count(args, playerData);
+	public static List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		return syntaxHandler.onTabComplete(sender, command, label, args);
+	}
 
-		if(!syntaxHandler.isValidSyntax(args)) return false;
+	private static void getUsage(String[] args, PlayerData playerData) {
+		SyntaxEntry current = syntaxHandler.getOptionsRoot();
+		StringBuilder output = new StringBuilder("/countticks ");
+
+		for(String arg : args) {
+			SyntaxEntry next = current.get(arg);
+
+			if(next == null)
+				break;
+
+			output.append(arg).append(" ");
+			current = next;
+		}
+
+		output.append(current.toSyntaxString());
+		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, output.toString());
+	}
+
+	public static void run(String[] args, PlayerData playerData) {
+		if(!syntaxHandler.isValidSyntax(args)) {
+			getUsage(args, playerData);
+			return;
+		}
+		
+		if(args.length == 0) {
+			count(args, playerData);
+			return;
+		}
 
 		String methodName = args[0];
 		args = Arrays.copyOfRange(args, 1, args.length);
 
-		Method method;
 		try {
-			method = getClass().getDeclaredMethod(
+			ArgumentParser.class.getDeclaredMethod(
 				methodName,
 				String[].class,
 				PlayerData.class
-			);
-
-			return (boolean) method.invoke(this, (Object) args, playerData);
-		} 
-		catch (NoSuchMethodException e) { 
-			Debug.log("syntax validator said yes, but it should say no");
-			return false;
-		} 
-		catch (Exception e) { throw new RuntimeException(e); }
+			).invoke(null, (Object) args, playerData);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	private boolean count(String[] args, PlayerData playerData) {
+	private static void count(String[] args, PlayerData playerData) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
-			return true;
+			return;
 		}
 		if(playerData.isInspecting()) {
 			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
-			return true;
+			return;
 		}
 
 		BlockVector3 startPosition = selection.getFirstPosition();
 		if(startPosition == null) {
 			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
-			return true;
+			return;
 		}
 		BlockVector3 endPosition = selection.getSecondPosition();
 		if(endPosition == null) {
 			MessageSender.sendMessage(player, Message.NO_END_SELECTED);
-			return true;
+			return;
 		}
 
 		playerData.count(startPosition, endPosition);
 
-		return true;
+		return;
 	}
 
-	private boolean scan(String[] args, PlayerData playerData) {
+	private static void scan(String[] args, PlayerData playerData) {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
 			playerData.terminateScan();
-			return true;
+			return;
 		}
 
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.ALREADY_SCANNING);
-			return true;
+			return;
 		}
 		if(playerData.isInspecting()) {
 			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
-			return true;
+			return;
 		}
 
 		WorldEditSelection selection = playerData.getSelection();
@@ -100,53 +124,55 @@ public class ArgumentParser {
 		BlockVector3 origin = selection.getFirstPosition();
 		if(origin == null) {
 			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
-			return true;
+			return;
 		}
 
 		playerData.scan(origin);
 
-		return true;
+		return;
 	}
 	
-	private boolean inspector(String[] args, PlayerData playerData) {
-		if(args.length == 0) return false;
-
+	private static void inspector(String[] args, PlayerData playerData) {
 		switch(args[0]) {
 			case "start" -> {
 				Player player = playerData.getPlayer();
 				if(playerData.isScanning()) {
 					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
-					return true;
+					return;
 				}
 				if(playerData.isInspecting()) {
 					MessageSender.sendMessage(player, Message.ALREADY_INSPECTING);
-					return true;
+					return;
 				}
 
 				playerData.inspect();
 			}
 			case "stop" -> playerData.terminateInspect();
 		}
-		return true;
+		return;
 	}
 	
-	private boolean define_region(String[] args, PlayerData playerData) {
+	private static void define_region(String[] args, PlayerData playerData) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
+			return;
 		}
 
 		Region region = playerData.updateRegion();
 
 		if(region == null) {
 			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
-			return true;
+			return;
 		}
 
 		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, region.toString());
-		return true;
+		return;
 	}
 
+	private static void help(String[] args, PlayerData playerData) {
+		MessageSender.sendMessage(playerData.getPlayer(), Message.HELP, syntaxHandler.getOptionsRoot().toSyntaxList());
+	}
 	
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {

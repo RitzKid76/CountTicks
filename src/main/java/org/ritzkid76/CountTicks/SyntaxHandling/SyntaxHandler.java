@@ -2,8 +2,10 @@ package org.ritzkid76.CountTicks.SyntaxHandling;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -35,6 +37,7 @@ public class SyntaxHandler implements TabCompleter {
 					}
 				}
 				case String s -> focus = entry.add(s);
+				case Boolean b -> focus.setRequired(b);
 				default -> {}
 			}
 		}
@@ -49,7 +52,7 @@ public class SyntaxHandler implements TabCompleter {
 			}
 
 			String current = args[args.length - 1];
-			List<String> candidates = tree.keys();
+			Set<String> candidates = tree.keys();
 			List<String> output = new ArrayList<>();
 
 			for(String candidate : candidates) {
@@ -64,11 +67,29 @@ public class SyntaxHandler implements TabCompleter {
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
 
-	public boolean isValidSyntax(String[] args) {
-		List<String> tabCompletion = getTabCompletionList(args);
+	// public boolean isValidSyntax(String[] args) {
+	// 	List<String> tabCompletion = getTabCompletionList(args);
 
-		if(tabCompletion == null) return false;
-		if(tabCompletion.isEmpty()) return false;
+	// 	if(tabCompletion == null) return false;
+	// 	if(tabCompletion.isEmpty()) return false;
+
+	// 	return true;
+	// }
+
+	public boolean isValidSyntax(String[] args) {
+		SyntaxEntry tree = options;
+
+		for(int i = 0; i < args.length; i++) {
+			tree = tree.get(args[i]);
+			if(tree == null)
+				return false;
+		}
+
+		for (String key : tree.keys()) {
+			SyntaxEntry entry = tree.get(key);
+			if(entry.isRequired() && !Arrays.asList(args).contains(key))
+				return false;
+		}
 
 		return true;
 	}

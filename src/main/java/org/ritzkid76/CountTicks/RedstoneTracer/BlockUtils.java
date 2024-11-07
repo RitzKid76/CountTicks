@@ -1,13 +1,13 @@
 package org.ritzkid76.CountTicks.RedstoneTracer;
 
-import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.util.BlockIterator;
+
+import com.sk89q.worldedit.math.BlockVector3;
 
 public class BlockUtils {
 	public static Block blockFromBlockVector3(World world, BlockVector3 blockVector) {

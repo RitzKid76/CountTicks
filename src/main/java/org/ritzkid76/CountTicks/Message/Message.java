@@ -6,7 +6,9 @@ public enum Message {
 	LOADED(MessageType.INFO),
 	UNLOADED(MessageType.INFO),
 
+	HELP(MessageType.INFO),
 	CONSOLE_USE(MessageType.ERROR),
+	INVALID_SYNTAX(MessageType.ERROR),
 
 	SET_SCAN_REGION(MessageType.INFO),
 	SCAN_COMPLETE(MessageType.INFO),
