@@ -39,7 +39,7 @@ public enum Message {
 	START_CHANGED(MessageType.WARNING);
 
 
-	
+
 	private final String message;
 	private final MessageType type;
 

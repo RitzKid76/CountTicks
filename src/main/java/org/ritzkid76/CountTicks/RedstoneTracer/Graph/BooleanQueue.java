@@ -12,9 +12,10 @@ public class BooleanQueue<T> {
     public BooleanQueue(Predicate<T> p) {
         priority = p;
     }
-    
+
     public void add(T element) {
-        if(priority.test(element)) primary.add(element);
+        if(priority.test(element))
+            primary.add(element);
         else secondary.add(element);
     }
 
@@ -29,7 +30,8 @@ public class BooleanQueue<T> {
     }
 
     public T remove() {
-        if(!primary.isEmpty()) return primary.remove();
+        if(!primary.isEmpty())
+            return primary.remove();
         return secondary.remove();
     }
 }

@@ -59,7 +59,8 @@ public class PlayerData {
 		return !scanStatus.isDone(); 
 	}
 	public boolean isInspecting() {
-		if(inspectStatus == null) return false;
+		if(inspectStatus == null)
+			return false;
 		return !inspectStatus.isDone();
 	}
 
@@ -72,8 +73,9 @@ public class PlayerData {
 		}
 
 		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
-		
-		if(returnTo == null) return;
+
+		if(returnTo == null)
+			return;
 		returnTo.run();
 	}
 	public void terminateScan() { terminateScan(false); }
@@ -81,11 +83,13 @@ public class PlayerData {
 		Player player = getPlayer();
 
 		if(!isScanning()) {
-			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
+			if(!silent)
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
 			return;
 		};
 		scanExecutor.shutdownNow();
-		if(!silent) MessageSender.sendMessage(player, Message.STOP_SCAN);
+		if(!silent)
+			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 
 	public void scan(BlockVector3 origin) { scan(origin, null); }
@@ -101,7 +105,7 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
 			return;
 		}
-		
+
 		MessageSender.sendMessage(player, Message.START_SCAN);
 		scanExecutor = Executors.newSingleThreadExecutor();
 		scanStatus = scanExecutor.submit(() -> {
@@ -110,17 +114,19 @@ public class PlayerData {
 			} catch (ThreadCanceledException e) {}
 		});
 	}
-	
+
 	public void terminateInspect() { terminateInspect(false); }
 	public void terminateInspect(boolean silent) {
 		Player player = getPlayer();
 
 		if(!isInspecting()) {
-			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
+			if(!silent)
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
 		};
 		inspectExecutor.shutdownNow();
-		if(!silent) MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
+		if(!silent)
+			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
 	public void inspect() {
@@ -142,12 +148,12 @@ public class PlayerData {
 					continue;
 				}
 				lastViewBlock = viewedBlock;
-				
+
 				ArgumentParser.sendInspectorMessageSubtitle(player, graph.fastestPath(viewedBlock));
 			}
 		});
 	}
-	
+
 	private BlockVector3 callbackEndpoint;
 	private void countCallback() {
 		ArgumentParser.sendInspectorMessage(getPlayer(), graph.fastestPath(callbackEndpoint));
@@ -155,7 +161,8 @@ public class PlayerData {
 	public void count(BlockVector3 start, BlockVector3 end) {
 		callbackEndpoint = end;
 
-		if(scanValidation(start, this::countCallback)) return;
+		if(scanValidation(start, this::countCallback))
+			return;
 		countCallback();
 	}
 
@@ -175,9 +182,10 @@ public class PlayerData {
 
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
 
-	public boolean hasScanned() { 
-		if(graph == null) return false;
-		return graph.totalScanned() > 0; 
+	public boolean hasScanned() {
+		if(graph == null)
+			return false;
+		return graph.totalScanned() > 0;
 	}
 
 	public void shutdown() {

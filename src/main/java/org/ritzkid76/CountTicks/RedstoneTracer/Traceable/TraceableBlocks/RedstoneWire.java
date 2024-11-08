@@ -47,7 +47,8 @@ public class RedstoneWire extends Traceable {
 		if(type == ConnectionType.OUTPUTS) {
 			org.bukkit.block.data.type.RedstoneWire.Connection blockDataConnection = data.get(connection.toBlockFace());
 
-			if(blockDataConnection == null) return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
+			if(blockDataConnection == null)
+				return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
 
 			return
 				noConnection(blockDataConnection) ||
@@ -80,7 +81,8 @@ public class RedstoneWire extends Traceable {
 	}
 
 	private boolean diagonalDiode(ConnectionDirection direction) {
-		if(!ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction)) return false;
+		if(!ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction))
+			return false;
 
 		BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
 

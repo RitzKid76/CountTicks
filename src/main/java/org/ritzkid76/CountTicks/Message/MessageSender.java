@@ -27,13 +27,13 @@ public class MessageSender {
             messages.put(langKey, message);
 		}
 	}
-    
+
     private static String colorize(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
     public static String getMessage(String message) {
-        return messages.getOrDefault(message, "&cunformatted: " + message); 
+        return messages.getOrDefault(message, "&cunformatted: " + message);
     }
 
     private static String getReplacementString(String message, String... replacements) {

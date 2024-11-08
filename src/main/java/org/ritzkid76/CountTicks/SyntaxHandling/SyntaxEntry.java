@@ -16,7 +16,8 @@ public class SyntaxEntry {
 
 	public Set<String> keys() { return entries.keySet(); }
 	public SyntaxEntry get(String string) {
-		if(string.isEmpty()) return this;
+		if(string.isEmpty())
+            return this;
 		return entries.get(string);
 	}
 
@@ -60,7 +61,7 @@ public class SyntaxEntry {
             SyntaxEntry subEntry = option.getValue();
 
             output.append(arg);
-            if(!subEntry.isEmpty()) 
+            if(!subEntry.isEmpty())
                 output.append(" ").append(subEntry.toSyntaxString());
             output.append("\n");
         }

@@ -49,7 +49,8 @@ public class RedstoneTracerGraphNodeConnections {
 	}
 
 	public void removeConnection(BlockVector3 connection) {
-		if(connections.remove(connection)) type = type.typeFromConnectionCount(connections.size());
+		if(connections.remove(connection))
+			type = type.typeFromConnectionCount(connections.size());
 	}
 
 	public void combine(RedstoneTracerGraphNodeConnections connection) {

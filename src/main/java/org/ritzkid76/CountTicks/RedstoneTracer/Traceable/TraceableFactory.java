@@ -55,7 +55,8 @@ public class TraceableFactory {
 	}
 
 	private static Traceable attemptSolidBlockCreation(BlockData blockData, BlockVector3 position, World world) {
-		if(!BlockUtils.isSolidBlock(blockData)) return null; // catch transparent blocks
+		if(!BlockUtils.isSolidBlock(blockData))
+			return null; // catch transparent blocks
 		return new SolidBlock(blockData, position, world);
 	}
 }

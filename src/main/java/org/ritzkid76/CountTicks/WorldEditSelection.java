@@ -33,14 +33,14 @@ public class WorldEditSelection {
 	public Region getRegion() { 
 		try {
 			return localSession.getSelection(weWorld); 
-		} catch (Exception ignored) {}
+		} catch (Exception e) {}
 		return null;
 	}
 
 	public RegionSelector getRegionSelector() {
 		try {
 			return localSession.getRegionSelector(weWorld);
-		} catch (Exception ignored) {}
+		} catch (Exception e) {}
 		return null;
 	}
 
@@ -59,11 +59,13 @@ public class WorldEditSelection {
 
 	public BlockVector3 getSecondPosition() {
 		BlockVector3 pos1 = getFirstPosition();
-		if(pos1 == null) return null;
+		if(pos1 == null)
+			return null;
 
 		Region selection = getRegion();
-		if(selection == null) return null;
-		
+		if(selection == null)
+			return null;
+
 		BlockVector3 min = selection.getMinimumPoint();
 		BlockVector3 max = selection.getMaximumPoint();
 

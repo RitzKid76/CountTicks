@@ -51,7 +51,7 @@ public class ArgumentParser {
 			getUsage(args, playerData);
 			return;
 		}
-		
+
 		if(args.length == 0) {
 			count(args, playerData);
 			return;
@@ -118,7 +118,7 @@ public class ArgumentParser {
 		}
 
 		WorldEditSelection selection = playerData.getSelection();
-		
+
 		BlockVector3 origin = selection.getFirstPosition();
 		if(origin == null) {
 			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
@@ -129,7 +129,7 @@ public class ArgumentParser {
 
 		return;
 	}
-	
+
 	private static void inspector(String[] args, PlayerData playerData) {
 		switch(args[0]) {
 			case "start" -> {
@@ -149,7 +149,7 @@ public class ArgumentParser {
 		}
 		return;
 	}
-	
+
 	private static void define_region(String[] args, PlayerData playerData) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
@@ -171,7 +171,7 @@ public class ArgumentParser {
 	private static void help(String[] args, PlayerData playerData) {
 		MessageSender.sendMessage(playerData.getPlayer(), Message.HELP, syntaxHandler.getOptionsRoot().toSyntaxList());
 	}
-	
+
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
 			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, path.delay()/2 + "");

@@ -38,7 +38,7 @@ public enum ConnectionDirection {
 			default -> { return null; }
 		}
 	}
-	
+
 	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
 		BlockVector3 offset = BlockVector3.ZERO;
 

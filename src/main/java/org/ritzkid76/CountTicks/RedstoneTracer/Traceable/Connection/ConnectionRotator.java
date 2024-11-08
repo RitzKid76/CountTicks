@@ -55,7 +55,8 @@ public class ConnectionRotator {
 
 
 	private static Map<ConnectionDirection, ConnectionDirection> createMapWithInfiniteEntries(ConnectionDirection... entries) {
-		if(entries.length%2 == 1) throw new OddNumerOfInputsException();
+		if(entries.length%2 == 1)
+			throw new OddNumerOfInputsException();
 
 		Map<ConnectionDirection, ConnectionDirection> map = new HashMap<>();
 
@@ -78,7 +79,8 @@ public class ConnectionRotator {
 			default -> {}
 		}
 
-		if(rotatedType == null) return connection;
+		if(rotatedType == null)
+			return connection;
 		return connection.updateDirection(rotatedType);
 	}
 
