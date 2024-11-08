@@ -17,7 +17,6 @@ import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
-import org.ritzkid76.CountTicks.RedstoneTracer.RedstoneTracerPathResult;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
 
@@ -87,8 +86,8 @@ public class RedstoneTracerGraph {
 	}
 
 	public RedstoneTracerGraphPath fastestPath(BlockVector3 destination) {
-		if(!posInBounds(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.OUT_OF_BOUNDS);
-		if(!contains(destination)) return new RedstoneTracerGraphPath(RedstoneTracerPathResult.UNSCANNED_LOCATION);
+		if(!posInBounds(destination)) return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.OUT_OF_BOUNDS);
+		if(!contains(destination)) return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.UNSCANNED_LOCATION);
 
 		return djikstra(positionToNode.get(destination));
 	}
