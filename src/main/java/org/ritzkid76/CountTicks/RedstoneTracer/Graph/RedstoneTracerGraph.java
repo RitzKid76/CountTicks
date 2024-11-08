@@ -11,6 +11,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
@@ -161,7 +162,7 @@ public class RedstoneTracerGraph {
 		return output.toString();
 	}
 
-	public boolean trace() {
+	public boolean trace(BukkitTask task) {
 		Traceable startTraceable;
 
 		try {
@@ -175,7 +176,7 @@ public class RedstoneTracerGraph {
 		}
 
 		while (!queue.isEmpty()) {
-			if(wasCanceled())
+			if(task.isCancelled())
 				throw new ThreadCanceledException();
 
 			Traceable current = queue.remove();
@@ -192,11 +193,7 @@ public class RedstoneTracerGraph {
 
 		return true;
 	}
-
-	private boolean wasCanceled() {
-		return Thread.currentThread().isInterrupted();
-	}
-
+	
 	private boolean candidateRemoval(Traceable candidate) {
 		BlockVector3 pos = candidate.getPosition();
 		return

@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
@@ -22,6 +23,7 @@ import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
 	public World world;
+	public BukkitScheduler scheduler;
 
 	@Override
 	public void onLoad() {
@@ -30,7 +32,10 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		File dataFolder = getPlugin().getDataFolder();
 
 		ArgumentParser.setDataFolder(dataFolder);
+		ArgumentParser.setPlugin(getPlugin());
 		MessageSender.populateOptions(dataFolder);
+
+		scheduler = getPlugin().getServer().getScheduler();
 
 		MessageSender.sendConsoleMessage(Message.LOADED);
 	}
@@ -39,7 +44,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	public void onUnload() {
 		disableListeners();
 
-		PlayerDataContainer.shutdown();
+		scheduler.cancelTasks(getPlugin());
 
 		MessageSender.sendConsoleMessage(Message.UNLOADED);
 	}

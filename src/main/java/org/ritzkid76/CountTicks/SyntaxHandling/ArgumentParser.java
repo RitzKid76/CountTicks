@@ -7,6 +7,8 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.ritzkid76.CountTicks.CountTicksCommand;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
@@ -19,9 +21,13 @@ import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
 	private static SyntaxHandler syntaxHandler;
+	private static Plugin plugin;
 
 	public static void setDataFolder(File dataFolder) {
 		syntaxHandler = new SyntaxHandler(dataFolder);
+	}
+	public static void setPlugin(Plugin p) {
+		plugin = p;
 	}
 
 	public static List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
@@ -30,7 +36,7 @@ public class ArgumentParser {
 
 	private static void getUsage(String[] args, PlayerData playerData) {
 		SyntaxEntry current = syntaxHandler.getOptionsRoot();
-		StringBuilder output = new StringBuilder("/countticks ");
+		StringBuilder output = new StringBuilder("/countticks "); //TODO replace this with the label
 
 		for(String arg : args) {
 			SyntaxEntry next = current.get(arg);
@@ -95,7 +101,7 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.count(startPosition, endPosition);
+		playerData.count(startPosition, endPosition, plugin);
 	}
 
 	private static void scan(String[] args, PlayerData playerData) {
@@ -123,7 +129,7 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.scan(origin);
+		playerData.scan(origin, plugin);
 	}
 
 	private static void inspector(String[] args, PlayerData playerData) {
@@ -139,7 +145,7 @@ public class ArgumentParser {
 					return;
 				}
 
-				playerData.inspect();
+				playerData.inspect(plugin);
 			}
 			case "stop" -> playerData.terminateInspect();
 		}

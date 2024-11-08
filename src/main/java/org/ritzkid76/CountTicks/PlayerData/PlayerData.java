@@ -1,13 +1,13 @@
 package org.ritzkid76.CountTicks.PlayerData;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
@@ -28,11 +28,8 @@ public class PlayerData {
 	private RedstoneTracerGraph graph;
 	private WorldEditSelection selection;
 
-	private ExecutorService scanExecutor;
-	private Future<?> scanStatus;
-
-	private ExecutorService inspectExecutor;
-	private Future<?> inspectStatus;
+	private BukkitTask scanTask;
+	private BukkitTask inspectTask;
 
 	public PlayerData(UUID u) {
 		uuid = u;
@@ -61,17 +58,19 @@ public class PlayerData {
 	}
 
 	public boolean isScanning() {
-		if(scanExecutor == null) return false;
-		return !scanStatus.isDone();
+		if(scanTask == null)
+			return false;
+		return !scanTask.isCancelled();
 	}
 	public boolean isInspecting() {
-		if(inspectStatus == null)
+		if(inspectTask == null)
 			return false;
-		return !inspectStatus.isDone();
+		return !inspectTask.isCancelled();
 	}
 
 	private void scanCallback(boolean success, Runnable returnTo) {
 		Player player = getPlayer();
+		scanTask.cancel(); // has to be done since this flag is not set on task completion
 
 		if(!success) {
 			MessageSender.sendMessage(player, Message.INVALID_START);
@@ -95,15 +94,17 @@ public class PlayerData {
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
 			return;
 		}
-		scanExecutor.shutdownNow();
+
+		scanTask.cancel();
+		
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 
-	public void scan(BlockVector3 origin) {
-		scan(origin, null);
+	public void scan(BlockVector3 origin, Plugin plugin) {
+		scan(origin, null, plugin);
 	}
-	private void scan(BlockVector3 origin, Runnable returnTo) {
+	private void scan(BlockVector3 origin, Runnable returnTo, Plugin plugin) {
 		Player player = getPlayer();
 
 		try {
@@ -117,10 +118,10 @@ public class PlayerData {
 		}
 
 		MessageSender.sendMessage(player, Message.START_SCAN);
-		scanExecutor = Executors.newSingleThreadExecutor();
-		scanStatus = scanExecutor.submit(() -> {
-			try{
-				scanCallback(graph.trace(), returnTo);
+		
+		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			try {
+				scanCallback(graph.trace(scanTask), returnTo);
 			} catch (ThreadCanceledException e) {}
 		});
 	}
@@ -136,12 +137,14 @@ public class PlayerData {
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
 		}
-		inspectExecutor.shutdownNow();
+		
+		inspectTask.cancel();
+
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
-	public void inspect() {
+	public void inspect(Plugin plugin) {
 		Player player = getPlayer();
 
 		if(!hasScanned()) {
@@ -151,47 +154,38 @@ public class PlayerData {
 
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
 
-		inspectExecutor = Executors.newSingleThreadExecutor();
-		inspectStatus = inspectExecutor.submit(() -> {
-			BlockVector3 lastViewBlock = null;
+		AtomicReference<BlockVector3> lastViewBlock = new AtomicReference<>(null);
+		inspectTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+			BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
 
-			while(!Thread.currentThread().isInterrupted()) {
-				BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
-
-				if(
-					viewedBlock == null ||
-					viewedBlock.equals(lastViewBlock)
-				) {
-					continue;
-				}
-				lastViewBlock = viewedBlock;
-				MessageSender.sendMessage(player, graph.get(viewedBlock).toString());
-					
-				ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
-			}
-		});
+			if(viewedBlock == null || viewedBlock.equals(lastViewBlock.get()))
+				return;
+			lastViewBlock.set(viewedBlock);
+				
+			ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
+		}, 0, 1);
 	}
 
 	private BlockVector3 callbackEndpoint;
 	private void countCallback() {
 		ArgumentParser.sendInspectorMessage(getPlayer(), graph.findFastestPath(callbackEndpoint));
 	}
-	public void count(BlockVector3 start, BlockVector3 end) {
+	public void count(BlockVector3 start, BlockVector3 end, Plugin plugin) {
 		callbackEndpoint = end;
 
-		if(scanValidation(start, this::countCallback))
+		if(scanValidation(start, this::countCallback, plugin))
 			return;
 		countCallback();
 	}
 
-	private boolean scanValidation(BlockVector3 origin, Runnable callback) {
+	private boolean scanValidation(BlockVector3 origin, Runnable callback, Plugin plugin) {
 		if(!hasScanned()) {
-			scan(origin, callback);
+			scan(origin, callback, plugin);
 			return true;
 		}
 		if(graph.getOrigin() != origin) {
 			MessageSender.sendMessage(getPlayer(), Message.START_CHANGED);
-			scan(origin, this::countCallback);
+			scan(origin, this::countCallback, plugin);
 			return true;
 		}
 
