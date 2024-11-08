@@ -75,8 +75,8 @@ public class SyntaxHandler implements TabCompleter {
 	public boolean isValidSyntax(String[] args) {
 		SyntaxEntry tree = options;
 
-		for(int i = 0; i < args.length; i++) {
-			tree = tree.get(args[i]);
+		for (String arg : args) {
+			tree = tree.get(arg);
 			if(tree == null)
 				return false;
 		}

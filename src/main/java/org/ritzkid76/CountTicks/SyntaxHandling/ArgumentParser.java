@@ -65,7 +65,7 @@ public class ArgumentParser {
 				methodName,
 				String[].class,
 				PlayerData.class
-			).invoke(null, (Object) args, playerData);
+			).invoke(null, args, playerData);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -96,8 +96,6 @@ public class ArgumentParser {
 		}
 
 		playerData.count(startPosition, endPosition);
-
-		return;
 	}
 
 	private static void scan(String[] args, PlayerData playerData) {
@@ -126,8 +124,6 @@ public class ArgumentParser {
 		}
 
 		playerData.scan(origin);
-
-		return;
 	}
 
 	private static void inspector(String[] args, PlayerData playerData) {
@@ -147,7 +143,6 @@ public class ArgumentParser {
 			}
 			case "stop" -> playerData.terminateInspect();
 		}
-		return;
 	}
 
 	private static void define_region(String[] args, PlayerData playerData) {
@@ -164,8 +159,7 @@ public class ArgumentParser {
 			return;
 		}
 
-		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, region.toString());
-		return;
+		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, formatRegion(region));
 	}
 
 	private static void help(String[] args, PlayerData playerData) {
@@ -174,7 +168,7 @@ public class ArgumentParser {
 
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
-			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, path.delay()/2 + "");
+			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, (path.delay() / 2) + "");
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendSubtitle(player, Message.UNSCANNED_LOCATION_SHORT);
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendSubtitle(player, Message.OUT_OF_BOUNDS_SHORT);
 		}
@@ -182,7 +176,7 @@ public class ArgumentParser {
 
 	public static void sendInspectorMessage(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
-			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, path.delay()/2 + "");
+			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, (path.delay() / 2) + "");
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 		}

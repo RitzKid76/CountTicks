@@ -42,7 +42,7 @@ public class RedstoneTracerGraph {
 
 		if(bounds == null)
 			throw new BoundsUndefinedException();
-		if(!posInBounds(origin))
+		if(!isInBounds(origin))
 			throw new PositionOutOfRegionBounds();
 
 		world = Bukkit.getWorld(bounds.getWorld().getName());
@@ -91,16 +91,16 @@ public class RedstoneTracerGraph {
 		return contents.contains(pos);
 	}
 
-	public RedstoneTracerGraphPath fastestPath(BlockVector3 destination) {
-		if(!posInBounds(destination))
+	public RedstoneTracerGraphPath findFastestPath(BlockVector3 destination) {
+		if(!isInBounds(destination))
 			return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.OUT_OF_BOUNDS);
 		if(!contains(destination))
 			return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.UNSCANNED_LOCATION);
 
-		return djikstra(positionToNode.get(destination));
+		return djikstraFastestPath(positionToNode.get(destination));
 	}
 
-	private RedstoneTracerGraphPath djikstra(RedstoneTracerGraphNode destination) {
+	private RedstoneTracerGraphPath djikstraFastestPath(RedstoneTracerGraphNode destination) {
 		PriorityQueue<RedstoneTracerGraphPath> queue = new PriorityQueue<>(
 			Comparator.comparingInt(RedstoneTracerGraphPath::delay)
 		);
@@ -139,7 +139,7 @@ public class RedstoneTracerGraph {
 		return new RedstoneTracerGraphPath(new LinkedList<>(), null);
 	}
 
-	public boolean posInBounds(BlockVector3 pos) {
+	public boolean isInBounds(BlockVector3 pos) {
 		return bounds.contains(pos);
 	}
 
@@ -152,7 +152,8 @@ public class RedstoneTracerGraph {
 
 			if(stored == pos)
 				output.append(" -> ");
-			else output.append(" => ");
+			else
+				output.append(" => ");
 
 			output.append(positionToNode.get(pos)).append("\n");
 		}
@@ -175,7 +176,6 @@ public class RedstoneTracerGraph {
 
 		while (!queue.isEmpty()) {
 			if(wasCanceled())
-
 				throw new ThreadCanceledException();
 
 			Traceable current = queue.remove();
@@ -201,7 +201,7 @@ public class RedstoneTracerGraph {
 		BlockVector3 pos = candidate.getPosition();
 		return
 			visited.contains(pos) ||
-			!posInBounds(pos);
+			!isInBounds(pos);
 	}
 
 	public int totalScanned() {
@@ -212,5 +212,8 @@ public class RedstoneTracerGraph {
 	}
 	public BlockVector3 getOrigin() {
 		return origin;
+	}
+	public RedstoneTracerGraphNode get(BlockVector3 pos) {
+		return positionToNode.get(pos);
 	}
 }

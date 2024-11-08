@@ -11,7 +11,7 @@ public class Connection {
 		powerType = type;
 	}
 
-	public boolean isCompatableWith(Connection other) {
+	public boolean isCompatibleWith(Connection other) {
 		return (
 			powerType.compare(other.powerType) <= 0 &&
 				connectionDirection == other.connectionDirection

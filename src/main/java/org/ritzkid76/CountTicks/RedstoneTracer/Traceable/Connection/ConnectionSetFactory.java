@@ -16,7 +16,6 @@ public class ConnectionSetFactory {
 		return this;
 	}
 
-
 	public ConnectionSetFactory add(Set<Connection> direction) {
 		connections.addAll(direction);
 		return this;

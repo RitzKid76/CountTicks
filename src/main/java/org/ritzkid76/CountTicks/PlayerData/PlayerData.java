@@ -94,7 +94,7 @@ public class PlayerData {
 			if(!silent)
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
 			return;
-		};
+		}
 		scanExecutor.shutdownNow();
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
@@ -135,7 +135,7 @@ public class PlayerData {
 			if(!silent)
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
-		};
+		}
 		inspectExecutor.shutdownNow();
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
@@ -158,6 +158,7 @@ public class PlayerData {
 			while(!Thread.currentThread().isInterrupted()) {
 				BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
 
+				
 				if(
 					viewedBlock == null ||
 					viewedBlock.equals(lastViewBlock)
@@ -165,15 +166,16 @@ public class PlayerData {
 					continue;
 				}
 				lastViewBlock = viewedBlock;
-
-				ArgumentParser.sendInspectorMessageSubtitle(player, graph.fastestPath(viewedBlock));
+				MessageSender.sendMessage(player, graph.get(viewedBlock).toString());
+					
+				ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
 			}
 		});
 	}
 
 	private BlockVector3 callbackEndpoint;
 	private void countCallback() {
-		ArgumentParser.sendInspectorMessage(getPlayer(), graph.fastestPath(callbackEndpoint));
+		ArgumentParser.sendInspectorMessage(getPlayer(), graph.findFastestPath(callbackEndpoint));
 	}
 	public void count(BlockVector3 start, BlockVector3 end) {
 		callbackEndpoint = end;
@@ -198,7 +200,7 @@ public class PlayerData {
 	}
 
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) {
-		return graph.fastestPath(pos);
+		return graph.findFastestPath(pos);
 	}
 
 	public boolean hasScanned() {

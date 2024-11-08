@@ -18,58 +18,58 @@ public class MessageSender {
 		File yamlFile = new File(dataFolder, "Messages.yaml");
 		FileConfiguration yamlConfig = YamlConfiguration.loadConfiguration(yamlFile);
 
-	    Map<String, Object> msgs = yamlConfig.getValues(false);
+		Map<String, Object> msgs = yamlConfig.getValues(false);
 
 		for(Map.Entry<String, Object> entry : msgs.entrySet()) {
-	        String langKey = entry.getKey();
-	        String message = (String) entry.getValue();
+			String langKey = entry.getKey();
+			String message = (String) entry.getValue();
 
-	        messages.put(langKey, message);
+			messages.put(langKey, message);
 		}
 	}
 
 	private static String colorize(String message) {
-	    return ChatColor.translateAlternateColorCodes('&', message);
+		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	public static String getMessage(String message) {
-	    return messages.getOrDefault(message, "&cunformatted: " + message);
+		return messages.getOrDefault(message, "&cunformatted: " + message);
 	}
 
 	private static String getReplacementString(String message, String... replacements) {
-	    for(String replacement : replacements) {
-	        message = message.replaceFirst("\\$", replacement);
-	    }
+		for(String replacement : replacements) {
+			message = message.replaceFirst("\\$", replacement);
+		}
 
-	    return message;
+		return message;
 	}
 
 	public static void sendConsoleMessage(Message message) {
-	    sendConsoleMessage(message.get());
+		sendConsoleMessage(message.get());
 	}
 	public static void sendConsoleMessage(String message) {
-	    sendMessage(Bukkit.getConsoleSender(), message);
+		sendMessage(Bukkit.getConsoleSender(), message);
 	}
 
 	public static void sendMessage(CommandSender sender, Message message) {
-	    sendMessage(sender, message.get());
+		sendMessage(sender, message.get());
 	}
 	public static void sendMessage(CommandSender sender, String message) {
-	    sender.sendMessage(colorize(message));
+		sender.sendMessage(colorize(message));
 	}
 	public static void sendMessage(CommandSender sender, Message message, String... replacements) {
-	    sendMessage(sender, getReplacementString(message.get(), replacements));
+		sendMessage(sender, getReplacementString(message.get(), replacements));
 	}
 
 	public static void sendSubtitle(CommandSender sender, Message message) {
-	    sendSubtitle(sender, message.getClean());
+		sendSubtitle(sender, message.getClean());
 	}
 	public static void sendSubtitle(CommandSender sender, String message) {
-	    Player player = (Player) sender;
-	    player.resetTitle();
-	    player.sendTitle("", colorize(message), 0, 40, 20);
+		Player player = (Player) sender;
+		player.resetTitle();
+		player.sendTitle("", colorize(message), 0, 40, 20);
 	}
 	public static void sendSubtitle(CommandSender sender, Message message, String... replacements) {
-	    sendSubtitle(sender, getReplacementString(message.getClean(), replacements));
+		sendSubtitle(sender, getReplacementString(message.getClean(), replacements));
 	}
 }
