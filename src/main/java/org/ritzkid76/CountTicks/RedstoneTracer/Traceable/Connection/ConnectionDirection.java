@@ -28,15 +28,15 @@ public enum ConnectionDirection {
 	public static final EnumSet<ConnectionDirection> WESTERN = EnumSet.of(WEST, WEST_UP, WEST_DOWN);
 
 	public static BlockFace toBlockFace(ConnectionDirection direction) {
-		switch(direction) {
-			case ConnectionDirection c when NORTHERN.contains(c) -> { return BlockFace.NORTH; }
-			case ConnectionDirection c when EASTERN.contains(c) -> { return BlockFace.EAST; }
-			case ConnectionDirection c when SOUTHERN.contains(c) -> { return BlockFace.SOUTH; }
-			case ConnectionDirection c when WESTERN.contains(c) -> { return BlockFace.WEST; }
-			case ConnectionDirection c when UPWARD.contains(c) -> { return BlockFace.UP; }
-			case ConnectionDirection c when DOWNWARD.contains(c) -> { return BlockFace.DOWN; }
-			default -> { return null; }
-		}
+		return switch(direction) {
+			case ConnectionDirection c when NORTHERN.contains(c) -> BlockFace.NORTH;
+			case ConnectionDirection c when EASTERN.contains(c) -> BlockFace.EAST;
+			case ConnectionDirection c when SOUTHERN.contains(c) -> BlockFace.SOUTH;
+			case ConnectionDirection c when WESTERN.contains(c) -> BlockFace.WEST;
+			case ConnectionDirection c when UPWARD.contains(c) -> BlockFace.UP;
+			case ConnectionDirection c when DOWNWARD.contains(c) -> BlockFace.DOWN;
+			default -> null;
+		};
 	}
 
 	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
@@ -60,12 +60,12 @@ public enum ConnectionDirection {
 	}
 
 	public static ConnectionDirection toCardinalDirection(ConnectionDirection direction) {
-		switch(direction) {
-			case ConnectionDirection c when NORTHERN.contains(c) -> { return NORTH; }
-			case ConnectionDirection c when EASTERN.contains(c) -> { return EAST; }
-			case ConnectionDirection c when SOUTHERN.contains(c) -> { return SOUTH; }
-			case ConnectionDirection c when WESTERN.contains(c) -> { return WEST; }
-			default -> { return null; }
-		}
+		return switch(direction) {
+			case ConnectionDirection c when NORTHERN.contains(c) -> NORTH;
+			case ConnectionDirection c when EASTERN.contains(c) -> EAST;
+			case ConnectionDirection c when SOUTHERN.contains(c) -> SOUTH;
+			case ConnectionDirection c when WESTERN.contains(c) -> WEST;
+			default -> null;
+		};
 	}
 }

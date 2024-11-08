@@ -26,19 +26,19 @@ public class RedstoneTracerGraphNodeConnections {
 		public Type add(Type other) {
 			int sum = this.getValue() + other.getValue();
 
-			switch(sum) {
-				case 0 -> { return NONE; }
-				case 1 -> { return SINGLE; }
-				default -> { return MULTIPLE; }
-			}
+			return switch(sum) {
+				case 0 -> NONE;
+				case 1 -> SINGLE;
+				default -> MULTIPLE;
+			};
 		}
 
 		public Type typeFromConnectionCount(int connections) {
-			switch(connections) {
-				case 0 -> { return Type.NONE; }
-				case 1 -> { return Type.SINGLE; }
-				default -> { return Type.MULTIPLE; }
-			}
+			return switch(connections) {
+				case 0 -> Type.NONE;
+				case 1 -> Type.SINGLE;
+				default -> Type.MULTIPLE;
+			};
 		}
 	}
 
