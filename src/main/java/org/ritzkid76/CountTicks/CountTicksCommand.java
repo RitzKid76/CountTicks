@@ -81,7 +81,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		}
 
 		PlayerData playerData = PlayerDataContainer.get(player);
-		ArgumentParser.run(args, playerData);
+		ArgumentParser.run(args, playerData, label);
 
 		return true; // dont want to use the bukkit default useage
 	}
@@ -101,7 +101,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		return new BukkitCommand[]{
 				new BukkitCommand("countticks")
 						.setUsageMessage("this should not happen .,;,;,.")
-						.setPermission("javaloader.countticks.counttickscommand")
+						.setPermission("javaloader.countticks.command")
 						.setPermissionMessage("You do not have permission to use this command.")
 						.setAliases("ct")
 						.setExecutor(this)

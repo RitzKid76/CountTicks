@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
-import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
@@ -101,19 +101,19 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 
-	public void scan(BlockVector3 origin, Plugin plugin) {
-		scan(origin, null, plugin);
+	public void scan(BlockVector3 origin, Plugin plugin, String label) {
+		scan(origin, null, plugin, label);
 	}
-	private void scan(BlockVector3 origin, Runnable returnTo, Plugin plugin) {
+	private void scan(BlockVector3 origin, Runnable returnTo, Plugin plugin, String label) {
 		Player player = getPlayer();
 
 		try {
 			graph = new RedstoneTracerGraph(origin, playerRegion);
-		} catch (PositionOutOfRegionBounds e) {
+		} catch (PositionOutOfRegionBoundsException e) {
 			MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 			return;
 		} catch (BoundsUndefinedException e) {
-			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION, label);
 			return;
 		}
 
@@ -170,22 +170,22 @@ public class PlayerData {
 	private void countCallback() {
 		ArgumentParser.sendInspectorMessage(getPlayer(), graph.findFastestPath(callbackEndpoint));
 	}
-	public void count(BlockVector3 start, BlockVector3 end, Plugin plugin) {
+	public void count(BlockVector3 start, BlockVector3 end, Plugin plugin, String label) {
 		callbackEndpoint = end;
 
-		if(scanValidation(start, this::countCallback, plugin))
+		if(scanValidation(start, this::countCallback, plugin, label))
 			return;
 		countCallback();
 	}
 
-	private boolean scanValidation(BlockVector3 origin, Runnable callback, Plugin plugin) {
+	private boolean scanValidation(BlockVector3 origin, Runnable callback, Plugin plugin, String label) {
 		if(!hasScanned()) {
-			scan(origin, callback, plugin);
+			scan(origin, callback, plugin, label);
 			return true;
 		}
 		if(graph.getOrigin() != origin) {
 			MessageSender.sendMessage(getPlayer(), Message.START_CHANGED);
-			scan(origin, this::countCallback, plugin);
+			scan(origin, this::countCallback, plugin, label);
 			return true;
 		}
 

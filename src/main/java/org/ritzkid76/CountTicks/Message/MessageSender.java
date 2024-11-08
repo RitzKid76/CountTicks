@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.ritzkid76.CountTicks.Exceptions.InvalidMessageParameterLengthException;
 
 public class MessageSender {
 	private static final Map<String, String> messages = new HashMap<>();
@@ -36,7 +37,16 @@ public class MessageSender {
 		return messages.getOrDefault(message, "&cunformatted: " + message);
 	}
 
-	private static String getReplacementString(String message, String... replacements) {
+	private static String getReplacementString(Message message, String... replacements) {
+		return replace(message.get(), message.parameterCount(), replacements);
+	}
+	private static String getCleanReplacementString(Message message, String... replacements) {
+		return replace(message.getClean(), message.parameterCount(), replacements);
+	}
+	private static String replace(String message, int parameters, String... replacements) {
+		if(replacements.length != parameters)
+			throw new InvalidMessageParameterLengthException();
+
 		for(String replacement : replacements) {
 			message = message.replaceFirst("\\$", replacement);
 		}
@@ -52,13 +62,15 @@ public class MessageSender {
 	}
 
 	public static void sendMessage(CommandSender sender, Message message) {
+		if(message.parameterCount() > 0)
+			throw new InvalidMessageParameterLengthException();
 		sendMessage(sender, message.get());
 	}
 	public static void sendMessage(CommandSender sender, String message) {
 		sender.sendMessage(colorize(message));
 	}
 	public static void sendMessage(CommandSender sender, Message message, String... replacements) {
-		sendMessage(sender, getReplacementString(message.get(), replacements));
+		sendMessage(sender, getReplacementString(message, replacements));
 	}
 
 	public static void sendSubtitle(CommandSender sender, Message message) {
@@ -70,6 +82,6 @@ public class MessageSender {
 		player.sendTitle("", colorize(message), 0, 40, 20);
 	}
 	public static void sendSubtitle(CommandSender sender, Message message, String... replacements) {
-		sendSubtitle(sender, getReplacementString(message.getClean(), replacements));
+		sendSubtitle(sender, getCleanReplacementString(message, replacements));
 	}
 }

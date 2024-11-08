@@ -8,7 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.ritzkid76.CountTicks.CountTicksCommand;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
@@ -34,9 +33,9 @@ public class ArgumentParser {
 		return syntaxHandler.onTabComplete(sender, command, label, args);
 	}
 
-	private static void getUsage(String[] args, PlayerData playerData) {
+	private static void getUsage(String[] args, PlayerData playerData, String label) {
 		SyntaxEntry current = syntaxHandler.getOptionsRoot();
-		StringBuilder output = new StringBuilder("/countticks "); //TODO replace this with the label
+		StringBuilder output = new StringBuilder();
 
 		for(String arg : args) {
 			SyntaxEntry next = current.get(arg);
@@ -49,17 +48,17 @@ public class ArgumentParser {
 		}
 
 		output.append(current.toSyntaxString());
-		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, output.toString());
+		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, label, output.toString().trim());
 	}
 
-	public static void run(String[] args, PlayerData playerData) {
+	public static void run(String[] args, PlayerData playerData, String label) {
 		if(!syntaxHandler.isValidSyntax(args)) {
-			getUsage(args, playerData);
+			getUsage(args, playerData, label);
 			return;
 		}
 
 		if(args.length == 0) {
-			count(args, playerData);
+			count(args, playerData, label);
 			return;
 		}
 
@@ -70,23 +69,24 @@ public class ArgumentParser {
 			ArgumentParser.class.getDeclaredMethod(
 				methodName,
 				String[].class,
-				PlayerData.class
-			).invoke(null, args, playerData);
+				PlayerData.class,
+				String.class
+			).invoke(null, args, playerData, label);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private static void count(String[] args, PlayerData playerData) {
+	private static void count(String[] args, PlayerData playerData, String label) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
 		if(playerData.isScanning()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
 			return;
 		}
 		if(playerData.isInspecting()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING, label);
 			return;
 		}
 
@@ -101,10 +101,10 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.count(startPosition, endPosition, plugin);
+		playerData.count(startPosition, endPosition, plugin, label);
 	}
 
-	private static void scan(String[] args, PlayerData playerData) {
+	private static void scan(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
@@ -117,7 +117,7 @@ public class ArgumentParser {
 			return;
 		}
 		if(playerData.isInspecting()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING, label);
 			return;
 		}
 
@@ -129,15 +129,15 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.scan(origin, plugin);
+		playerData.scan(origin, plugin, label);
 	}
 
-	private static void inspector(String[] args, PlayerData playerData) {
+	private static void inspector(String[] args, PlayerData playerData, String label) {
 		switch(args[0]) {
 			case "start" -> {
 				Player player = playerData.getPlayer();
 				if(playerData.isScanning()) {
-					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
 					return;
 				}
 				if(playerData.isInspecting()) {
@@ -151,7 +151,7 @@ public class ArgumentParser {
 		}
 	}
 
-	private static void define_region(String[] args, PlayerData playerData) {
+	private static void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
@@ -168,7 +168,7 @@ public class ArgumentParser {
 		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, formatRegion(region));
 	}
 
-	private static void help(String[] args, PlayerData playerData) {
+	private static void help(String[] args, PlayerData playerData, String label) {
 		MessageSender.sendMessage(playerData.getPlayer(), Message.HELP, syntaxHandler.getOptionsRoot().toSyntaxList());
 	}
 

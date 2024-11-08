@@ -14,7 +14,7 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
-import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
@@ -44,7 +44,7 @@ public class RedstoneTracerGraph {
 		if(bounds == null)
 			throw new BoundsUndefinedException();
 		if(!isInBounds(origin))
-			throw new PositionOutOfRegionBounds();
+			throw new PositionOutOfRegionBoundsException();
 
 		world = Bukkit.getWorld(bounds.getWorld().getName());
 	}
