@@ -26,7 +26,9 @@ public class RedstoneWallTorch extends Traceable {
 		.add(ConnectionDirection.UP, PowerType.HARD)
 	.get();
 
-	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
+	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 
 	@Override
 	public TraceableBlockData applyBlockData(BlockData blockData) {

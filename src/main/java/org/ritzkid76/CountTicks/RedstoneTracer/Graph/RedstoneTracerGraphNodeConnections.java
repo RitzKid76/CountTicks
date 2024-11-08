@@ -15,9 +15,13 @@ public class RedstoneTracerGraphNodeConnections {
 
 		private final int value;
 
-		Type(int value) { this.value = value; }
+		Type(int value) {
+			this.value = value;
+		}
 
-		public int getValue() { return value; }
+		public int getValue() {
+			return value;
+		}
 
 		public Type add(Type other) {
 			int sum = this.getValue() + other.getValue();

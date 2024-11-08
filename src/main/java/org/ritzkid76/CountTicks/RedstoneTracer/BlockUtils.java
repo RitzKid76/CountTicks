@@ -15,7 +15,9 @@ public class BlockUtils {
 		return location.getBlock();
 	}
 
-	public static boolean isSolidBlock(BlockData data) { return data.isOccluding(); }
+	public static boolean isSolidBlock(BlockData data) {
+		return data.isOccluding();
+	}
 	public static boolean isSolidBlock(World world, BlockVector3 position) {
 		Block block = blockFromBlockVector3(world, position);
 		return isSolidBlock(block.getBlockData());

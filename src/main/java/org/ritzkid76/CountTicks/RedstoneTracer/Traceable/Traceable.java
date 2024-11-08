@@ -43,7 +43,9 @@ public abstract class Traceable {
 		return position;
 	}
 
-	public int delay() { return gameTickDelay.gameTicks; }
+	public int delay() {
+		return gameTickDelay.gameTicks;
+	}
 	public GameTickDelay getGameTickDelay() {
 		return gameTickDelay;
 	}
@@ -94,10 +96,16 @@ public abstract class Traceable {
 		return result;
 	}
 
-	public RedstoneTracerGraphNode toRedstoneTracerGraphNode() { return new RedstoneTracerGraphNode(position, gameTickDelay); }
+	public RedstoneTracerGraphNode toRedstoneTracerGraphNode() {
+		return new RedstoneTracerGraphNode(position, gameTickDelay);
+	}
 
-	public TraceableBlockData applyBlockData(BlockData blockData) { return new TraceableBlockData(); }
-	public boolean filterConnection(Connection connection, ConnectionType type) {return false; }
+	public TraceableBlockData applyBlockData(BlockData blockData) {
+		return new TraceableBlockData();
+	}
+	public boolean filterConnection(Connection connection, ConnectionType type) {
+		return false;
+	}
 
 	public void getInputDependentPower(Connection connection, PowerType powerType) {
 		switch(powerType) {

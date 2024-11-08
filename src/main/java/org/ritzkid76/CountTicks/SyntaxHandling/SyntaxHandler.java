@@ -68,7 +68,9 @@ public class SyntaxHandler implements TabCompleter {
 		}
 	}
 
-	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) { return getTabCompletionList(args); }
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+		return getTabCompletionList(args);
+	}
 
 	public boolean isValidSyntax(String[] args) {
 		SyntaxEntry tree = options;
@@ -88,5 +90,7 @@ public class SyntaxHandler implements TabCompleter {
 		return true;
 	}
 
-	public SyntaxEntry getOptionsRoot() { return options; }
+	public SyntaxEntry getOptionsRoot() {
+		return options;
+	}
 }

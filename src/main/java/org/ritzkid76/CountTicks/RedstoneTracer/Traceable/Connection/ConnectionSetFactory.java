@@ -40,5 +40,7 @@ public class ConnectionSetFactory {
 		return output;
 	}
 
-	public Set<Connection> get() { return connections; }
+	public Set<Connection> get() {
+		return connections;
+	}
 }

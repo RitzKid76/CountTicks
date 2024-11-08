@@ -23,16 +23,18 @@ public class WorldEditSelection {
 		localSession = getLocalSession();
 	}
 
-	private int getOppositeCoordinate(int min, int max, int pos1Coord) { return (min == pos1Coord)? max : min; }
+	private int getOppositeCoordinate(int min, int max, int pos1Coord) {
+		return (min == pos1Coord)? max : min;
+	}
 
 	private LocalSession getLocalSession() {
 		SessionManager sessionManager = WorldEdit.getInstance().getSessionManager();
 		return sessionManager.get(wePlayer);
 	}
 
-	public Region getRegion() { 
+	public Region getRegion() {
 		try {
-			return localSession.getSelection(weWorld); 
+			return localSession.getSelection(weWorld);
 		} catch (Exception e) {}
 		return null;
 	}
@@ -45,7 +47,10 @@ public class WorldEditSelection {
 	}
 
 	public BlockVector3[] getSelection() {
-		return new BlockVector3[] {getFirstPosition(), getSecondPosition()};
+		return new BlockVector3[] {
+			getFirstPosition(),
+			getSecondPosition()
+		};
 	}
 
 	public BlockVector3 getFirstPosition() {

@@ -27,7 +27,9 @@ public class RedstoneWire extends Traceable {
 
 	private Map<BlockFace, org.bukkit.block.data.type.RedstoneWire.Connection> data;
 
-	public RedstoneWire(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
+	public RedstoneWire(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 
 	@Override
 	public TraceableBlockData applyBlockData(BlockData blockData) {
@@ -61,8 +63,12 @@ public class RedstoneWire extends Traceable {
 
 	private static boolean noConnection(org.bukkit.block.data.type.RedstoneWire.Connection connection) {
 		switch(connection) {
-			case UP, SIDE-> { return false; }
-			default -> { return true; }
+			case UP, SIDE-> {
+				return false;
+			}
+			default -> {
+				return true;
+			}
 		}
 	}
 
@@ -72,7 +78,9 @@ public class RedstoneWire extends Traceable {
 		switch(direction) {
 			case ConnectionDirection c when ConnectionDirection.UPWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.UP;
 			case ConnectionDirection c when ConnectionDirection.DOWNWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.toCardinalDirection(direction);
-			default -> { return false; }
+			default -> {
+				return false;
+			}
 		}
 
 		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);

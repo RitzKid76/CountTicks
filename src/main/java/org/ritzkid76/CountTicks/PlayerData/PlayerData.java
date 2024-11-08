@@ -42,9 +42,15 @@ public class PlayerData {
 	public Player getPlayer() {
 		return Bukkit.getPlayer(uuid);
 	}
-	public World getWorld() { return getPlayer().getWorld(); }
-	public WorldEditSelection getSelection() { return selection; }
-	public CuboidRegion getRegion() { return playerRegion; }
+	public World getWorld() {
+		return getPlayer().getWorld();
+	}
+	public WorldEditSelection getSelection() {
+		return selection;
+	}
+	public CuboidRegion getRegion() {
+		return playerRegion;
+	}
 
 	public CuboidRegion updateRegion() {
 		CuboidRegion region = (CuboidRegion) selection.getRegion();
@@ -54,9 +60,9 @@ public class PlayerData {
 		return playerRegion;
 	}
 
-	public boolean isScanning() { 
+	public boolean isScanning() {
 		if(scanExecutor == null) return false;
-		return !scanStatus.isDone(); 
+		return !scanStatus.isDone();
 	}
 	public boolean isInspecting() {
 		if(inspectStatus == null)
@@ -78,7 +84,9 @@ public class PlayerData {
 			return;
 		returnTo.run();
 	}
-	public void terminateScan() { terminateScan(false); }
+	public void terminateScan() {
+		terminateScan(false);
+	}
 	public void terminateScan(boolean silent) {
 		Player player = getPlayer();
 
@@ -92,7 +100,9 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 
-	public void scan(BlockVector3 origin) { scan(origin, null); }
+	public void scan(BlockVector3 origin) {
+		scan(origin, null);
+	}
 	private void scan(BlockVector3 origin, Runnable returnTo) {
 		Player player = getPlayer();
 
@@ -115,7 +125,9 @@ public class PlayerData {
 		});
 	}
 
-	public void terminateInspect() { terminateInspect(false); }
+	public void terminateInspect() {
+		terminateInspect(false);
+	}
 	public void terminateInspect(boolean silent) {
 		Player player = getPlayer();
 
@@ -180,7 +192,9 @@ public class PlayerData {
 		return false;
 	}
 
-	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
+	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) {
+		return graph.fastestPath(pos);
+	}
 
 	public boolean hasScanned() {
 		if(graph == null)

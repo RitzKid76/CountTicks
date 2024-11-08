@@ -28,8 +28,12 @@ public class RedstoneTracerGraphNode {
 		addNodeMember(pos);
 	}
 
-	public void addNodeMember(Traceable member) { addNodeMember(member.getPosition()); }
-	public void addNodeMember(BlockVector3 member) { nodeMembers.add(member); }
+	public void addNodeMember(Traceable member) {
+		addNodeMember(member.getPosition());
+	}
+	public void addNodeMember(BlockVector3 member) {
+		nodeMembers.add(member);
+	}
 
 	private void removeSharedConnections(RedstoneTracerGraphNode node) {
 		for(BlockVector3 member : nodeMembers) {
@@ -49,8 +53,12 @@ public class RedstoneTracerGraphNode {
 		nodeMembers.addAll(node.nodeMembers);
 	}
 
-	public void addInput(BlockVector3 input) { inputs.addConnection(input); }
-	public void addOutput(BlockVector3 output) { outputs.addConnection(output); }
+	public void addInput(BlockVector3 input) {
+		inputs.addConnection(input);
+	}
+	public void addOutput(BlockVector3 output) {
+		outputs.addConnection(output);
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -63,7 +71,9 @@ public class RedstoneTracerGraphNode {
 		return position.equals(that.position);
 	}
 
-	public boolean containsMember(BlockVector3 pos) { return nodeMembers.contains(pos); }
+	public boolean containsMember(BlockVector3 pos) {
+		return nodeMembers.contains(pos);
+	}
 
 	@Override
 	public int hashCode() {
