@@ -43,7 +43,9 @@ public abstract class Traceable {
 		return position;
 	}
 
-	public int delay() { return gameTickDelay.gameTicks; }
+	public int delay() {
+		return gameTickDelay.gameTicks;
+	}
 	public GameTickDelay getGameTickDelay() {
 		return gameTickDelay;
 	}
@@ -59,7 +61,8 @@ public abstract class Traceable {
 
 	private boolean isValidConnection(Traceable traceable, Connection input) {
 		for(Connection connection : traceable.inputs) {
-			if(connection.isCompatableWith(input)) return true;
+			if(connection.isCompatableWith(input))
+				return true;
 		}
 		return false;
 	}
@@ -67,7 +70,7 @@ public abstract class Traceable {
 	private void processDependentOutputPowers(Traceable traceable, PowerType inputPower) {
 		for(Connection connection : traceable.outputs) {
 			PowerType outputPower = connection.powerType;
-			if(outputPower == PowerType.INPUT_DEPENDENT) 
+			if(outputPower == PowerType.INPUT_DEPENDENT)
 				traceable.getInputDependentPower(connection, inputPower);
 		}
 	}
@@ -79,24 +82,30 @@ public abstract class Traceable {
 			PowerType connectedTraceableInputPower = outputConnection.powerType;
 			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, outputConnection.connectionDirection);
 
-			if(connectedTraceable == null) 
+			if(connectedTraceable == null)
 				continue; // throw out invalid blocks
-			if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0) 
+			if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0)
 				continue; // no reason to have this connection if the input power is none
 
 			processDependentOutputPowers(connectedTraceable, connectedTraceableInputPower);
 
-			if(isValidConnection(connectedTraceable, outputConnection)) 
+			if(isValidConnection(connectedTraceable, outputConnection))
 				result.add(connectedTraceable);
 		}
 
 		return result;
 	}
 
-	public RedstoneTracerGraphNode toRedstoneTracerGraphNode() { return new RedstoneTracerGraphNode(position, gameTickDelay); }
+	public RedstoneTracerGraphNode toRedstoneTracerGraphNode() {
+		return new RedstoneTracerGraphNode(position, gameTickDelay);
+	}
 
-	public TraceableBlockData applyBlockData(BlockData blockData) { return new TraceableBlockData(); }
-	public boolean filterConnection(Connection connection, ConnectionType type) {return false; }
+	public TraceableBlockData applyBlockData(BlockData blockData) {
+		return new TraceableBlockData();
+	}
+	public boolean filterConnection(Connection connection, ConnectionType type) {
+		return false;
+	}
 
 	public void getInputDependentPower(Connection connection, PowerType powerType) {
 		switch(powerType) {

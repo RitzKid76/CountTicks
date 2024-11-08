@@ -27,7 +27,9 @@ public class RedstoneWire extends Traceable {
 
 	private Map<BlockFace, org.bukkit.block.data.type.RedstoneWire.Connection> data;
 
-	public RedstoneWire(BlockData data, BlockVector3 position, World world) { super(inputs, outputs, data, position, world); }
+	public RedstoneWire(BlockData data, BlockVector3 position, World world) {
+		super(inputs, outputs, data, position, world);
+	}
 
 	@Override
 	public TraceableBlockData applyBlockData(BlockData blockData) {
@@ -47,7 +49,8 @@ public class RedstoneWire extends Traceable {
 		if(type == ConnectionType.OUTPUTS) {
 			org.bukkit.block.data.type.RedstoneWire.Connection blockDataConnection = data.get(connection.toBlockFace());
 
-			if(blockDataConnection == null) return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
+			if(blockDataConnection == null)
+				return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
 
 			return
 				noConnection(blockDataConnection) ||
@@ -60,8 +63,12 @@ public class RedstoneWire extends Traceable {
 
 	private static boolean noConnection(org.bukkit.block.data.type.RedstoneWire.Connection connection) {
 		switch(connection) {
-			case UP, SIDE-> { return false; }
-			default -> { return true; }
+			case UP, SIDE-> {
+				return false;
+			}
+			default -> {
+				return true;
+			}
 		}
 	}
 
@@ -71,7 +78,9 @@ public class RedstoneWire extends Traceable {
 		switch(direction) {
 			case ConnectionDirection c when ConnectionDirection.UPWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.UP;
 			case ConnectionDirection c when ConnectionDirection.DOWNWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.toCardinalDirection(direction);
-			default -> { return false; }
+			default -> {
+				return false;
+			}
 		}
 
 		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
@@ -80,7 +89,8 @@ public class RedstoneWire extends Traceable {
 	}
 
 	private boolean diagonalDiode(ConnectionDirection direction) {
-		if(!ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction)) return false;
+		if(!ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction))
+			return false;
 
 		BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
 

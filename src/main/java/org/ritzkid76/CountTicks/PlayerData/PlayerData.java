@@ -42,9 +42,15 @@ public class PlayerData {
 	public Player getPlayer() {
 		return Bukkit.getPlayer(uuid);
 	}
-	public World getWorld() { return getPlayer().getWorld(); }
-	public WorldEditSelection getSelection() { return selection; }
-	public CuboidRegion getRegion() { return playerRegion; }
+	public World getWorld() {
+		return getPlayer().getWorld();
+	}
+	public WorldEditSelection getSelection() {
+		return selection;
+	}
+	public CuboidRegion getRegion() {
+		return playerRegion;
+	}
 
 	public CuboidRegion updateRegion() {
 		CuboidRegion region = (CuboidRegion) selection.getRegion();
@@ -54,12 +60,13 @@ public class PlayerData {
 		return playerRegion;
 	}
 
-	public boolean isScanning() { 
+	public boolean isScanning() {
 		if(scanExecutor == null) return false;
-		return !scanStatus.isDone(); 
+		return !scanStatus.isDone();
 	}
 	public boolean isInspecting() {
-		if(inspectStatus == null) return false;
+		if(inspectStatus == null)
+			return false;
 		return !inspectStatus.isDone();
 	}
 
@@ -72,23 +79,30 @@ public class PlayerData {
 		}
 
 		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
-		
-		if(returnTo == null) return;
+
+		if(returnTo == null)
+			return;
 		returnTo.run();
 	}
-	public void terminateScan() { terminateScan(false); }
+	public void terminateScan() {
+		terminateScan(false);
+	}
 	public void terminateScan(boolean silent) {
 		Player player = getPlayer();
 
 		if(!isScanning()) {
-			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
+			if(!silent)
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_SCAN);
 			return;
 		};
 		scanExecutor.shutdownNow();
-		if(!silent) MessageSender.sendMessage(player, Message.STOP_SCAN);
+		if(!silent)
+			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
 
-	public void scan(BlockVector3 origin) { scan(origin, null); }
+	public void scan(BlockVector3 origin) {
+		scan(origin, null);
+	}
 	private void scan(BlockVector3 origin, Runnable returnTo) {
 		Player player = getPlayer();
 
@@ -101,7 +115,7 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
 			return;
 		}
-		
+
 		MessageSender.sendMessage(player, Message.START_SCAN);
 		scanExecutor = Executors.newSingleThreadExecutor();
 		scanStatus = scanExecutor.submit(() -> {
@@ -110,21 +124,30 @@ public class PlayerData {
 			} catch (ThreadCanceledException e) {}
 		});
 	}
-	
-	public void terminateInspect() { terminateInspect(false); }
+
+	public void terminateInspect() {
+		terminateInspect(false);
+	}
 	public void terminateInspect(boolean silent) {
 		Player player = getPlayer();
 
 		if(!isInspecting()) {
-			if(!silent) MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
+			if(!silent)
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
 		};
 		inspectExecutor.shutdownNow();
-		if(!silent) MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
+		if(!silent)
+			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
 	public void inspect() {
 		Player player = getPlayer();
+
+		if(!hasScanned()) {
+			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
+			return;
+		}
 
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
 
@@ -142,12 +165,12 @@ public class PlayerData {
 					continue;
 				}
 				lastViewBlock = viewedBlock;
-				
+
 				ArgumentParser.sendInspectorMessageSubtitle(player, graph.fastestPath(viewedBlock));
 			}
 		});
 	}
-	
+
 	private BlockVector3 callbackEndpoint;
 	private void countCallback() {
 		ArgumentParser.sendInspectorMessage(getPlayer(), graph.fastestPath(callbackEndpoint));
@@ -155,7 +178,8 @@ public class PlayerData {
 	public void count(BlockVector3 start, BlockVector3 end) {
 		callbackEndpoint = end;
 
-		if(scanValidation(start, this::countCallback)) return;
+		if(scanValidation(start, this::countCallback))
+			return;
 		countCallback();
 	}
 
@@ -173,11 +197,14 @@ public class PlayerData {
 		return false;
 	}
 
-	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) { return graph.fastestPath(pos); }
+	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) {
+		return graph.fastestPath(pos);
+	}
 
-	public boolean hasScanned() { 
-		if(graph == null) return false;
-		return graph.totalScanned() > 0; 
+	public boolean hasScanned() {
+		if(graph == null)
+			return false;
+		return graph.totalScanned() > 0;
 	}
 
 	public void shutdown() {

@@ -15,9 +15,13 @@ public class RedstoneTracerGraphNodeConnections {
 
 		private final int value;
 
-		Type(int value) { this.value = value; }
+		Type(int value) {
+			this.value = value;
+		}
 
-		public int getValue() { return value; }
+		public int getValue() {
+			return value;
+		}
 
 		public Type add(Type other) {
 			int sum = this.getValue() + other.getValue();
@@ -49,7 +53,8 @@ public class RedstoneTracerGraphNodeConnections {
 	}
 
 	public void removeConnection(BlockVector3 connection) {
-		if(connections.remove(connection)) type = type.typeFromConnectionCount(connections.size());
+		if(connections.remove(connection))
+			type = type.typeFromConnectionCount(connections.size());
 	}
 
 	public void combine(RedstoneTracerGraphNodeConnections connection) {

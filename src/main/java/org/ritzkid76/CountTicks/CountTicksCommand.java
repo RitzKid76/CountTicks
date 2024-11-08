@@ -28,7 +28,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		enableListeners();
 
 		File dataFolder = getPlugin().getDataFolder();
-		
+
 		ArgumentParser.setDataFolder(dataFolder);
 		MessageSender.populateOptions(dataFolder);
 
@@ -64,7 +64,9 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	public static void sendChatMessage(CommandSender sender, String message) {
 		sender.sendMessage(message);
 	}
-	public static void sendChatMessage(CommandSender sender, Message message) { sender.sendMessage(message.get()); }
+	public static void sendChatMessage(CommandSender sender, Message message) {
+		sender.sendMessage(message.get());
+	}
 
 	@Override
 	public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
@@ -79,7 +81,6 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		return true; // dont want to use the bukkit default useage
 	}
 
-	// i am aware that there is a .setTabCompleter() function, but i prefer this for now. i can change it later
 	@Override
 	public List<String> onTabComplete(
 		CommandSender sender,

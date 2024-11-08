@@ -39,7 +39,7 @@ public enum Message {
 	START_CHANGED(MessageType.WARNING);
 
 
-	
+
 	private final String message;
 	private final MessageType type;
 
@@ -64,19 +64,35 @@ public enum Message {
 		message = MessageSender.getMessage(name().toLowerCase());
 	}
 
-	public String get() { return commandPrefix + formatMessage(); }
-	public String getClean() { return formatMessage(); }
+	public String get() {
+		return commandPrefix + formatMessage();
+	}
+	public String getClean() {
+		return formatMessage();
+	}
 
 	private String formatMessage() {
 		switch(type) {
-			case INFO -> { return formatInfo(); }
-			case WARNING -> { return formatWarning(); }
-			case ERROR -> { return formatError(); }
+			case INFO -> {
+				return formatInfo();
+			}
+			case WARNING -> {
+				return formatWarning();
+			}
+			case ERROR -> {
+				return formatError();
+			}
 		}
 		return null;
 	}
 
-	private String formatInfo() { return message; }
-	private String formatWarning() { return warning + message; }
-	private String formatError() { return error + message; }
+	private String formatInfo() {
+		return message;
+	}
+	private String formatWarning() {
+		return warning + message;
+	}
+	private String formatError() {
+		return error + message;
+	}
 }
