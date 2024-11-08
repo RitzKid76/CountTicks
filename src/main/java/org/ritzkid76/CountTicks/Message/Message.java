@@ -6,7 +6,6 @@ public enum Message {
 	LOADED(MessageType.INFO),
 	UNLOADED(MessageType.INFO),
 
-	HELP(MessageType.INFO),
 	CONSOLE_USE(MessageType.ERROR),
 	INVALID_SYNTAX(MessageType.ERROR, 2),
 	HELP(MessageType.INFO),
@@ -22,17 +21,16 @@ public enum Message {
 	
 	SCAN_COMPLETE(MessageType.INFO, 1),
 	SCAN_IN_PROGRESS(MessageType.INFO),
+
 	START_SCAN(MessageType.INFO),
-	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
-	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
+	STOP_SCAN(MessageType.INFO),
+	NO_ACTIVE_SCAN(MessageType.ERROR),
 	ALREADY_SCANNING(MessageType.ERROR),
 	CURRENTLY_SCANNING(MessageType.ERROR, 1),
 	INVALID_START(MessageType.ERROR),
 	
 	START_INSPECT_MODE(MessageType.INFO),
 	STOP_INSPECT_MODE(MessageType.INFO),
-	DELAY(MessageType.INFO),
-	DELAY_SHORT(MessageType.INFO),
 	NO_ACTIVE_INSPECTION(MessageType.ERROR),
 	ALREADY_INSPECTING(MessageType.ERROR),
 	CURRENTLY_INSPECTING(MessageType.ERROR, 1),

@@ -187,4 +187,15 @@ public class ArgumentParser {
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 		}
 	}
+
+	private static String formatRegion(Region region) {
+		BlockVector3 min = region.getMinimumPoint();
+		BlockVector3 max = region.getMaximumPoint();
+		return 
+			"&3[&b" + 
+			min.x()+ "&3, &b" + min.y() + "&3, &b" + min.z() + 
+			"&3]&b &3-> [&b" + 
+			max.x() + "&3, &b" + max.y() + "&3, &b" + max.z() + 
+			"&3]&r";
+	}
 }
