@@ -158,7 +158,6 @@ public class PlayerData {
 			while(!Thread.currentThread().isInterrupted()) {
 				BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
 
-				
 				if(
 					viewedBlock == null ||
 					viewedBlock.equals(lastViewBlock)
