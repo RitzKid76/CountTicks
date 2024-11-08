@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Exceptions.InvalidMessageParameterLengthException;
+import org.ritzkid76.CountTicks.SyntaxHandling.SyntaxEntry;
 
 public class MessageSender {
 	private static final Map<String, String> messages = new HashMap<>();
@@ -61,6 +62,15 @@ public class MessageSender {
 		sendMessage(Bukkit.getConsoleSender(), message);
 	}
 
+	public static void sendCleanMessage(CommandSender sender, Message message) {
+		if(message.parameterCount() > 0)
+			throw new InvalidMessageParameterLengthException();
+		sendMessage(sender, message.getClean());
+	}
+	public static void sendCleanMessage(CommandSender sender, Message message, String... replacements) {
+		sendMessage(sender, getCleanReplacementString(message, replacements));
+	}
+
 	public static void sendMessage(CommandSender sender, Message message) {
 		if(message.parameterCount() > 0)
 			throw new InvalidMessageParameterLengthException();
@@ -83,5 +93,19 @@ public class MessageSender {
 	}
 	public static void sendSubtitle(CommandSender sender, Message message, String... replacements) {
 		sendSubtitle(sender, getCleanReplacementString(message, replacements));
+	}
+
+	public static void sendHelpMessage(CommandSender sender, SyntaxEntry options, String label) {
+		sendMessage(sender, Message.HELP);
+
+		int remaining = options.size();
+		for(Map.Entry<String, SyntaxEntry> option : options.entrySet()) {
+			remaining--;
+
+			String arg = option.getKey();
+			SyntaxEntry subEntry = option.getValue();
+
+			sendCleanMessage(sender, Message.HELP_LISTING, label, arg + " " + subEntry.toSyntaxString());
+		}
 	}
 }

@@ -3,7 +3,8 @@ unloaded: "&cUnloaded."
 
 console_use: "This command can only be used by &bplayers&r!"
 invalid_syntax: "Invalid syntax. \n Use &3/$ &b$&r."
-help: "List of commands:\n&b$&r"
+help: "List of commands:"
+help_listing: "&3/$ &b$"
 
 no_start_selected: "No scan start defined.\nUses &3WorldEdit &bpos1&r."
 no_end_selected: "No scan end defined.\nUses &3WorldEdit &bpos2&r."

@@ -2,7 +2,6 @@ package org.ritzkid76.CountTicks.SyntaxHandling;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +36,7 @@ public class SyntaxHandler implements TabCompleter {
 					}
 				}
 				case String s -> focus = entry.add(s);
-				case Boolean b -> focus.setRequired(b);
+				case Boolean b -> focus.setRequiresParameter(b);
 				default -> {}
 			}
 		}
@@ -81,13 +80,7 @@ public class SyntaxHandler implements TabCompleter {
 				return false;
 		}
 
-		for (String key : tree.keys()) {
-			SyntaxEntry entry = tree.get(key);
-			if(entry.isRequired() && !Arrays.asList(args).contains(key))
-				return false;
-		}
-
-		return true;
+		return !tree.requiresParameter();
 	}
 
 	public SyntaxEntry getOptionsRoot() {

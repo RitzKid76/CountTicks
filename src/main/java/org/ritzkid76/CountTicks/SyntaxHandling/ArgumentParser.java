@@ -169,7 +169,7 @@ public class ArgumentParser {
 	}
 
 	private static void help(String[] args, PlayerData playerData, String label) {
-		MessageSender.sendMessage(playerData.getPlayer(), Message.HELP, syntaxHandler.getOptionsRoot().toSyntaxList());
+		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {

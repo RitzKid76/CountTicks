@@ -9,7 +9,8 @@ public enum Message {
 	HELP(MessageType.INFO),
 	CONSOLE_USE(MessageType.ERROR),
 	INVALID_SYNTAX(MessageType.ERROR, 2),
-	HELP(MessageType.INFO, 1),
+	HELP(MessageType.INFO),
+	HELP_LISTING(MessageType.INFO, 2),
 	
 	NO_START_SELECTED(MessageType.ERROR),
 	NO_END_SELECTED(MessageType.ERROR),
