@@ -144,6 +144,11 @@ public class PlayerData {
 	public void inspect() {
 		Player player = getPlayer();
 
+		if(!hasScanned()) {
+			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
+			return;
+		}
+
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
 
 		inspectExecutor = Executors.newSingleThreadExecutor();
