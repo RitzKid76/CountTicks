@@ -14,15 +14,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionSetFactory.createConnectionSet;
-
 public class RedstoneWire extends Traceable {
-	public static final Set<Connection> inputs = createConnectionSet(PowerType.SOFT, ConnectionDirection.ALL);
+	public static final Set<Connection> inputs = new ConnectionSetFactory()
+		.add(ConnectionDirection.ALL, PowerType.SOFT)
+	.get();
 
 	public static final Set<Connection> outputs = new ConnectionSetFactory()
-		.add(createConnectionSet(PowerType.SOFT, ConnectionDirection.UPWARD_DIAGONAL))
-		.add(createConnectionSet(PowerType.SOFT, ConnectionDirection.CARDINAL))
-		.add(createConnectionSet(PowerType.SOFT, ConnectionDirection.DOWNWARD))
+		.add(ConnectionDirection.UPWARD_DIAGONAL, PowerType.SOFT)
+		.add(ConnectionDirection.CARDINAL, PowerType.SOFT)
+		.add(ConnectionDirection.DOWNWARD, PowerType.SOFT)
 	.get();
 
 	private Map<BlockFace, org.bukkit.block.data.type.RedstoneWire.Connection> data;
@@ -62,14 +62,10 @@ public class RedstoneWire extends Traceable {
 	}
 
 	private static boolean noConnection(org.bukkit.block.data.type.RedstoneWire.Connection connection) {
-		switch(connection) {
-			case UP, SIDE-> {
-				return false;
-			}
-			default -> {
-				return true;
-			}
-		}
+		return switch(connection) {
+			case UP, SIDE-> false;
+			default -> true;
+		};
 	}
 
 	private boolean diagonalBlocked(ConnectionDirection direction) {
@@ -78,9 +74,7 @@ public class RedstoneWire extends Traceable {
 		switch(direction) {
 			case ConnectionDirection c when ConnectionDirection.UPWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.UP;
 			case ConnectionDirection c when ConnectionDirection.DOWNWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.toCardinalDirection(direction);
-			default -> {
-				return false;
-			}
+			default -> { return false; }
 		}
 
 		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);

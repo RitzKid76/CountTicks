@@ -84,18 +84,12 @@ public enum Message {
 	}
 
 	private String formatMessage() {
-		switch(type) {
-			case INFO -> {
-				return formatInfo();
-			}
-			case WARNING -> {
-				return formatWarning();
-			}
-			case ERROR -> {
-				return formatError();
-			}
-		}
-		return null;
+		return switch(type) {
+			case INFO -> formatInfo();
+			case WARNING -> formatWarning();
+			case ERROR -> formatError();
+			default -> null;
+		};
 	}
 
 	private String formatInfo() {

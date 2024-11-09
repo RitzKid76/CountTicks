@@ -19,21 +19,19 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
-	private static SyntaxHandler syntaxHandler;
-	private static Plugin plugin;
+	private final SyntaxHandler syntaxHandler;
+	private final Plugin plugin;
 
-	public static void setDataFolder(File dataFolder) {
+	public ArgumentParser(File dataFolder, Plugin p) {
 		syntaxHandler = new SyntaxHandler(dataFolder);
-	}
-	public static void setPlugin(Plugin p) {
 		plugin = p;
 	}
 
-	public static List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		return syntaxHandler.onTabComplete(sender, command, label, args);
 	}
 
-	private static void getUsage(String[] args, PlayerData playerData, String label) {
+	private void getUsage(String[] args, PlayerData playerData, String label) {
 		SyntaxEntry current = syntaxHandler.getOptionsRoot();
 		StringBuilder output = new StringBuilder();
 
@@ -51,7 +49,7 @@ public class ArgumentParser {
 		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, label, output.toString().trim());
 	}
 
-	public static void run(String[] args, PlayerData playerData, String label) {
+	public void run(String[] args, PlayerData playerData, String label) {
 		if(!syntaxHandler.isValidSyntax(args)) {
 			getUsage(args, playerData, label);
 			return;
@@ -77,7 +75,7 @@ public class ArgumentParser {
 		}
 	}
 
-	private static void count(String[] args, PlayerData playerData, String label) {
+	private void count(String[] args, PlayerData playerData, String label) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
@@ -104,7 +102,7 @@ public class ArgumentParser {
 		playerData.count(startPosition, endPosition, plugin, label);
 	}
 
-	private static void scan(String[] args, PlayerData playerData, String label) {
+	private void scan(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
@@ -132,7 +130,7 @@ public class ArgumentParser {
 		playerData.scan(origin, plugin, label);
 	}
 
-	private static void inspector(String[] args, PlayerData playerData, String label) {
+	private void inspector(String[] args, PlayerData playerData, String label) {
 		switch(args[0]) {
 			case "start" -> {
 				Player player = playerData.getPlayer();
@@ -151,7 +149,7 @@ public class ArgumentParser {
 		}
 	}
 
-	private static void define_region(String[] args, PlayerData playerData, String label) {
+	private void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
@@ -174,7 +172,7 @@ public class ArgumentParser {
 		);
 	}
 
-	private static void help(String[] args, PlayerData playerData, String label) {
+	private void help(String[] args, PlayerData playerData, String label) {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 
