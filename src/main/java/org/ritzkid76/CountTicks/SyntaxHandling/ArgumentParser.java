@@ -143,7 +143,7 @@ public class ArgumentParser {
 					return;
 				}
 
-				playerData.inspect(plugin);
+				playerData.inspect(plugin, label);
 			}
 			case "stop" -> playerData.terminateInspect();
 		}
@@ -159,7 +159,7 @@ public class ArgumentParser {
 		Region region = playerData.updateRegion();
 
 		if(region == null) {
-			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION, label);
 			return;
 		}
 

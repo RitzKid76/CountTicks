@@ -3,7 +3,6 @@ package org.ritzkid76.CountTicks;
 import java.io.File;
 import java.util.List;
 
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,24 +21,22 @@ import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
-	private World world;
 	private BukkitScheduler scheduler;
 	private ArgumentParser parser;
 	private PlayerDataContainer playerDataContainer;
 
 	@Override
 	public void onLoad() {
-		enableListeners();
-
 		scheduler = getPlugin().getServer().getScheduler();
-
+		
 		File dataFolder = getPlugin().getDataFolder();
 		parser = new ArgumentParser(dataFolder, getPlugin());
-
+		
 		playerDataContainer = new PlayerDataContainer();
-
+		
 		MessageSender.populateOptions(dataFolder);
-
+		
+		enableListeners();
 		MessageSender.sendConsoleMessage(Message.LOADED);
 	}
 

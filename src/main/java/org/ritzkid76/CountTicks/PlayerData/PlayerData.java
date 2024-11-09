@@ -155,11 +155,11 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
-	public void inspect(Plugin plugin) {
+	public void inspect(Plugin plugin, String label) {
 		Player player = getPlayer();
 
 		if(!hasScanned()) {
-			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
+			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD, label);
 			return;
 		}
 
