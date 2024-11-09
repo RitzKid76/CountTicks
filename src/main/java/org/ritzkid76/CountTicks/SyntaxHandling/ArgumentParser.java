@@ -152,7 +152,11 @@ public class ArgumentParser {
 	private void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
-			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+			return;
+		}
+		if(playerData.isInspecting()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
 			return;
 		}
 
