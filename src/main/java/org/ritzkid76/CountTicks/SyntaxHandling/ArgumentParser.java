@@ -69,7 +69,7 @@ public class ArgumentParser {
 				String[].class,
 				PlayerData.class,
 				String.class
-			).invoke(null, args, playerData, label);
+			).invoke(this, args, playerData, label);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
