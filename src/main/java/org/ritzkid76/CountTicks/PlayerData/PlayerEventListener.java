@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class PlayerEventListener implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-	    UUID uuid = event.getPlayer().getUniqueId();
-	    PlayerDataContainer.shutdown(uuid);
+		UUID uuid = event.getPlayer().getUniqueId();
+		PlayerDataContainer.shutdown(uuid);
 	}
 }

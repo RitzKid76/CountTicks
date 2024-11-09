@@ -11,9 +11,10 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
-import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBounds;
+import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
@@ -42,8 +43,8 @@ public class RedstoneTracerGraph {
 
 		if(bounds == null)
 			throw new BoundsUndefinedException();
-		if(!posInBounds(origin))
-			throw new PositionOutOfRegionBounds();
+		if(!isInBounds(origin))
+			throw new PositionOutOfRegionBoundsException();
 
 		world = Bukkit.getWorld(bounds.getWorld().getName());
 	}
@@ -91,16 +92,16 @@ public class RedstoneTracerGraph {
 		return contents.contains(pos);
 	}
 
-	public RedstoneTracerGraphPath fastestPath(BlockVector3 destination) {
-		if(!posInBounds(destination))
+	public RedstoneTracerGraphPath findFastestPath(BlockVector3 destination) {
+		if(!isInBounds(destination))
 			return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.OUT_OF_BOUNDS);
 		if(!contains(destination))
 			return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.UNSCANNED_LOCATION);
 
-		return djikstra(positionToNode.get(destination));
+		return djikstraFastestPath(positionToNode.get(destination));
 	}
 
-	private RedstoneTracerGraphPath djikstra(RedstoneTracerGraphNode destination) {
+	private RedstoneTracerGraphPath djikstraFastestPath(RedstoneTracerGraphNode destination) {
 		PriorityQueue<RedstoneTracerGraphPath> queue = new PriorityQueue<>(
 			Comparator.comparingInt(RedstoneTracerGraphPath::delay)
 		);
@@ -139,7 +140,7 @@ public class RedstoneTracerGraph {
 		return new RedstoneTracerGraphPath(new LinkedList<>(), null);
 	}
 
-	public boolean posInBounds(BlockVector3 pos) {
+	public boolean isInBounds(BlockVector3 pos) {
 		return bounds.contains(pos);
 	}
 
@@ -152,7 +153,8 @@ public class RedstoneTracerGraph {
 
 			if(stored == pos)
 				output.append(" -> ");
-			else output.append(" => ");
+			else
+				output.append(" => ");
 
 			output.append(positionToNode.get(pos)).append("\n");
 		}
@@ -160,7 +162,7 @@ public class RedstoneTracerGraph {
 		return output.toString();
 	}
 
-	public boolean trace() {
+	public boolean trace(BukkitTask task) {
 		Traceable startTraceable;
 
 		try {
@@ -174,8 +176,7 @@ public class RedstoneTracerGraph {
 		}
 
 		while (!queue.isEmpty()) {
-			if(wasCanceled())
-
+			if(task.isCancelled())
 				throw new ThreadCanceledException();
 
 			Traceable current = queue.remove();
@@ -192,16 +193,12 @@ public class RedstoneTracerGraph {
 
 		return true;
 	}
-
-	private boolean wasCanceled() {
-		return Thread.currentThread().isInterrupted();
-	}
-
+	
 	private boolean candidateRemoval(Traceable candidate) {
 		BlockVector3 pos = candidate.getPosition();
 		return
 			visited.contains(pos) ||
-			!posInBounds(pos);
+			!isInBounds(pos);
 	}
 
 	public int totalScanned() {
@@ -212,5 +209,8 @@ public class RedstoneTracerGraph {
 	}
 	public BlockVector3 getOrigin() {
 		return origin;
+	}
+	public RedstoneTracerGraphNode get(BlockVector3 pos) {
+		return positionToNode.get(pos);
 	}
 }

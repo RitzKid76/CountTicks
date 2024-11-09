@@ -1,17 +1,12 @@
 args:
   - arg: scan             # populates the RedstoneTracerGraph
-    required: false
+    requires_parameter: false
     options:
     - arg: terminate
-      required: false
   - arg: inspector        # for raycasted inspection mode
-    required: false
+    requires_parameter: true
     options:
     - arg: start
-      required: true
     - arg: stop
-      required: true
   - arg: define_region    # defines the region to scan inside
-    required: false
   - arg: help
-    required: false

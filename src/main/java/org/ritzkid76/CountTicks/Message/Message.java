@@ -6,42 +6,47 @@ public enum Message {
 	LOADED(MessageType.INFO),
 	UNLOADED(MessageType.INFO),
 
-	HELP(MessageType.INFO),
 	CONSOLE_USE(MessageType.ERROR),
-	INVALID_SYNTAX(MessageType.ERROR),
-
-	SET_SCAN_REGION(MessageType.INFO),
-	SCAN_COMPLETE(MessageType.INFO),
-	STOP_SCAN(MessageType.INFO),
-	SCAN_IN_PROGRESS(MessageType.INFO),
-	START_SCAN(MessageType.INFO),
-	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
-	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
-	ALREADY_SCANNING(MessageType.ERROR),
-	NO_ACTIVE_SCAN(MessageType.ERROR),
-	NO_SCANNED_BUILD(MessageType.ERROR),
-	NO_SCAN_REGION(MessageType.ERROR),
+	INVALID_SYNTAX(MessageType.ERROR, 2),
+	HELP(MessageType.INFO),
+	HELP_LISTING(MessageType.INFO, 2),
+	
 	NO_START_SELECTED(MessageType.ERROR),
-	INVALID_START(MessageType.ERROR),
-	UNSCANNED_LOCATION(MessageType.ERROR),
-	OUT_OF_BOUNDS(MessageType.ERROR),
-	CURRENTLY_SCANNING(MessageType.ERROR),
+	NO_END_SELECTED(MessageType.ERROR),
+	NO_SCANNED_BUILD(MessageType.ERROR, 1),
+	NO_SCAN_REGION(MessageType.ERROR, 1),
 
+	START_CHANGED(MessageType.WARNING),
+	SET_SCAN_REGION(MessageType.INFO, 6),
+	
+	SCAN_COMPLETE(MessageType.INFO, 2),
+	SCAN_IN_PROGRESS(MessageType.INFO),
+
+	START_SCAN(MessageType.INFO),
+	STOP_SCAN(MessageType.INFO),
+	NO_ACTIVE_SCAN(MessageType.ERROR),
+	ALREADY_SCANNING(MessageType.ERROR),
+	CURRENTLY_SCANNING(MessageType.ERROR, 1),
+	INVALID_START(MessageType.ERROR),
+	
 	START_INSPECT_MODE(MessageType.INFO),
 	STOP_INSPECT_MODE(MessageType.INFO),
-	DELAY(MessageType.INFO),
-	DELAY_SHORT(MessageType.INFO),
 	NO_ACTIVE_INSPECTION(MessageType.ERROR),
 	ALREADY_INSPECTING(MessageType.ERROR),
-	CURRENTLY_INSPECTING(MessageType.ERROR),
+	CURRENTLY_INSPECTING(MessageType.ERROR, 1),
 
-	NO_END_SELECTED(MessageType.ERROR),
-	START_CHANGED(MessageType.WARNING);
+	DELAY(MessageType.INFO, 1),
+	DELAY_SHORT(MessageType.INFO, 1),
+	UNSCANNED_LOCATION(MessageType.ERROR),
+	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
+	OUT_OF_BOUNDS(MessageType.ERROR),
+	OUT_OF_BOUNDS_SHORT(MessageType.INFO);
 
 
 
 	private final String message;
 	private final MessageType type;
+	private final int parameterCount;
 
 	private static final String commandPrefix =
 		ChatColor.BLUE + "[" +
@@ -60,10 +65,17 @@ public enum Message {
 		ChatColor.RESET;
 
 	Message(MessageType mt) {
+		this(mt, 0);
+	}
+	Message(MessageType mt, int pc) {
 		type = mt;
+		parameterCount = pc;
 		message = MessageSender.getMessage(name().toLowerCase());
 	}
 
+	public int parameterCount() {
+		return parameterCount;
+	}
 	public String get() {
 		return commandPrefix + formatMessage();
 	}

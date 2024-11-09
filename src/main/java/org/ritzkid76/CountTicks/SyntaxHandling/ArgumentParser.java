@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
@@ -19,18 +20,22 @@ import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
 	private static SyntaxHandler syntaxHandler;
+	private static Plugin plugin;
 
 	public static void setDataFolder(File dataFolder) {
 		syntaxHandler = new SyntaxHandler(dataFolder);
+	}
+	public static void setPlugin(Plugin p) {
+		plugin = p;
 	}
 
 	public static List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		return syntaxHandler.onTabComplete(sender, command, label, args);
 	}
 
-	private static void getUsage(String[] args, PlayerData playerData) {
+	private static void getUsage(String[] args, PlayerData playerData, String label) {
 		SyntaxEntry current = syntaxHandler.getOptionsRoot();
-		StringBuilder output = new StringBuilder("/countticks ");
+		StringBuilder output = new StringBuilder();
 
 		for(String arg : args) {
 			SyntaxEntry next = current.get(arg);
@@ -43,17 +48,17 @@ public class ArgumentParser {
 		}
 
 		output.append(current.toSyntaxString());
-		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, output.toString());
+		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, label, output.toString().trim());
 	}
 
-	public static void run(String[] args, PlayerData playerData) {
+	public static void run(String[] args, PlayerData playerData, String label) {
 		if(!syntaxHandler.isValidSyntax(args)) {
-			getUsage(args, playerData);
+			getUsage(args, playerData, label);
 			return;
 		}
 
 		if(args.length == 0) {
-			count(args, playerData);
+			count(args, playerData, label);
 			return;
 		}
 
@@ -64,23 +69,24 @@ public class ArgumentParser {
 			ArgumentParser.class.getDeclaredMethod(
 				methodName,
 				String[].class,
-				PlayerData.class
-			).invoke(null, (Object) args, playerData);
+				PlayerData.class,
+				String.class
+			).invoke(null, args, playerData, label);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private static void count(String[] args, PlayerData playerData) {
+	private static void count(String[] args, PlayerData playerData, String label) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
 		if(playerData.isScanning()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
 			return;
 		}
 		if(playerData.isInspecting()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING, label);
 			return;
 		}
 
@@ -95,12 +101,10 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.count(startPosition, endPosition);
-
-		return;
+		playerData.count(startPosition, endPosition, plugin, label);
 	}
 
-	private static void scan(String[] args, PlayerData playerData) {
+	private static void scan(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
@@ -113,7 +117,7 @@ public class ArgumentParser {
 			return;
 		}
 		if(playerData.isInspecting()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING, label);
 			return;
 		}
 
@@ -125,17 +129,15 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.scan(origin);
-
-		return;
+		playerData.scan(origin, plugin, label);
 	}
 
-	private static void inspector(String[] args, PlayerData playerData) {
+	private static void inspector(String[] args, PlayerData playerData, String label) {
 		switch(args[0]) {
 			case "start" -> {
 				Player player = playerData.getPlayer();
 				if(playerData.isScanning()) {
-					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
 					return;
 				}
 				if(playerData.isInspecting()) {
@@ -143,14 +145,13 @@ public class ArgumentParser {
 					return;
 				}
 
-				playerData.inspect();
+				playerData.inspect(plugin);
 			}
 			case "stop" -> playerData.terminateInspect();
 		}
-		return;
 	}
 
-	private static void define_region(String[] args, PlayerData playerData) {
+	private static void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
 			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
@@ -164,17 +165,22 @@ public class ArgumentParser {
 			return;
 		}
 
-		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, region.toString());
-		return;
+		BlockVector3 min = region.getMinimumPoint();
+		BlockVector3 max = region.getMaximumPoint();
+		MessageSender.sendMessage(
+			player, Message.SET_SCAN_REGION,
+			String.valueOf(min.x()), String.valueOf(min.y()), String.valueOf(min.z()),
+			String.valueOf(max.x()), String.valueOf(max.y()), String.valueOf(max.z())
+		);
 	}
 
-	private static void help(String[] args, PlayerData playerData) {
-		MessageSender.sendMessage(playerData.getPlayer(), Message.HELP, syntaxHandler.getOptionsRoot().toSyntaxList());
+	private static void help(String[] args, PlayerData playerData, String label) {
+		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
-			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, path.delay()/2 + "");
+			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, String.valueOf(path.delay() / 2));
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendSubtitle(player, Message.UNSCANNED_LOCATION_SHORT);
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendSubtitle(player, Message.OUT_OF_BOUNDS_SHORT);
 		}
@@ -182,7 +188,7 @@ public class ArgumentParser {
 
 	public static void sendInspectorMessage(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
-			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, path.delay()/2 + "");
+			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, String.valueOf(path.delay() / 2));
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 		}

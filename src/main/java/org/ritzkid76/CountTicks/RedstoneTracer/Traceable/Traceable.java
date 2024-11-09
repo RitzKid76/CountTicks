@@ -61,7 +61,7 @@ public abstract class Traceable {
 
 	private boolean isValidConnection(Traceable traceable, Connection input) {
 		for(Connection connection : traceable.inputs) {
-			if(connection.isCompatableWith(input))
+			if(connection.isCompatibleWith(input))
 				return true;
 		}
 		return false;

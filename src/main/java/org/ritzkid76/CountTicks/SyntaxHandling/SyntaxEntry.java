@@ -2,18 +2,19 @@ package org.ritzkid76.CountTicks.SyntaxHandling;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class SyntaxEntry {
 	private final Map<String, SyntaxEntry> entries = new HashMap<>();
-	private boolean required = false;
+	private boolean requiresParameter = false;
 
-	public boolean isRequired() {
-		return required;
+	public boolean requiresParameter() {
+		return requiresParameter;
 	}
 
-	public void setRequired(boolean r) {
-		required = r;
+	public void setRequiresParameter(boolean r) {
+		requiresParameter = r;
 	}
 
 	public boolean isEmpty() {
@@ -23,6 +24,15 @@ public class SyntaxEntry {
 	public Set<String> keys() {
 		return entries.keySet();
 	}
+
+	public int size() {
+		return entries.size();
+	}
+
+	public Set<Entry<String, SyntaxEntry>> entrySet() {
+		return entries.entrySet();
+	}
+
 	public SyntaxEntry get(String string) {
 		if(string.isEmpty())
 			return this;
@@ -37,45 +47,37 @@ public class SyntaxEntry {
 		return v;
 	}
 
+	//TODO fix with new parameter requirement shift
 	public String toSyntaxString() {
+		if(entries.isEmpty())
+			return "";
+
 		StringBuilder syntax = new StringBuilder();
 
+		if(requiresParameter)
+			syntax.append("<");
+		else
+			syntax.append("[");
+
+		int remaining = entries.size();
 		for(Map.Entry<String, SyntaxEntry> option : entries.entrySet()) {
+			remaining--;
+
 			String arg = option.getKey();
 			SyntaxEntry subEntry = option.getValue();
 
-			if(subEntry.isRequired())
-				syntax.append("<").append(arg);
-			else
-				syntax.append("[").append(arg);
-
+			syntax.append(arg);
 			if(!subEntry.entries.isEmpty())
 				syntax.append(" ").append(subEntry.toSyntaxString());
-
-			if(subEntry.isRequired())
-				syntax.append(">");
-			else
-				syntax.append("]");
-
-			syntax.append(" ");
+			if(remaining > 0)
+				syntax.append(" | ");
 		}
+
+		if(requiresParameter)
+			syntax.append(">");
+		else
+			syntax.append("]");
 
 		return syntax.toString().trim();
-	}
-
-	public String toSyntaxList() {
-		StringBuilder output = new StringBuilder();
-
-		for(Map.Entry<String, SyntaxEntry> option : entries.entrySet()) {
-			String arg = option.getKey();
-			SyntaxEntry subEntry = option.getValue();
-
-			output.append(arg);
-			if(!subEntry.isEmpty())
-				output.append(" ").append(subEntry.toSyntaxString());
-			output.append("\n");
-		}
-
-		return output.toString();
 	}
 }
