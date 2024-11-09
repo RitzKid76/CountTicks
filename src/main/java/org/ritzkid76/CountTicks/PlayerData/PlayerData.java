@@ -68,7 +68,12 @@ public class PlayerData {
 		return !inspectTask.isCancelled();
 	}
 
-	private void scanCallback(boolean success, Runnable returnTo) {
+	private String getFormattedTimer(long difference) {
+		double seconds = (double) difference / 1000.0;
+		return String.format("%.2f", seconds);
+	}
+
+	private void scanCallback(boolean success, Runnable returnTo, long startTime) {
 		Player player = getPlayer();
 		scanTask.cancel(); // has to be done since this flag is not set on task completion
 
@@ -77,7 +82,12 @@ public class PlayerData {
 			return;
 		}
 
-		MessageSender.sendMessage(player, Message.SCAN_COMPLETE, String.valueOf(graph.totalScanned()));
+		MessageSender.sendMessage(
+			player, 
+			Message.SCAN_COMPLETE, 
+			getFormattedTimer(System.currentTimeMillis() - startTime),
+			String.valueOf(graph.totalScanned())
+		);
 
 		if(returnTo == null)
 			return;
@@ -118,10 +128,11 @@ public class PlayerData {
 		}
 
 		MessageSender.sendMessage(player, Message.START_SCAN);
-		
+
+		long startTime = System.currentTimeMillis();
 		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
-				scanCallback(graph.trace(scanTask), returnTo);
+				scanCallback(graph.trace(scanTask), returnTo, startTime);
 			} catch (ThreadCanceledException e) {}
 		});
 	}

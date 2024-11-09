@@ -19,7 +19,7 @@ public enum Message {
 	START_CHANGED(MessageType.WARNING),
 	SET_SCAN_REGION(MessageType.INFO, 1),
 	
-	SCAN_COMPLETE(MessageType.INFO, 1),
+	SCAN_COMPLETE(MessageType.INFO, 2),
 	SCAN_IN_PROGRESS(MessageType.INFO),
 
 	START_SCAN(MessageType.INFO),

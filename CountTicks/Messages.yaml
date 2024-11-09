@@ -14,7 +14,7 @@ no_scan_region: "No region defined for scan.\nUse &3/$ &bdefine_region&r with a 
 start_changed: "Rescanning due to change in start position."
 set_scan_region: "Defined the scan region to\n$"
 
-scan_complete: "Scan completed with &3$&r blocks scanned."
+scan_complete: "Scan completed in &b$&3s&r with &b$&r blocks scanned."
 scan_in_progress: "This command is &cdisabled&r while a scan is in progress."
 
 start_scan: "Starting scan..."
