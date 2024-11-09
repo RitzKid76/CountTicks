@@ -8,10 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
+import org.ritzkid76.CountTicks.PlayerData.WorldEditSelection;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPathResult;
 

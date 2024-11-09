@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
