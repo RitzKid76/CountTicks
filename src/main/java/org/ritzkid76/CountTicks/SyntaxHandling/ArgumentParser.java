@@ -165,7 +165,13 @@ public class ArgumentParser {
 			return;
 		}
 
-		MessageSender.sendMessage(player, Message.SET_SCAN_REGION, formatRegion(region));
+		BlockVector3 min = region.getMinimumPoint();
+		BlockVector3 max = region.getMaximumPoint();
+		MessageSender.sendMessage(
+			player, Message.SET_SCAN_REGION,
+			String.valueOf(min.x()), String.valueOf(min.y()), String.valueOf(min.z()),
+			String.valueOf(max.x()), String.valueOf(max.y()), String.valueOf(max.z())
+		);
 	}
 
 	private static void help(String[] args, PlayerData playerData, String label) {
@@ -186,16 +192,5 @@ public class ArgumentParser {
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
 			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
 		}
-	}
-
-	private static String formatRegion(Region region) {
-		BlockVector3 min = region.getMinimumPoint();
-		BlockVector3 max = region.getMaximumPoint();
-		return 
-			"&3[&b" + 
-			min.x()+ "&3, &b" + min.y() + "&3, &b" + min.z() + 
-			"&3]&b &3-> [&b" + 
-			max.x() + "&3, &b" + max.y() + "&3, &b" + max.z() + 
-			"&3]&r";
 	}
 }
