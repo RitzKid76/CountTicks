@@ -19,7 +19,7 @@ public abstract class Traceable {
 	private final BlockVector3 position;
 	private final GameTickDelay gameTickDelay;
 
-	protected final World world;
+	public final World world;
 
 	// some retard shit since java doesnt let me call super() unless its the first method in the function. makes sense, but sadge.
 	public Traceable(Set<Connection> in, Set<Connection> out, BlockData blockData, BlockVector3 pos, World wld) {
