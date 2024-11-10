@@ -3,7 +3,6 @@ package org.ritzkid76.CountTicks;
 import java.io.File;
 import java.util.List;
 
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,21 +21,22 @@ import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
-	public World world;
-	public BukkitScheduler scheduler;
+	private BukkitScheduler scheduler;
+	private ArgumentParser parser;
+	private PlayerDataContainer playerDataContainer;
 
 	@Override
 	public void onLoad() {
-		enableListeners();
-
-		File dataFolder = getPlugin().getDataFolder();
-
-		ArgumentParser.setDataFolder(dataFolder);
-		ArgumentParser.setPlugin(getPlugin());
-		MessageSender.populateOptions(dataFolder);
-
 		scheduler = getPlugin().getServer().getScheduler();
 
+		File dataFolder = getPlugin().getDataFolder();
+		parser = new ArgumentParser(dataFolder, getPlugin());
+
+		playerDataContainer = new PlayerDataContainer();
+
+		MessageSender.populateOptions(dataFolder);
+
+		enableListeners();
 		MessageSender.sendConsoleMessage(Message.LOADED);
 	}
 
@@ -55,7 +55,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	}
 
 	private void enableListeners() {
-		addListener(new PlayerEventListener());
+		addListener(new PlayerEventListener(playerDataContainer));
 	}
 	private void disableListeners() {
 		HandlerList.unregisterAll(getPlugin());
@@ -66,22 +66,15 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		return "0.0.1-SNAPSHOT";
 	}
 
-	public static void sendChatMessage(CommandSender sender, String message) {
-		sender.sendMessage(message);
-	}
-	public static void sendChatMessage(CommandSender sender, Message message) {
-		sender.sendMessage(message.get());
-	}
-
 	@Override
 	public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
 		if (!(sender instanceof Player player)) {
-			sendChatMessage(sender, Message.CONSOLE_USE);
+			MessageSender.sendMessage(sender, Message.CONSOLE_USE);
 			return true;
 		}
 
-		PlayerData playerData = PlayerDataContainer.get(player);
-		ArgumentParser.run(args, playerData, label);
+		PlayerData playerData = playerDataContainer.get(player);
+		parser.run(args, playerData, label);
 
 		return true; // dont want to use the bukkit default useage
 	}
@@ -93,7 +86,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 		String label,
 		String[] args
 	) {
-		return ArgumentParser.onTabComplete(sender, command, label, args);
+		return parser.onTabComplete(sender, command, label, args);
 	}
 
 	@Override

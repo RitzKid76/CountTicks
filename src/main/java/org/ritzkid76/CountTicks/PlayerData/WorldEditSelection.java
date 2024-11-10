@@ -1,4 +1,4 @@
-package org.ritzkid76.CountTicks;
+package org.ritzkid76.CountTicks.PlayerData;
 
 import org.bukkit.entity.Player;
 

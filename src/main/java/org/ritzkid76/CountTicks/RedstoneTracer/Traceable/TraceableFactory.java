@@ -40,7 +40,7 @@ public class TraceableFactory {
 			return attemptSolidBlockCreation(blockData, position, world);
 
 		try {
-			return (Traceable) constructor.newInstance(blockData, position, world);
+			return constructor.newInstance(blockData, position, world);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

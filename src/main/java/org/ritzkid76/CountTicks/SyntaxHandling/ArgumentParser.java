@@ -8,10 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
+import org.ritzkid76.CountTicks.PlayerData.WorldEditSelection;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPathResult;
 
@@ -19,21 +19,19 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
-	private static SyntaxHandler syntaxHandler;
-	private static Plugin plugin;
+	private final SyntaxHandler syntaxHandler;
+	private final Plugin plugin;
 
-	public static void setDataFolder(File dataFolder) {
+	public ArgumentParser(File dataFolder, Plugin p) {
 		syntaxHandler = new SyntaxHandler(dataFolder);
-	}
-	public static void setPlugin(Plugin p) {
 		plugin = p;
 	}
 
-	public static List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
 		return syntaxHandler.onTabComplete(sender, command, label, args);
 	}
 
-	private static void getUsage(String[] args, PlayerData playerData, String label) {
+	private void getUsage(String[] args, PlayerData playerData, String label) {
 		SyntaxEntry current = syntaxHandler.getOptionsRoot();
 		StringBuilder output = new StringBuilder();
 
@@ -51,7 +49,7 @@ public class ArgumentParser {
 		MessageSender.sendMessage(playerData.getPlayer(), Message.INVALID_SYNTAX, label, output.toString().trim());
 	}
 
-	public static void run(String[] args, PlayerData playerData, String label) {
+	public void run(String[] args, PlayerData playerData, String label) {
 		if(!syntaxHandler.isValidSyntax(args)) {
 			getUsage(args, playerData, label);
 			return;
@@ -71,13 +69,13 @@ public class ArgumentParser {
 				String[].class,
 				PlayerData.class,
 				String.class
-			).invoke(null, args, playerData, label);
+			).invoke(this, args, playerData, label);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private static void count(String[] args, PlayerData playerData, String label) {
+	private void count(String[] args, PlayerData playerData, String label) {
 		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
@@ -104,7 +102,8 @@ public class ArgumentParser {
 		playerData.count(startPosition, endPosition, plugin, label);
 	}
 
-	private static void scan(String[] args, PlayerData playerData, String label) {
+	@SuppressWarnings("unused")
+	private void scan(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 
 		if(args.length > 0) {
@@ -132,7 +131,8 @@ public class ArgumentParser {
 		playerData.scan(origin, plugin, label);
 	}
 
-	private static void inspector(String[] args, PlayerData playerData, String label) {
+	@SuppressWarnings("unused")
+	private void inspector(String[] args, PlayerData playerData, String label) {
 		switch(args[0]) {
 			case "start" -> {
 				Player player = playerData.getPlayer();
@@ -145,23 +145,28 @@ public class ArgumentParser {
 					return;
 				}
 
-				playerData.inspect(plugin);
+				playerData.inspect(plugin, label);
 			}
 			case "stop" -> playerData.terminateInspect();
 		}
 	}
 
-	private static void define_region(String[] args, PlayerData playerData, String label) {
+	@SuppressWarnings("unused")
+	private void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
-			MessageSender.sendMessage(player, Message.SCAN_IN_PROGRESS);
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING);
+			return;
+		}
+		if(playerData.isInspecting()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING);
 			return;
 		}
 
 		Region region = playerData.updateRegion();
 
 		if(region == null) {
-			MessageSender.sendMessage(player, Message.NO_SCAN_REGION);
+			MessageSender.sendMessage(player, Message.NO_SCAN_REGION, label);
 			return;
 		}
 
@@ -174,7 +179,8 @@ public class ArgumentParser {
 		);
 	}
 
-	private static void help(String[] args, PlayerData playerData, String label) {
+	@SuppressWarnings("unused")
+	private void help(String[] args, PlayerData playerData, String label) {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 

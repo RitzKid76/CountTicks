@@ -2,6 +2,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -18,9 +19,8 @@ public abstract class Traceable {
 	private final BlockVector3 position;
 	private final GameTickDelay gameTickDelay;
 
-	protected final World world;
+	public final World world;
 
-	// some retard shit since java doesnt let me call super() unless its the first method in the function. makes sense, but sadge.
 	public Traceable(Set<Connection> in, Set<Connection> out, BlockData blockData, BlockVector3 pos, World wld) {
 		TraceableBlockData data = applyBlockData(blockData);
 		BlockFace direction = data.direction();
@@ -105,6 +105,10 @@ public abstract class Traceable {
 	}
 	public boolean filterConnection(Connection connection, ConnectionType type) {
 		return false;
+	}
+
+	public Material getMaterial() {
+		return null;
 	}
 
 	public void getInputDependentPower(Connection connection, PowerType powerType) {

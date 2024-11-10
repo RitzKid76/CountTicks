@@ -10,7 +10,7 @@ public enum Message {
 	INVALID_SYNTAX(MessageType.ERROR, 2),
 	HELP(MessageType.INFO),
 	HELP_LISTING(MessageType.INFO, 2),
-	
+
 	NO_START_SELECTED(MessageType.ERROR),
 	NO_END_SELECTED(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR, 1),
@@ -18,22 +18,21 @@ public enum Message {
 
 	START_CHANGED(MessageType.WARNING),
 	SET_SCAN_REGION(MessageType.INFO, 6),
-	
+
 	SCAN_COMPLETE(MessageType.INFO, 2),
-	SCAN_IN_PROGRESS(MessageType.INFO),
 
 	START_SCAN(MessageType.INFO),
 	STOP_SCAN(MessageType.INFO),
 	NO_ACTIVE_SCAN(MessageType.ERROR),
 	ALREADY_SCANNING(MessageType.ERROR),
-	CURRENTLY_SCANNING(MessageType.ERROR, 1),
+	CURRENTLY_SCANNING(MessageType.INFO, 1),
 	INVALID_START(MessageType.ERROR),
-	
+
 	START_INSPECT_MODE(MessageType.INFO),
 	STOP_INSPECT_MODE(MessageType.INFO),
 	NO_ACTIVE_INSPECTION(MessageType.ERROR),
 	ALREADY_INSPECTING(MessageType.ERROR),
-	CURRENTLY_INSPECTING(MessageType.ERROR, 1),
+	CURRENTLY_INSPECTING(MessageType.INFO, 1),
 
 	DELAY(MessageType.INFO, 1),
 	DELAY_SHORT(MessageType.INFO, 1),
@@ -84,18 +83,12 @@ public enum Message {
 	}
 
 	private String formatMessage() {
-		switch(type) {
-			case INFO -> {
-				return formatInfo();
-			}
-			case WARNING -> {
-				return formatWarning();
-			}
-			case ERROR -> {
-				return formatError();
-			}
-		}
-		return null;
+		return switch(type) {
+			case INFO -> formatInfo();
+			case WARNING -> formatWarning();
+			case ERROR -> formatError();
+			default -> null;
+		};
 	}
 
 	private String formatInfo() {

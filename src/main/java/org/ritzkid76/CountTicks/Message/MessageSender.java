@@ -98,10 +98,7 @@ public class MessageSender {
 	public static void sendHelpMessage(CommandSender sender, SyntaxEntry options, String label) {
 		sendMessage(sender, Message.HELP);
 
-		int remaining = options.size();
 		for(Map.Entry<String, SyntaxEntry> option : options.entrySet()) {
-			remaining--;
-
 			String arg = option.getKey();
 			SyntaxEntry subEntry = option.getValue();
 

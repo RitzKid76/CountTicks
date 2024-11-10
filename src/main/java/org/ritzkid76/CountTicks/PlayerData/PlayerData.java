@@ -8,7 +8,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.ritzkid76.CountTicks.WorldEditSelection;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
@@ -106,7 +105,7 @@ public class PlayerData {
 		}
 
 		scanTask.cancel();
-		
+
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
@@ -148,18 +147,18 @@ public class PlayerData {
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
 		}
-		
+
 		inspectTask.cancel();
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
-	public void inspect(Plugin plugin) {
+	public void inspect(Plugin plugin, String label) {
 		Player player = getPlayer();
 
 		if(!hasScanned()) {
-			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD);
+			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD, label);
 			return;
 		}
 
@@ -172,7 +171,7 @@ public class PlayerData {
 			if(viewedBlock == null || viewedBlock.equals(lastViewBlock.get()))
 				return;
 			lastViewBlock.set(viewedBlock);
-				
+
 			ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
 		}, 0, 1);
 	}
