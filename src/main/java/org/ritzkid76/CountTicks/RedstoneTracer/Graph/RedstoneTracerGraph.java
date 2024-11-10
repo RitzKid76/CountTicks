@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
@@ -31,12 +32,13 @@ public class RedstoneTracerGraph {
 	private World world;
 
 	private final Set<BlockVector3> visited = new HashSet<>();
-	private final BooleanQueue<Traceable> queue = new BooleanQueue<>(this::isPriority);
+	private final BooleanQueue<Traceable> queue = new BooleanQueue<>(this::isChainable);
 
-	private boolean isPriority(Traceable t) {
-		return t.delay() == 0;
+	private boolean isChainable(Traceable t) {
+		return t.getMaterial() == Material.REDSTONE_WIRE;
 	}
 
+	@SuppressWarnings("null")
 	public RedstoneTracerGraph(BlockVector3 origin, Region bounds) {
 		this.origin = origin;
 		this.bounds = bounds;
@@ -71,7 +73,7 @@ public class RedstoneTracerGraph {
 	}
 
 	private RedstoneTracerGraphNode chainBuilder = null;
-	public void add(Traceable current, Set<Traceable> children, boolean chainLast) {
+	private void add(Traceable current, Set<Traceable> children, boolean chainLast) {
 		RedstoneTracerGraphNode currentNode = positionToNode.getOrDefault(current.getPosition(), current.toRedstoneTracerGraphNode());
 
 		if(chainBuilder == null)
@@ -88,7 +90,7 @@ public class RedstoneTracerGraph {
 			chainBuilder = null;
 	}
 
-	public boolean contains(BlockVector3 pos) {
+	private boolean contains(BlockVector3 pos) {
 		return contents.contains(pos);
 	}
 
@@ -140,7 +142,7 @@ public class RedstoneTracerGraph {
 		return new RedstoneTracerGraphPath(new LinkedList<>(), null);
 	}
 
-	public boolean isInBounds(BlockVector3 pos) {
+	private boolean isInBounds(BlockVector3 pos) {
 		return bounds.contains(pos);
 	}
 
@@ -185,7 +187,7 @@ public class RedstoneTracerGraph {
 			visited.add(currentPos);
 
 			Set<Traceable> candidates = current.getNeighbors(world);
-			add(current, candidates, isPriority(current));
+			add(current, candidates, isChainable(current));
 
 			candidates.removeIf(this::candidateRemoval);
 			queue.addAll(candidates);

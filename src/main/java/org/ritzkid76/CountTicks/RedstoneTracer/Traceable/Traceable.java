@@ -2,6 +2,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -105,6 +106,10 @@ public abstract class Traceable {
 	}
 	public boolean filterConnection(Connection connection, ConnectionType type) {
 		return false;
+	}
+
+	public Material getMaterial() {
+		return null;
 	}
 
 	public void getInputDependentPower(Connection connection, PowerType powerType) {

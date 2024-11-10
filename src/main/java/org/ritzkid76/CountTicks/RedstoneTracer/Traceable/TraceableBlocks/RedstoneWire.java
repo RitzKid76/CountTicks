@@ -2,6 +2,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -29,6 +30,11 @@ public class RedstoneWire extends Traceable {
 
 	public RedstoneWire(BlockData data, BlockVector3 position, World world) {
 		super(inputs, outputs, data, position, world);
+	}
+
+	@Override
+	public Material getMaterial() {
+		return Material.REDSTONE_WIRE;
 	}
 
 	@Override

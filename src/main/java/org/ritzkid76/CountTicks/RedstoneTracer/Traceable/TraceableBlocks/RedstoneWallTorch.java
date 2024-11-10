@@ -2,6 +2,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
@@ -28,6 +29,11 @@ public class RedstoneWallTorch extends Traceable {
 
 	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) {
 		super(inputs, outputs, data, position, world);
+	}
+
+	@Override
+	public Material getMaterial() {
+		return Material.REDSTONE_WALL_TORCH;
 	}
 
 	@Override
