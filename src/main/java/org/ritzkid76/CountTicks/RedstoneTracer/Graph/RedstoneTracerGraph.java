@@ -195,7 +195,7 @@ public class RedstoneTracerGraph {
 
 		return true;
 	}
-	
+
 	private boolean candidateRemoval(Traceable candidate) {
 		BlockVector3 pos = candidate.getPosition();
 		return

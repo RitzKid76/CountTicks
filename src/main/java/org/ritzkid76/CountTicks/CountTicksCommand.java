@@ -28,14 +28,14 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	@Override
 	public void onLoad() {
 		scheduler = getPlugin().getServer().getScheduler();
-		
+
 		File dataFolder = getPlugin().getDataFolder();
 		parser = new ArgumentParser(dataFolder, getPlugin());
-		
+
 		playerDataContainer = new PlayerDataContainer();
-		
+
 		MessageSender.populateOptions(dataFolder);
-		
+
 		enableListeners();
 		MessageSender.sendConsoleMessage(Message.LOADED);
 	}

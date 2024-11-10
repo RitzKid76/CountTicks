@@ -105,7 +105,7 @@ public class PlayerData {
 		}
 
 		scanTask.cancel();
-		
+
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_SCAN);
 	}
@@ -147,7 +147,7 @@ public class PlayerData {
 				MessageSender.sendMessage(player, Message.NO_ACTIVE_INSPECTION);
 			return;
 		}
-		
+
 		inspectTask.cancel();
 
 		if(!silent)
@@ -171,7 +171,7 @@ public class PlayerData {
 			if(viewedBlock == null || viewedBlock.equals(lastViewBlock.get()))
 				return;
 			lastViewBlock.set(viewedBlock);
-				
+
 			ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
 		}, 0, 1);
 	}

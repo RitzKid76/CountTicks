@@ -10,7 +10,7 @@ public enum Message {
 	INVALID_SYNTAX(MessageType.ERROR, 2),
 	HELP(MessageType.INFO),
 	HELP_LISTING(MessageType.INFO, 2),
-	
+
 	NO_START_SELECTED(MessageType.ERROR),
 	NO_END_SELECTED(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR, 1),
@@ -18,7 +18,7 @@ public enum Message {
 
 	START_CHANGED(MessageType.WARNING),
 	SET_SCAN_REGION(MessageType.INFO, 6),
-	
+
 	SCAN_COMPLETE(MessageType.INFO, 2),
 
 	START_SCAN(MessageType.INFO),
@@ -27,7 +27,7 @@ public enum Message {
 	ALREADY_SCANNING(MessageType.ERROR),
 	CURRENTLY_SCANNING(MessageType.INFO, 1),
 	INVALID_START(MessageType.ERROR),
-	
+
 	START_INSPECT_MODE(MessageType.INFO),
 	STOP_INSPECT_MODE(MessageType.INFO),
 	NO_ACTIVE_INSPECTION(MessageType.ERROR),
