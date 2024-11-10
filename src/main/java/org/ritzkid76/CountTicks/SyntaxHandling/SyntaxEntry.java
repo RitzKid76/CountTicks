@@ -47,7 +47,6 @@ public class SyntaxEntry {
 		return v;
 	}
 
-	//TODO fix with new parameter requirement shift
 	public String toSyntaxString() {
 		if(entries.isEmpty())
 			return "";
