@@ -102,6 +102,7 @@ public class ArgumentParser {
 		playerData.count(startPosition, endPosition, plugin, label);
 	}
 
+	@SuppressWarnings("unused")
 	private void scan(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 
@@ -130,6 +131,7 @@ public class ArgumentParser {
 		playerData.scan(origin, plugin, label);
 	}
 
+	@SuppressWarnings("unused")
 	private void inspector(String[] args, PlayerData playerData, String label) {
 		switch(args[0]) {
 			case "start" -> {
@@ -149,6 +151,7 @@ public class ArgumentParser {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void define_region(String[] args, PlayerData playerData, String label) {
 		Player player = playerData.getPlayer();
 		if(playerData.isScanning()) {
@@ -176,6 +179,7 @@ public class ArgumentParser {
 		);
 	}
 
+	@SuppressWarnings("unused")
 	private void help(String[] args, PlayerData playerData, String label) {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
