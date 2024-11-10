@@ -19,4 +19,10 @@ public record RedstoneTracerGraphPath(RedstoneTracerGraphPathResult result, Link
 	public RedstoneTracerGraphPath pathFound() {
 		return new RedstoneTracerGraphPath(RedstoneTracerGraphPathResult.PATH_FOUND, path, gameTickDelay);
 	}
+
+	public void showPath() {
+		for(RedstoneTracerGraphNode node : path) {
+			node.show();
+		}
+	}
 }

@@ -97,7 +97,7 @@ public abstract class Traceable {
 	}
 
 	public RedstoneTracerGraphNode toRedstoneTracerGraphNode() {
-		return new RedstoneTracerGraphNode(position, gameTickDelay);
+		return new RedstoneTracerGraphNode(position, gameTickDelay, world);
 	}
 
 	public TraceableBlockData applyBlockData(BlockData blockData) {

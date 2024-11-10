@@ -184,6 +184,14 @@ public class ArgumentParser {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 
+	@SuppressWarnings("unused")
+	private void show_path(String[] args, PlayerData playerData, String label) {
+		switch(args[0]) {
+			case "enabled" -> playerData.enableShowPath();
+			case "disabled" -> playerData.disableShowPath();
+		}
+	}
+
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
 			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, String.valueOf(path.delay() / 2));

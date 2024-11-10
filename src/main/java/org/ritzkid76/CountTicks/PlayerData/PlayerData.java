@@ -16,6 +16,7 @@ import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
+import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPathResult;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
 
 import com.sk89q.worldedit.math.BlockVector3;
@@ -26,6 +27,7 @@ public class PlayerData {
 	private CuboidRegion playerRegion;
 	private RedstoneTracerGraph graph;
 	private WorldEditSelection selection;
+	private boolean showPath = false;
 
 	private BukkitTask scanTask;
 	private BukkitTask inspectTask;
@@ -54,6 +56,15 @@ public class PlayerData {
 			return null;
 		playerRegion = region.clone();
 		return playerRegion;
+	}
+
+	public void enableShowPath() {
+		showPath = true;
+		MessageSender.sendMessage(getPlayer(), Message.ENABLED_SHOW);
+	}
+	public void disableShowPath() {
+		showPath = false;
+		MessageSender.sendMessage(getPlayer(), Message.DISABLED_SHOW);
 	}
 
 	public boolean isScanning() {
@@ -165,15 +176,30 @@ public class PlayerData {
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
 
 		AtomicReference<BlockVector3> lastViewBlock = new AtomicReference<>(null);
+		AtomicReference<RedstoneTracerGraphPath> lastPath = new AtomicReference<>(null);
 		inspectTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
 			BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
 
-			if(viewedBlock == null || viewedBlock.equals(lastViewBlock.get()))
+			if(showPath) {
+				RedstoneTracerGraphPath last = lastPath.get();
+				if(last != null)
+					last.showPath();
+			}
+
+			if(viewedBlock == null)
+				return;
+			if(viewedBlock.equals(lastViewBlock.get()))
 				return;
 			lastViewBlock.set(viewedBlock);
-
-			ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
-		}, 0, 1);
+			
+			RedstoneTracerGraphPath path = graph.findFastestPath(viewedBlock);
+			if(showPath) {
+				if(path.result() == RedstoneTracerGraphPathResult.PATH_FOUND)
+					lastPath.set(path);
+			}
+			
+			ArgumentParser.sendInspectorMessageSubtitle(player, path);
+		}, 0, 2);
 	}
 
 	private BlockVector3 callbackEndpoint;

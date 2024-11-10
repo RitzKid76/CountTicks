@@ -10,3 +10,8 @@ args:
     - arg: stop
   - arg: define_region    # defines the region to scan inside
   - arg: help
+  - arg: show_path
+    requires_parameter: true
+    options:
+    - arg: enabled
+    - arg: disabled

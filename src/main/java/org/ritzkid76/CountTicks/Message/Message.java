@@ -39,8 +39,10 @@ public enum Message {
 	UNSCANNED_LOCATION(MessageType.ERROR),
 	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
 	OUT_OF_BOUNDS(MessageType.ERROR),
-	OUT_OF_BOUNDS_SHORT(MessageType.INFO);
+	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
 
+	ENABLED_SHOW(MessageType.INFO),
+	DISABLED_SHOW(MessageType.INFO);
 
 
 	private final String message;
