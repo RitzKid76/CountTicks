@@ -131,7 +131,7 @@ public class PlayerData {
 		long startTime = System.currentTimeMillis();
 		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
-				scanCallback(graph.trace(scanTask), returnTo, startTime);
+				scanCallback(graph.trace(scanTask, startTime, player), returnTo, startTime);
 			} catch (ThreadCanceledException e) {}
 		});
 	}

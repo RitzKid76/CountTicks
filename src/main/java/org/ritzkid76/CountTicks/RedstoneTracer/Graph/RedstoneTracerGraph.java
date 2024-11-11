@@ -12,11 +12,14 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.NonTraceableStartPositionException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
+import org.ritzkid76.CountTicks.Message.Message;
+import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
@@ -164,7 +167,7 @@ public class RedstoneTracerGraph {
 		return output.toString();
 	}
 
-	public boolean trace(BukkitTask task) {
+	public boolean trace(BukkitTask task, long startTime, Player player) {
 		Traceable startTraceable;
 
 		try {
@@ -180,6 +183,12 @@ public class RedstoneTracerGraph {
 		while (!queue.isEmpty()) {
 			if(task.isCancelled())
 				throw new ThreadCanceledException();
+
+			long currentTime = System.currentTimeMillis();
+			if(currentTime - startTime > 3000L) {
+				startTime = currentTime;
+				MessageSender.sendMessage(player, Message.SCAN_PROGRESS, String.valueOf(totalScanned()));
+			}
 
 			Traceable current = queue.remove();
 			BlockVector3 currentPos = current.getPosition();

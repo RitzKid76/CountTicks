@@ -27,6 +27,7 @@ public enum Message {
 	ALREADY_SCANNING(MessageType.ERROR),
 	CURRENTLY_SCANNING(MessageType.INFO, 1),
 	INVALID_START(MessageType.ERROR),
+	SCAN_PROGRESS(MessageType.INFO, 1),
 
 	START_INSPECT_MODE(MessageType.INFO),
 	STOP_INSPECT_MODE(MessageType.INFO),

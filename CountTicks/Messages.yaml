@@ -22,6 +22,7 @@ no_active_scan: "There is no scan in progress."
 already_scanning: "Scanning already in progress."
 currently_scanning: "There is a scan in progress. \nCancel it with &3/$ &bscan terminate&r."
 invalid_start: "The start point selected was not a redstone component."
+scan_progress: "&7Scanning... &b$ &3blocks&r."
 
 start_inspect_mode: "Started inspect mode."
 stop_inspect_mode: "Stopped inspect mode."
