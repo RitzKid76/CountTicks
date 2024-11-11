@@ -185,7 +185,7 @@ public class RedstoneTracerGraph {
 				throw new ThreadCanceledException();
 
 			long currentTime = System.currentTimeMillis();
-			if(currentTime - startTime > 3000L) {
+			if(currentTime - startTime >= 3000L) {
 				startTime = currentTime;
 				MessageSender.sendMessage(player, Message.SCAN_PROGRESS, String.valueOf(totalScanned()));
 			}
