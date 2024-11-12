@@ -67,18 +67,18 @@ public abstract class Traceable {
 		return false;
 	}
 
-	private void processDependentOutputPowers(Traceable traceable, PowerType inputPower) {
-		for(Connection connection : traceable.outputs) {
-			PowerType outputPower = connection.powerType;
-			if(outputPower == PowerType.INPUT_DEPENDENT)
-				traceable.getInputDependentPower(connection, inputPower);
+	private void processDependentOutputPowers(Traceable destination, PowerType sourcePower) {
+		for(Connection connection : destination.outputs) {
+			PowerType destinationOutputPower = connection.powerType;
+			if(destinationOutputPower == PowerType.INPUT_DEPENDENT)
+				destination.getInputDependentPower(connection, sourcePower, this);
 		}
 	}
 
 	public Set<Traceable> getNeighbors(World world) {
 		Set<Traceable> result = new HashSet<>();
 
-		for(Connection outputConnection: outputs) {
+		for(Connection outputConnection : outputs) {
 			PowerType connectedTraceableInputPower = outputConnection.powerType;
 			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, outputConnection.connectionDirection);
 
@@ -111,11 +111,11 @@ public abstract class Traceable {
 		return null;
 	}
 
-	public void getInputDependentPower(Connection connection, PowerType powerType) {
-		switch(powerType) {
-			case HARD -> connection.updatePowerType(PowerType.SOFT);
-			case SOFT -> connection.updatePowerType(PowerType.WEAK);
-			default-> connection.updatePowerType(PowerType.NONE);
+	public void getInputDependentPower(Connection currentConnection, PowerType inputPowerType, Traceable source) {
+		switch(inputPowerType) {
+			case HARD -> currentConnection.updatePowerType(PowerType.SOFT);
+			case SOFT -> currentConnection.updatePowerType(PowerType.WEAK);
+			default-> currentConnection.updatePowerType(PowerType.NONE);
 		}
 	}
 }

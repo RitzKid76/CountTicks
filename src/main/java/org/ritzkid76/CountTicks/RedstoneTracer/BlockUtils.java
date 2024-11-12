@@ -15,6 +15,9 @@ public class BlockUtils {
 		return location.getBlock();
 	}
 
+	public static boolean isSolidBlock(Material material) {
+		return material.isOccluding();
+	}
 	public static boolean isSolidBlock(BlockData data) {
 		return data.isOccluding();
 	}
