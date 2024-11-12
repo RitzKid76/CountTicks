@@ -25,13 +25,13 @@ import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
 
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.regions.CuboidRegion;
 
 public class RedstoneTracerGraph {
 	private Map<BlockVector3, RedstoneTracerGraphNode> positionToNode = new HashMap<>();
 	private Set<BlockVector3> contents = new HashSet<>();
 	private BlockVector3 origin;
-	private Region bounds;
+	private CuboidRegion bounds;
 	private World world;
 
 	private final Set<BlockVector3> visited = new HashSet<>();
@@ -42,7 +42,7 @@ public class RedstoneTracerGraph {
 	}
 
 	@SuppressWarnings("null")
-	public RedstoneTracerGraph(BlockVector3 origin, Region bounds) {
+	public RedstoneTracerGraph(BlockVector3 origin, CuboidRegion bounds) {
 		this.origin = origin;
 		this.bounds = bounds;
 
@@ -220,6 +220,9 @@ public class RedstoneTracerGraph {
 	}
 	public BlockVector3 getOrigin() {
 		return origin;
+	}
+	public CuboidRegion getRegion() {
+		return bounds;
 	}
 	public RedstoneTracerGraphNode get(BlockVector3 pos) {
 		return positionToNode.get(pos);

@@ -12,6 +12,7 @@ no_scanned_build: "No build scanned.\nUse &3/$ &bscan&r."
 no_scan_region: "No region defined for scan.\nUse &3/$ &bdefine_region&r with a &3WorldEdit&r selection."
 
 start_changed: "Rescanning due to change in start position."
+region_changed: "Rescanning due to change in region."
 set_scan_region: "Defined the scan region as:\n&3[&b$&3, &b$&3, &b$&3] &rto &3[&b$&3, &b$&3, &b$&3]"
 
 scan_complete: "Scan completed in &b$&3s&r with &b$&r blocks scanned."

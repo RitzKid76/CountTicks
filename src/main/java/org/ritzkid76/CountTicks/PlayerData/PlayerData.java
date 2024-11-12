@@ -198,6 +198,12 @@ public class PlayerData {
 			scan(origin, this::countCallback, plugin, label);
 			return true;
 		}
+		if(graph.getRegion() != playerRegion) {
+			MessageSender.sendMessage(getPlayer(), Message.REGION_CHANGED);
+			updateRegion();
+			scan(origin, this::countCallback, plugin, label);
+			return true;
+		}
 
 		return false;
 	}

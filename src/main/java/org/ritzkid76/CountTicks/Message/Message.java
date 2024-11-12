@@ -17,6 +17,7 @@ public enum Message {
 	NO_SCAN_REGION(MessageType.ERROR, 1),
 
 	START_CHANGED(MessageType.WARNING),
+	REGION_CHANGED(MessageType.WARNING),
 	SET_SCAN_REGION(MessageType.INFO, 6),
 
 	SCAN_COMPLETE(MessageType.INFO, 2),
