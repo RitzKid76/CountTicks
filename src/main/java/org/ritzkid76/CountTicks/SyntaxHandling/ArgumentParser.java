@@ -180,6 +180,12 @@ public class ArgumentParser {
 	}
 
 	@SuppressWarnings("unused")
+	private void stop(String[] args, PlayerData playerData, String label) {
+		playerData.shutdown();
+		MessageSender.sendMessage(playerData.getPlayer(), Message.STOPPED_ALL);
+	}
+
+	@SuppressWarnings("unused")
 	private void help(String[] args, PlayerData playerData, String label) {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}

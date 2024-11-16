@@ -10,6 +10,7 @@ public enum Message {
 	INVALID_SYNTAX(MessageType.ERROR, 2),
 	HELP(MessageType.INFO),
 	HELP_LISTING(MessageType.INFO, 2),
+	STOPPED_ALL(MessageType.INFO),
 
 	NO_START_SELECTED(MessageType.ERROR),
 	NO_END_SELECTED(MessageType.ERROR),
