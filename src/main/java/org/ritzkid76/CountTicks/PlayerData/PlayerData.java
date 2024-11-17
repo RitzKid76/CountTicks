@@ -1,7 +1,7 @@
 package org.ritzkid76.CountTicks.PlayerData;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -164,15 +164,28 @@ public class PlayerData {
 
 		MessageSender.sendMessage(player, Message.START_INSPECT_MODE);
 
-		AtomicReference<BlockVector3> lastViewBlock = new AtomicReference<>(null);
+		class BlockVector3Wrapper {
+			BlockVector3 blockVector3;
+		}
+
+		AtomicBoolean canEnterSafeZone = new AtomicBoolean(true);
+		BlockVector3Wrapper wrapper = new BlockVector3Wrapper();
+
 		inspectTask = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-			BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
-
-			if(viewedBlock == null || viewedBlock.equals(lastViewBlock.get()))
+			if(!canEnterSafeZone.compareAndSet(true, false))
 				return;
-			lastViewBlock.set(viewedBlock);
 
-			ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
+			try {
+				BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
+
+				if(viewedBlock == null || viewedBlock.equals(wrapper.blockVector3))
+					return;
+				wrapper.blockVector3 = viewedBlock;
+
+				ArgumentParser.sendInspectorMessageSubtitle(player, graph.findFastestPath(viewedBlock));
+			} finally {
+				canEnterSafeZone.set(true);
+			}
 		}, 0, 1);
 	}
 
