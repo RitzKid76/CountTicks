@@ -65,7 +65,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 
 	@Override
 	public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
-		if (!(sender instanceof Player player)) {
+		if(!(sender instanceof Player player)) {
 			MessageSender.sendMessage(sender, Message.CONSOLE_USE);
 			return true;
 		}

@@ -28,17 +28,17 @@ public enum ConnectionDirection {
 	public static final EnumSet<ConnectionDirection> WESTERN = EnumSet.of(WEST, WEST_UP, WEST_DOWN);
 
 	public static BlockFace toBlockFace(ConnectionDirection direction) {
-		if (NORTHERN.contains(direction)) {
+		if(NORTHERN.contains(direction)) {
 			return BlockFace.NORTH;
-		} else if (EASTERN.contains(direction)) {
+		} else if(EASTERN.contains(direction)) {
 			return BlockFace.EAST;
-		} else if (SOUTHERN.contains(direction)) {
+		} else if(SOUTHERN.contains(direction)) {
 			return BlockFace.SOUTH;
-		} else if (WESTERN.contains(direction)) {
+		} else if(WESTERN.contains(direction)) {
 			return BlockFace.WEST;
-		} else if (UPWARD.contains(direction)) {
+		} else if(UPWARD.contains(direction)) {
 			return BlockFace.UP;
-		} else if (DOWNWARD.contains(direction)) {
+		} else if(DOWNWARD.contains(direction)) {
 			return BlockFace.DOWN;
 		} else {
 			return null;
@@ -48,34 +48,33 @@ public enum ConnectionDirection {
 	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
 		BlockVector3 offset = BlockVector3.ZERO;
 	
-		if (UPWARD.contains(direction)) {
+		if(UPWARD.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_Y);
-		} else if (DOWNWARD.contains(direction)) {
+		} else if(DOWNWARD.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_Y);
 		}
 	
-		if (NORTHERN.contains(direction)) {
+		if(NORTHERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_Z);
-		} else if (EASTERN.contains(direction)) {
+		} else if(EASTERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_X);
-		} else if (SOUTHERN.contains(direction)) {
+		} else if(SOUTHERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_Z);
-		} else if (WESTERN.contains(direction)) {
+		} else if(WESTERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_X);
 		}
 	
 		return offset.add(origin);
 	}
 	
-
 	public static ConnectionDirection toCardinalDirection(ConnectionDirection direction) {
-		if (NORTHERN.contains(direction)) {
+		if(NORTHERN.contains(direction)) {
 			return NORTH;
-		} else if (EASTERN.contains(direction)) {
+		} else if(EASTERN.contains(direction)) {
 			return EAST;
-		} else if (SOUTHERN.contains(direction)) {
+		} else if(SOUTHERN.contains(direction)) {
 			return SOUTH;
-		} else if (WESTERN.contains(direction)) {
+		} else if(WESTERN.contains(direction)) {
 			return WEST;
 		} else {
 			return null;
