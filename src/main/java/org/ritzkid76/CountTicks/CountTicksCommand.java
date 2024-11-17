@@ -3,12 +3,12 @@ package org.ritzkid76.CountTicks;
 import java.io.File;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
@@ -21,14 +21,11 @@ import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProject;
 import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
-	private BukkitScheduler scheduler;
 	private ArgumentParser parser;
 	private PlayerDataContainer playerDataContainer;
 
 	@Override
 	public void onLoad() {
-		scheduler = getPlugin().getServer().getScheduler();
-
 		File dataFolder = getPlugin().getDataFolder();
 		parser = new ArgumentParser(dataFolder, getPlugin());
 
@@ -44,7 +41,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	public void onUnload() {
 		disableListeners();
 
-		scheduler.cancelTasks(getPlugin());
+		Bukkit.getScheduler().cancelTasks(getPlugin());
 
 		MessageSender.sendConsoleMessage(Message.UNLOADED);
 	}
