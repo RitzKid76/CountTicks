@@ -14,9 +14,7 @@ public class PlayerDataContainer {
 		return get(uuid);
 	}
 	public PlayerData get(UUID uuid) {
-		players.putIfAbsent(uuid, new PlayerData(uuid));
-
-		return players.get(uuid);
+		return players.computeIfAbsent(uuid, PlayerData::new);
 	}
 
 	public void shutdown() {
