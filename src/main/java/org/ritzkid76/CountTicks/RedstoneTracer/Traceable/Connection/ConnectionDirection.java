@@ -40,9 +40,8 @@ public enum ConnectionDirection {
 			return BlockFace.UP;
 		} else if(DOWNWARD.contains(direction)) {
 			return BlockFace.DOWN;
-		} else {
-			return null;
 		}
+		throw new IllegalArgumentException();
 	}
 
 	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
@@ -80,5 +79,4 @@ public enum ConnectionDirection {
 			return null;
 		}
 	}
-	
 }
