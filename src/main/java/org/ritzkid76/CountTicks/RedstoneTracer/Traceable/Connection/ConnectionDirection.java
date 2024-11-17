@@ -28,44 +28,58 @@ public enum ConnectionDirection {
 	public static final EnumSet<ConnectionDirection> WESTERN = EnumSet.of(WEST, WEST_UP, WEST_DOWN);
 
 	public static BlockFace toBlockFace(ConnectionDirection direction) {
-		return switch(direction) {
-			case ConnectionDirection c when NORTHERN.contains(c) -> BlockFace.NORTH;
-			case ConnectionDirection c when EASTERN.contains(c) -> BlockFace.EAST;
-			case ConnectionDirection c when SOUTHERN.contains(c) -> BlockFace.SOUTH;
-			case ConnectionDirection c when WESTERN.contains(c) -> BlockFace.WEST;
-			case ConnectionDirection c when UPWARD.contains(c) -> BlockFace.UP;
-			case ConnectionDirection c when DOWNWARD.contains(c) -> BlockFace.DOWN;
-			default -> null;
-		};
+		if (NORTHERN.contains(direction)) {
+			return BlockFace.NORTH;
+		} else if (EASTERN.contains(direction)) {
+			return BlockFace.EAST;
+		} else if (SOUTHERN.contains(direction)) {
+			return BlockFace.SOUTH;
+		} else if (WESTERN.contains(direction)) {
+			return BlockFace.WEST;
+		} else if (UPWARD.contains(direction)) {
+			return BlockFace.UP;
+		} else if (DOWNWARD.contains(direction)) {
+			return BlockFace.DOWN;
+		} else {
+			return null;
+		}
 	}
 
 	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
 		BlockVector3 offset = BlockVector3.ZERO;
-
-		switch (direction) {
-			case ConnectionDirection c when UPWARD.contains(c) -> offset = offset.add(BlockVector3.UNIT_Y);
-			case ConnectionDirection c when DOWNWARD.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_Y);
-			default -> {}
+	
+		if (UPWARD.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_Y);
+		} else if (DOWNWARD.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_Y);
 		}
-
-		switch (direction) {
-			case ConnectionDirection c when NORTHERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_Z);
-			case ConnectionDirection c when EASTERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_X);
-			case ConnectionDirection c when SOUTHERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_Z);
-			case ConnectionDirection c when WESTERN.contains(c) -> offset = offset.add(BlockVector3.UNIT_MINUS_X);
-			default -> {}
+	
+		if (NORTHERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_Z);
+		} else if (EASTERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_X);
+		} else if (SOUTHERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_Z);
+		} else if (WESTERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_X);
 		}
-
+	
 		return offset.add(origin);
 	}
+	
 
 	public static ConnectionDirection toCardinalDirection(ConnectionDirection direction) {
-		return switch(direction) {
-			case ConnectionDirection c when NORTHERN.contains(c) -> NORTH;
-			case ConnectionDirection c when EASTERN.contains(c) -> EAST;
-			case ConnectionDirection c when SOUTHERN.contains(c) -> SOUTH;
-			case ConnectionDirection c when WESTERN.contains(c) -> WEST;
-			default -> null;
-		};
+		if (NORTHERN.contains(direction)) {
+			return NORTH;
+		} else if (EASTERN.contains(direction)) {
+			return EAST;
+		} else if (SOUTHERN.contains(direction)) {
+			return SOUTH;
+		} else if (WESTERN.contains(direction)) {
+			return WEST;
+		} else {
+			return null;
+		}
 	}
+	
 }

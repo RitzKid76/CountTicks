@@ -29,16 +29,15 @@ public class SyntaxHandler implements TabCompleter {
 		SyntaxEntry focus = entry;
 
 		for(Object value : commands.values()) {
-			switch(value) {
-				case ArrayList<?> list -> {
-					for(Object o : list) {
-						populateOptions((Map<String, Object>) o, focus);
-					}
+			if(value instanceof ArrayList<?> list) {
+				for(Object o : list) {
+					populateOptions((Map<String, Object>) o, focus);
 				}
-				case String s -> focus = entry.add(s);
-				case Boolean b -> focus.setRequiresParameter(b);
-				default -> {}
 			}
+			else if(value instanceof String s)
+				focus = entry.add(s);
+			else if(value instanceof Boolean b)
+				focus.setRequiresParameter(b);
 		}
 	}
 

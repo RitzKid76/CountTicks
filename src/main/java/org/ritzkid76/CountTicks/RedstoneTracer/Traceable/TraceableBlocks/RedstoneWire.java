@@ -77,11 +77,12 @@ public class RedstoneWire extends Traceable {
 	private boolean diagonalBlocked(ConnectionDirection direction) {
 		ConnectionDirection testDirection;
 
-		switch(direction) {
-			case ConnectionDirection c when ConnectionDirection.UPWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.UP;
-			case ConnectionDirection c when ConnectionDirection.DOWNWARD_DIAGONAL.contains(c) -> testDirection = ConnectionDirection.toCardinalDirection(direction);
-			default -> { return false; }
-		}
+		if(ConnectionDirection.UPWARD_DIAGONAL.contains(direction))
+			testDirection = ConnectionDirection.UP;
+		else if(ConnectionDirection.DOWNWARD_DIAGONAL.contains(direction))
+			testDirection = ConnectionDirection.toCardinalDirection(direction);
+		else
+			return false;
 
 		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
 
