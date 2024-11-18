@@ -70,7 +70,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 			return true;
 		}
 
-		PlayerData playerData = playerDataContainer.get(player);
+		PlayerData playerData = playerDataContainer.getOrCreate(player);
 		parser.run(args, playerData, label);
 
 		return true; // dont want to use the bukkit default useage

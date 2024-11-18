@@ -9,12 +9,15 @@ import org.bukkit.entity.Player;
 public class PlayerDataContainer {
 	private final Map<UUID, PlayerData> players = new HashMap<>();
 
-	public PlayerData get(Player player) {
+	public PlayerData getOrCreate(Player player) {
 		UUID uuid = player.getUniqueId();
-		return get(uuid);
+		return getOrCreate(uuid);
+	}
+	public PlayerData getOrCreate(UUID uuid) {
+		return players.computeIfAbsent(uuid, PlayerData::new);
 	}
 	public PlayerData get(UUID uuid) {
-		return players.computeIfAbsent(uuid, PlayerData::new);
+		return players.get(uuid);
 	}
 
 	public void shutdown() {
@@ -24,6 +27,8 @@ public class PlayerDataContainer {
 	}
 
 	public void shutdown(UUID uuid) {
-		get(uuid).shutdown();
+		PlayerData player = get(uuid);
+		if(player != null)
+			player.shutdown();
 	}
 }
