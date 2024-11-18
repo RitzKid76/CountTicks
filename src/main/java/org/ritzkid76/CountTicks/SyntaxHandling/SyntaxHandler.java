@@ -33,11 +33,11 @@ public class SyntaxHandler implements TabCompleter {
 				for(Object o : list) {
 					populateOptions((Map<String, Object>) o, focus);
 				}
-			}
-			else if(value instanceof String s)
+			} else if(value instanceof String s) {
 				focus = entry.add(s);
-			else if(value instanceof Boolean b)
+			} else if(value instanceof Boolean b) {
 				focus.setRequiresParameter(b);
+			}
 		}
 	}
 
