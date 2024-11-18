@@ -35,15 +35,13 @@ public class WorldEditSelection {
 	public Region getRegion() {
 		try {
 			return localSession.getSelection(weWorld);
-		} catch (Exception e) {}
-		return null;
+		} catch (IncompleteRegionException e) {
+			return null;
+		}
 	}
 
 	public RegionSelector getRegionSelector() {
-		try {
-			return localSession.getRegionSelector(weWorld);
-		} catch (Exception e) {}
-		return null;
+		return localSession.getRegionSelector(weWorld);
 	}
 
 	public BlockVector3[] getSelection() {
@@ -57,9 +55,9 @@ public class WorldEditSelection {
 		RegionSelector selector = getRegionSelector();
 		try {
 			return selector.getPrimaryPosition();
-		} catch (IncompleteRegionException e) {}
-
-		return null;
+		} catch (IncompleteRegionException e) {
+			return null;
+		}
 	}
 
 	public BlockVector3 getSecondPosition() {
