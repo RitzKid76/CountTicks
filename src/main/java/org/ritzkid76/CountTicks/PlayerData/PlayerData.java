@@ -20,6 +20,7 @@ import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
 
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 
 public class PlayerData {
 	private UUID uuid;
@@ -48,11 +49,17 @@ public class PlayerData {
 		return playerRegion;
 	}
 
-	public CuboidRegion updateRegion() {
-		CuboidRegion region = (CuboidRegion) selection.getRegion();
-		if(region == null)
+	public CuboidRegion updateRegion(String label) {
+		Region region = selection.getRegion();
+		if(region == null) {
+			MessageSender.sendMessage(getPlayer(), Message.NO_SCAN_REGION, label);
 			return null;
-		playerRegion = region.clone();
+		}	
+		if(!(region instanceof CuboidRegion cuboidRegion)) {
+			MessageSender.sendMessage(getPlayer(), Message.NON_CUBOID_REGION);
+			return null;
+		}
+		playerRegion = cuboidRegion.clone();
 		return playerRegion;
 	}
 
@@ -213,7 +220,7 @@ public class PlayerData {
 		}
 		if(graph.getRegion() != playerRegion) {
 			MessageSender.sendMessage(getPlayer(), Message.REGION_CHANGED);
-			updateRegion();
+			updateRegion(label);
 			scan(origin, this::countCallback, plugin, label);
 			return true;
 		}

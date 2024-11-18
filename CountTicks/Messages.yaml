@@ -11,6 +11,7 @@ no_start_selected: "No scan start defined.\nUses &3WorldEdit &bpos1&r."
 no_end_selected: "No scan end defined.\nUses &3WorldEdit &bpos2&r."
 no_scanned_build: "No build scanned.\nUse &3/$ &bscan&r."
 no_scan_region: "No region defined for scan.\nUse &3/$ &bdefine_region&r with a &3WorldEdit&r selection."
+non_cuboid_region: "Please use a &bCuboid&r region.\nUse &3//sel &bcuboid&r."
 
 start_changed: "Rescanning due to change in start position."
 region_changed: "Rescanning due to change in region."
