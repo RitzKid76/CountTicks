@@ -170,8 +170,8 @@ public class ArgumentParser {
 		BlockVector3 max = region.getMaximumPoint();
 		MessageSender.sendMessage(
 			player, Message.SET_SCAN_REGION,
-			String.valueOf(min.x()), String.valueOf(min.y()), String.valueOf(min.z()),
-			String.valueOf(max.x()), String.valueOf(max.y()), String.valueOf(max.z())
+			String.valueOf(min.getX()), String.valueOf(min.getY()), String.valueOf(min.getZ()),
+			String.valueOf(max.getX()), String.valueOf(max.getY()), String.valueOf(max.getZ())
 		);
 	}
 

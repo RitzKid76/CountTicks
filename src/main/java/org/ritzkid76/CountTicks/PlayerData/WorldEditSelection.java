@@ -73,9 +73,9 @@ public class WorldEditSelection {
 		BlockVector3 max = selection.getMaximumPoint();
 
 		return BlockVector3.at(
-			getOppositeCoordinate(min.x(), max.x(), pos1.x()),
-			getOppositeCoordinate(min.y(), max.y(), pos1.y()),
-			getOppositeCoordinate(min.z(), max.z(), pos1.z())
+			getOppositeCoordinate(min.getX(), max.getX(), pos1.getX()),
+			getOppositeCoordinate(min.getY(), max.getY(), pos1.getY()),
+			getOppositeCoordinate(min.getZ(), max.getZ(), pos1.getZ())
 		);
 	}
 }

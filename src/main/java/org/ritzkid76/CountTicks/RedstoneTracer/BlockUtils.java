@@ -11,7 +11,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 
 public class BlockUtils {
 	public static Block blockFromBlockVector3(World world, BlockVector3 blockVector) {
-		Location location = new Location(world, blockVector.x(), blockVector.y(), blockVector.z());
+		Location location = new Location(world, blockVector.getX(), blockVector.getY(), blockVector.getZ());
 		return location.getBlock();
 	}
 
