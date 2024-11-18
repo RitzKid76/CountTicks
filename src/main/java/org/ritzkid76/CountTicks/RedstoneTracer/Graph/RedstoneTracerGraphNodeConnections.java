@@ -5,60 +5,21 @@ import com.sk89q.worldedit.math.BlockVector3;
 import java.util.LinkedHashSet;
 
 public class RedstoneTracerGraphNodeConnections {
-	public Type type;
 	public LinkedHashSet<BlockVector3> connections;
 
-	public enum Type {
-		NONE(0),
-		SINGLE(1),
-		MULTIPLE(2);
-
-		private final int value;
-
-		Type(int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public Type add(Type other) {
-			int sum = this.getValue() + other.getValue();
-
-			return switch(sum) {
-				case 0 -> NONE;
-				case 1 -> SINGLE;
-				default -> MULTIPLE;
-			};
-		}
-
-		public Type typeFromConnectionCount(int connections) {
-			return switch(connections) {
-				case 0 -> Type.NONE;
-				case 1 -> Type.SINGLE;
-				default -> Type.MULTIPLE;
-			};
-		}
-	}
-
 	public RedstoneTracerGraphNodeConnections() {
-		type = Type.NONE;
 		connections = new LinkedHashSet<>();
 	}
 
 	public void addConnection(BlockVector3 connection) {
 		connections.add(connection);
-		type = type.add(Type.SINGLE);
 	}
 
 	public void removeConnection(BlockVector3 connection) {
-		if(connections.remove(connection))
-			type = type.typeFromConnectionCount(connections.size());
+		connections.remove(connection);
 	}
 
 	public void combine(RedstoneTracerGraphNodeConnections connection) {
-		type = type.add(connection.type);
 		connections.addAll(connection.connections);
 	}
 
