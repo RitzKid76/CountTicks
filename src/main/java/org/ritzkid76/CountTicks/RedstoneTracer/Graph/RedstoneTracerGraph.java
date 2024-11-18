@@ -41,7 +41,6 @@ public class RedstoneTracerGraph {
 		return t.getMaterial() == Material.REDSTONE_WIRE;
 	}
 
-	@SuppressWarnings("null")
 	public RedstoneTracerGraph(BlockVector3 origin, CuboidRegion bounds) {
 		this.origin = origin;
 		this.bounds = bounds;
