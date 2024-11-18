@@ -44,26 +44,22 @@ public class SyntaxHandler implements TabCompleter {
 	private List<String> getTabCompletionList (String[] args) {
 		SyntaxEntry tree = options;
 
-		try {
-			for(int i = 0; i < args.length - 1; i++) {
-				tree = tree.get(args[i]);
-			}
-
-			String current = args[args.length - 1];
-			Set<String> candidates = tree.keys();
-			List<String> output = new ArrayList<>();
-
-			for(String candidate : candidates) {
-				if(candidate.toLowerCase().startsWith(current.toLowerCase()))
-					output.add(candidate);
-			}
-
-			return output;
-		} catch (NullPointerException e) {
-			return null;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+		for(int i = 0; i < args.length - 1; i++) {
+			tree = tree.get(args[i]);
+			if(tree == null)
+				return List.of();
 		}
+
+		String current = args[args.length - 1];
+		Set<String> candidates = tree.keys();
+		List<String> output = new ArrayList<>();
+
+		for(String candidate : candidates) {
+			if(candidate.toLowerCase().startsWith(current.toLowerCase()))
+				output.add(candidate);
+		}
+
+		return output;
 	}
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {

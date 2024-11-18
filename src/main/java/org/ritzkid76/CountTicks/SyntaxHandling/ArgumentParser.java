@@ -162,12 +162,9 @@ public class ArgumentParser {
 			return;
 		}
 
-		Region region = playerData.updateRegion();
-
-		if(region == null) {
-			MessageSender.sendMessage(player, Message.NO_SCAN_REGION, label);
+		Region region = playerData.updateRegion(label);
+		if(region == null)
 			return;
-		}
 
 		BlockVector3 min = region.getMinimumPoint();
 		BlockVector3 max = region.getMaximumPoint();

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.block.BlockFace;
-import org.ritzkid76.CountTicks.Exceptions.OddNumerOfInputsException;
+import org.ritzkid76.CountTicks.Exceptions.OddNumberOfInputsException;
 
 public class ConnectionRotator {
 	// NORTH is not required here since there's no reason to map it to the default.
@@ -56,7 +56,7 @@ public class ConnectionRotator {
 
 	private static Map<ConnectionDirection, ConnectionDirection> createMapWithInfiniteEntries(ConnectionDirection... entries) {
 		if(entries.length % 2 == 1)
-			throw new OddNumerOfInputsException();
+			throw new OddNumberOfInputsException();
 
 		Map<ConnectionDirection, ConnectionDirection> map = new HashMap<>();
 

@@ -16,6 +16,7 @@ public enum Message {
 	NO_END_SELECTED(MessageType.ERROR),
 	NO_SCANNED_BUILD(MessageType.ERROR, 1),
 	NO_SCAN_REGION(MessageType.ERROR, 1),
+	NON_CUBOID_REGION(MessageType.ERROR),
 
 	START_CHANGED(MessageType.WARNING),
 	REGION_CHANGED(MessageType.WARNING),
@@ -90,7 +91,6 @@ public enum Message {
 			case INFO -> formatInfo();
 			case WARNING -> formatWarning();
 			case ERROR -> formatError();
-			default -> null;
 		};
 	}
 
