@@ -1,58 +1,50 @@
 package org.ritzkid76.CountTicks.PlayerData;
 
-import org.bukkit.entity.Player;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.entity.Player;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.session.SessionManager;
 
 public class WorldEditSelection {
-	private com.sk89q.worldedit.world.World weWorld;
-	private com.sk89q.worldedit.entity.Player wePlayer;
-	private LocalSession localSession;
-
-	public WorldEditSelection(Player player) {
-		weWorld = BukkitAdapter.adapt(player.getWorld());
-		wePlayer = BukkitAdapter.adapt(player);
-
-		localSession = getLocalSession();
-	}
-
-	private int getOppositeCoordinate(int min, int max, int pos1Coord) {
+	private static int getOppositeCoordinate(int min, int max, int pos1Coord) {
 		return (min == pos1Coord)? max : min;
 	}
 
-	private LocalSession getLocalSession() {
+	private static LocalSession getLocalSession(Player player) {
 		SessionManager sessionManager = WorldEdit.getInstance().getSessionManager();
-		return sessionManager.get(wePlayer);
+		return sessionManager.get(player);
 	}
 
-	public Region getRegion() {
+	private static Player getPlayer(UUID uuid) {
+		return BukkitAdapter.adapt(Bukkit.getPlayer(uuid));
+	}
+
+	public static Region getRegion(UUID uuid) {
+		Player player = getPlayer(uuid);
+
 		try {
-			return localSession.getSelection(weWorld);
+			return getLocalSession(player).getSelection();
 		} catch (IncompleteRegionException e) {
 			return null;
 		}
 	}
 
-	public RegionSelector getRegionSelector() {
-		return localSession.getRegionSelector(weWorld);
+	public static RegionSelector getRegionSelector(UUID uuid) {
+		Player player = getPlayer(uuid);
+		return getLocalSession(player).getRegionSelector(player.getWorld());
 	}
 
-	public BlockVector3[] getSelection() {
-		return new BlockVector3[] {
-			getFirstPosition(),
-			getSecondPosition()
-		};
-	}
-
-	public BlockVector3 getFirstPosition() {
-		RegionSelector selector = getRegionSelector();
+	public static BlockVector3 getFirstPosition(UUID uuid) {
+		RegionSelector selector = getRegionSelector(uuid);
 		try {
 			return selector.getPrimaryPosition();
 		} catch (IncompleteRegionException e) {
@@ -60,12 +52,12 @@ public class WorldEditSelection {
 		}
 	}
 
-	public BlockVector3 getSecondPosition() {
-		BlockVector3 pos1 = getFirstPosition();
+	public static BlockVector3 getSecondPosition(UUID uuid) {
+		BlockVector3 pos1 = getFirstPosition(uuid);
 		if(pos1 == null)
 			return null;
 
-		Region selection = getRegion();
+		Region selection = getRegion(uuid);
 		if(selection == null)
 			return null;
 
