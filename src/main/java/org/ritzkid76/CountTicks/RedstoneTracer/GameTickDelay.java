@@ -8,7 +8,7 @@ public class GameTickDelay {
 	public GameTickDelay() {
 		gameTicks = 0;
 	}
-	
+
 	public void add(GameTickDelay addDelay) {
 		gameTicks += addDelay.gameTicks;
 	}

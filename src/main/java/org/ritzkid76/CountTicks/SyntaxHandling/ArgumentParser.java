@@ -75,7 +75,6 @@ public class ArgumentParser {
 	}
 
 	private void count(String[] args, PlayerData playerData, String label) {
-		WorldEditSelection selection = playerData.getSelection();
 		Player player = playerData.getPlayer();
 
 		if(playerData.isScanning()) {
@@ -87,12 +86,12 @@ public class ArgumentParser {
 			return;
 		}
 
-		BlockVector3 startPosition = selection.getFirstPosition();
+		BlockVector3 startPosition = playerData.getFirstPosition();
 		if(startPosition == null) {
 			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
 			return;
 		}
-		BlockVector3 endPosition = selection.getSecondPosition();
+		BlockVector3 endPosition = playerData.getSecondPosition();
 		if(endPosition == null) {
 			MessageSender.sendMessage(player, Message.NO_END_SELECTED);
 			return;
@@ -119,9 +118,7 @@ public class ArgumentParser {
 			return;
 		}
 
-		WorldEditSelection selection = playerData.getSelection();
-
-		BlockVector3 origin = selection.getFirstPosition();
+		BlockVector3 origin = playerData.getFirstPosition();
 		if(origin == null) {
 			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
 			return;

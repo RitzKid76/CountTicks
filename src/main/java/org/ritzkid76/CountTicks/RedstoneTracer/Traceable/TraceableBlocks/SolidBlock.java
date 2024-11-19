@@ -34,12 +34,12 @@ public class SolidBlock extends Traceable {
 		material = blockData.getMaterial();
 		return new TraceableBlockData();
 	}
-	
+
 	@Override
 	public Material getMaterial() {
 		return material;
 	}
-	
+
 	@Override
 	public void getInputDependentPower(Connection currentConnection, PowerType inputPowerType, Traceable source) {
 		if(!BlockUtils.isSolidBlock(source.getMaterial())) {

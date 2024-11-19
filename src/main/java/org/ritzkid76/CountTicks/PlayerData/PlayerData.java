@@ -26,31 +26,28 @@ public class PlayerData {
 	private UUID uuid;
 	private CuboidRegion playerRegion;
 	private RedstoneTracerGraph graph;
-	private WorldEditSelection selection;
 
 	private BukkitTask scanTask;
 	private BukkitTask inspectTask;
 
 	public PlayerData(UUID u) {
 		uuid = u;
-		selection = new WorldEditSelection(getPlayer());
 	}
 
 	public Player getPlayer() {
 		return Bukkit.getPlayer(uuid);
 	}
+
 	public World getWorld() {
 		return getPlayer().getWorld();
 	}
-	public WorldEditSelection getSelection() {
-		return selection;
-	}
+
 	public CuboidRegion getRegion() {
 		return playerRegion;
 	}
 
 	public CuboidRegion updateRegion(String label) {
-		Region region = selection.getRegion();
+		Region region = WorldEditSelection.getRegion(uuid);
 		if(region == null) {
 			MessageSender.sendMessage(getPlayer(), Message.NO_SCAN_REGION, label);
 			return null;
@@ -61,6 +58,14 @@ public class PlayerData {
 		}
 		playerRegion = cuboidRegion.clone();
 		return playerRegion;
+	}
+
+	public BlockVector3 getFirstPosition() {
+		return WorldEditSelection.getFirstPosition(uuid);
+	}
+
+	public BlockVector3 getSecondPosition() {
+		return WorldEditSelection.getSecondPosition(uuid);
 	}
 
 	public boolean isScanning() {
