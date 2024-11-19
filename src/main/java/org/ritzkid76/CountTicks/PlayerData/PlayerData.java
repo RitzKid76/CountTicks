@@ -166,9 +166,24 @@ public class PlayerData {
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
 	}
 
+	public void toggleInspector(Plugin plugin, String label) {
+		if(!isInspecting())
+			inspect(plugin, label);
+		else
+			terminateInspect();
+	}
+
 	public void inspect(Plugin plugin, String label) {
 		Player player = getPlayer();
 
+		if(isScanning()) {
+			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
+			return;
+		}
+		if(isInspecting()) {
+			MessageSender.sendMessage(player, Message.ALREADY_INSPECTING);
+			return;
+		}
 		if(!hasScanned()) {
 			MessageSender.sendMessage(player, Message.NO_SCANNED_BUILD, label);
 			return;
