@@ -11,7 +11,6 @@ import org.bukkit.plugin.Plugin;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
-import org.ritzkid76.CountTicks.PlayerData.WorldEditSelection;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPathResult;
 
@@ -130,20 +129,13 @@ public class ArgumentParser {
 
 	@SuppressWarnings("unused")
 	private void inspector(String[] args, PlayerData playerData, String label) {
+		if(args.length == 0) {
+			playerData.toggleInspector(plugin, label);
+			return;
+		}
+		
 		switch(args[0]) {
-			case "start" -> {
-				Player player = playerData.getPlayer();
-				if(playerData.isScanning()) {
-					MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
-					return;
-				}
-				if(playerData.isInspecting()) {
-					MessageSender.sendMessage(player, Message.ALREADY_INSPECTING);
-					return;
-				}
-
-				playerData.inspect(plugin, label);
-			}
+			case "start" -> playerData.inspect(plugin, label);
 			case "stop" -> playerData.terminateInspect();
 		}
 	}

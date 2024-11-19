@@ -3,7 +3,6 @@ args:
     options:
     - arg: terminate
   - arg: inspector        # for raycasted inspection mode
-    requires_parameter: true
     options:
     - arg: start
     - arg: stop
