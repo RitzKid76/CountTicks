@@ -13,7 +13,7 @@ import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
-import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraph;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
@@ -143,7 +143,7 @@ public class PlayerData {
 		long startTime = System.currentTimeMillis();
 		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
-				scanCallback(graph.trace(scanTask, startTime, player), returnTo, startTime);
+				scanCallback(graph.trace(scanTask, startTime, player, new BlockGetter()), returnTo, startTime);
 			} catch (ThreadCanceledException e) {}
 		});
 	}
@@ -203,7 +203,7 @@ public class PlayerData {
 				return;
 
 			try {
-				BlockVector3 viewedBlock = BlockUtils.getBlockLookingAt(player, 10);
+				BlockVector3 viewedBlock = BlockGetter.getBlockLookingAt(player, 10);
 
 				if(viewedBlock == null || viewedBlock.equals(wrapper.blockVector3))
 					return;
