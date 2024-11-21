@@ -12,27 +12,26 @@ import org.bukkit.entity.Player;
 import com.sk89q.worldedit.math.BlockVector3;
 
 public class BlockGetter {
-	private Map<BlockVector3, Block> cache;
+	private Map<BlockVector3, BlockData> cache;
 
 	public BlockGetter() {
 		cache = new HashMap<>();
 	}
 	
-	public Block blockFromBlockVector3(World world, BlockVector3 blockVector) {
-		Block cached = cache.get(blockVector);
+	public BlockData blockFromBlockVector3(World world, BlockVector3 blockVector) {
+		BlockData cached = cache.get(blockVector);
 		if(cached != null)
 			return cached;
 
-
-		Block newBlock = world.getBlockAt(blockVector.x(), blockVector.y(), blockVector.z());
+		BlockData newBlock = world.getBlockAt(blockVector.x(), blockVector.y(), blockVector.z()).getBlockData();
 		cache.put(blockVector, newBlock);
 
 		return newBlock;
 	}
 
 	public boolean isSolidBlock(World world, BlockVector3 position) {
-		Block block = blockFromBlockVector3(world, position);
-		return isSolidBlock(block.getBlockData());
+		BlockData block = blockFromBlockVector3(world, position);
+		return isSolidBlock(block);
 	}
 
 	public static BlockVector3 getBlockLookingAt(Player player, int range) {
