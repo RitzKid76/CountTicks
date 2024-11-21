@@ -23,7 +23,7 @@ public class BlockGetter {
 		if(cached != null)
 			return cached;
 
-		BlockData newBlock = world.getBlockAt(blockVector.x(), blockVector.y(), blockVector.z()).getBlockData();
+		BlockData newBlock = world.getBlockAt(blockVector.getX(), blockVector.getY(), blockVector.getZ()).getBlockData();
 		cache.put(blockVector, newBlock);
 
 		return newBlock;
