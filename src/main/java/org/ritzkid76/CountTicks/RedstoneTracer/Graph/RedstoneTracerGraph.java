@@ -20,6 +20,7 @@ import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableFactory;
@@ -166,11 +167,11 @@ public class RedstoneTracerGraph {
 		return output.toString();
 	}
 
-	public boolean trace(BukkitTask task, long startTime, Player player) {
+	public boolean trace(BukkitTask task, long startTime, Player player, BlockGetter getter) {
 		Traceable startTraceable;
 
 		try {
-			startTraceable = TraceableFactory.traceableFromBlockVector3(world, origin);
+			startTraceable = TraceableFactory.traceableFromBlockVector3(world, origin, getter);
 			if(startTraceable == null)
 				throw new NonTraceableStartPositionException();
 
@@ -194,7 +195,7 @@ public class RedstoneTracerGraph {
 
 			visited.add(currentPos);
 
-			Set<Traceable> candidates = current.getNeighbors(world);
+			Set<Traceable> candidates = current.getNeighbors(world, getter);
 			add(current, candidates, isChainable(current));
 
 			candidates.removeIf(this::candidateRemoval);
