@@ -6,11 +6,14 @@ import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
-import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
-import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.*;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.Comparator;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.RedstoneTorch;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.RedstoneWallTorch;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.RedstoneWire;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.Repeater;
+import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlocks.SolidBlock;
 
 import com.sk89q.worldedit.math.BlockVector3;
 
@@ -25,9 +28,8 @@ public class TraceableFactory {
 	}
 
 	public static Traceable traceableFromBlockVector3(World world, BlockVector3 blockVector, BlockGetter getter) {
-		Block block = getter.blockFromBlockVector3(world, blockVector);
-		BlockData blockData = block.getBlockData();
-		Material blockType = block.getType();
+		BlockData blockData = getter.blockFromBlockVector3(world, blockVector);
+		Material blockType = blockData.getMaterial();
 
 		return createTraceable(blockType, blockData, blockVector, world, getter);
 	}
