@@ -80,12 +80,12 @@ public abstract class Traceable {
 
 		for(Connection outputConnection : outputs) {
 			PowerType connectedTraceableInputPower = outputConnection.powerType;
-			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, outputConnection.connectionDirection);
-
-			if(connectedTraceable == null)
-				continue; // throw out invalid blocks
 			if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0)
 				continue; // no reason to have this connection if the input power is none
+				
+			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, outputConnection.connectionDirection);
+			if(connectedTraceable == null)
+				continue; // throw out invalid blocks
 
 			processDependentOutputPowers(connectedTraceable, connectedTraceableInputPower);
 
