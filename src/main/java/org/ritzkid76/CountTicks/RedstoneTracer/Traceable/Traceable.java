@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphNode;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
@@ -18,10 +19,11 @@ public abstract class Traceable {
 	private final Set<Connection> outputs;
 	private final BlockVector3 position;
 	private final GameTickDelay gameTickDelay;
+	protected final BlockGetter getter;
 
 	public final World world;
 
-	public Traceable(Set<Connection> in, Set<Connection> out, BlockData blockData, BlockVector3 pos, World wld) {
+	public Traceable(Set<Connection> in, Set<Connection> out, BlockData blockData, BlockVector3 pos, World wld, BlockGetter gtr) {
 		TraceableBlockData data = applyBlockData(blockData);
 		BlockFace direction = data.direction();
 		GameTickDelay delay = data.gameTickDelay();
@@ -29,6 +31,7 @@ public abstract class Traceable {
 		position = pos;
 		gameTickDelay = delay;
 		world = wld;
+		getter = gtr;
 
 		inputs = processConnections(new HashSet<>(in), ConnectionType.INPUTS, direction);
 		outputs = processConnections(new HashSet<>(out), ConnectionType.OUTPUTS, direction);
@@ -50,13 +53,13 @@ public abstract class Traceable {
 		return gameTickDelay;
 	}
 
-	private Traceable getTraceableFromConnectionDirection(World world, ConnectionDirection connectionType) {
+	private Traceable getTraceableFromConnectionDirection(World world, BlockGetter getter, ConnectionDirection connectionType) {
 		BlockVector3 target = ConnectionDirection.positionFromConnectionDirection(
 			position,
 			connectionType
 		);
 
-		return TraceableFactory.traceableFromBlockVector3(world, target);
+		return TraceableFactory.traceableFromBlockVector3(world, target, getter);
 	}
 
 	private boolean isValidConnection(Traceable traceable, Connection input) {
@@ -75,17 +78,17 @@ public abstract class Traceable {
 		}
 	}
 
-	public Set<Traceable> getNeighbors(World world) {
+	public Set<Traceable> getNeighbors(World world, BlockGetter getter) {
 		Set<Traceable> result = new HashSet<>();
 
 		for(Connection outputConnection : outputs) {
 			PowerType connectedTraceableInputPower = outputConnection.powerType;
-			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, outputConnection.connectionDirection);
-
-			if(connectedTraceable == null)
-				continue; // throw out invalid blocks
 			if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0)
 				continue; // no reason to have this connection if the input power is none
+				
+			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, getter, outputConnection.connectionDirection);
+			if(connectedTraceable == null)
+				continue; // throw out invalid blocks
 
 			processDependentOutputPowers(connectedTraceable, connectedTraceableInputPower);
 

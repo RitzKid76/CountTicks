@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.ritzkid76.CountTicks.RedstoneTracer.BlockUtils;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.*;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Traceable;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.TraceableBlockData;
@@ -28,8 +28,8 @@ public class RedstoneWire extends Traceable {
 
 	private Map<BlockFace, org.bukkit.block.data.type.RedstoneWire.Connection> data;
 
-	public RedstoneWire(BlockData data, BlockVector3 position, World world) {
-		super(inputs, outputs, data, position, world);
+	public RedstoneWire(BlockData data, BlockVector3 position, World world, BlockGetter getter) {
+		super(inputs, outputs, data, position, world, getter);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class RedstoneWire extends Traceable {
 
 		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
 
-		return BlockUtils.isSolidBlock(world, testPosition);
+		return getter.isSolidBlock(world, testPosition);
 	}
 
 	private boolean diagonalDiode(ConnectionDirection direction) {
@@ -95,6 +95,6 @@ public class RedstoneWire extends Traceable {
 
 		BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
 
-		return !BlockUtils.isSolidBlock(world, supportBlock);
+		return !getter.isSolidBlock(world, supportBlock);
 	}
 }

@@ -5,6 +5,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
+import org.ritzkid76.CountTicks.RedstoneTracer.BlockGetter;
 import org.ritzkid76.CountTicks.RedstoneTracer.GameTickDelay;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.Connection;
 import org.ritzkid76.CountTicks.RedstoneTracer.Traceable.Connection.ConnectionDirection;
@@ -27,8 +28,8 @@ public class RedstoneWallTorch extends Traceable {
 		.add(ConnectionDirection.UP, PowerType.HARD)
 	.get();
 
-	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world) {
-		super(inputs, outputs, data, position, world);
+	public RedstoneWallTorch(BlockData data, BlockVector3 position, World world, BlockGetter getter) {
+		super(inputs, outputs, data, position, world, getter);
 	}
 
 	@Override
