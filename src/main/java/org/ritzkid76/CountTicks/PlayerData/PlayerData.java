@@ -119,7 +119,7 @@ public class PlayerData {
 		scanTask.cancel();
 
 		if(!silent)
-			MessageSender.sendMessage(player, Message.STOP_SCAN);
+			MessageSender.sendMessage(player, Message.STOP_SCAN_MODE);
 	}
 
 	public void scan(BlockVector3 origin, Plugin plugin, String label) {
@@ -138,7 +138,7 @@ public class PlayerData {
 			return;
 		}
 
-		MessageSender.sendMessage(player, Message.START_SCAN);
+		MessageSender.sendMessage(player, Message.START_SCAN_MODE);
 
 		long startTime = System.currentTimeMillis();
 		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {

@@ -19,8 +19,8 @@ set_scan_region: "Defined the scan region as:\n&3[&b$&3, &b$&3, &b$&3] &rto &3[&
 
 scan_complete: "Scan completed in &b$&3s&r with &b$&r blocks scanned."
 
-start_scan: "Starting scan..."
-stop_scan: "Canceled active scan."
+start_scan_mode: "Starting scan..."
+stop_scan_mode: "Canceled active scan."
 no_active_scan: "There is no scan in progress."
 already_scanning: "Scanning already in progress."
 currently_scanning: "There is a scan in progress. \nCancel it with &3/$ &bscan terminate&r."

@@ -24,8 +24,8 @@ public enum Message {
 
 	SCAN_COMPLETE(MessageType.INFO, 2),
 
-	START_SCAN(MessageType.INFO),
-	STOP_SCAN(MessageType.INFO),
+	START_SCAN_MODE(MessageType.INFO),
+	STOP_SCAN_MODE(MessageType.INFO),
 	NO_ACTIVE_SCAN(MessageType.INFO),
 	ALREADY_SCANNING(MessageType.INFO),
 	CURRENTLY_SCANNING(MessageType.INFO, 1),
