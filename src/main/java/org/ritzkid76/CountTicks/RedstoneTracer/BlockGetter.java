@@ -6,6 +6,7 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 
@@ -29,6 +30,10 @@ public class BlockGetter {
 		return newBlock;
 	}
 
+	public static BlockData blockFromBlockVector3Uncached(World world, BlockVector3 blockVector) {
+		return world.getBlockAt(blockVector.x(), blockVector.y(), blockVector.z()).getBlockData();
+	}
+
 	public boolean isSolidBlock(World world, BlockVector3 position) {
 		BlockData block = blockFromBlockVector3(world, position);
 		return isSolidBlock(block);
@@ -49,6 +54,9 @@ public class BlockGetter {
 		);
 	}
 
+	public static BlockState blockStateFromBlockVector3(World world, BlockVector3 pos) {
+		return blockFromBlockVector3Uncached(world, pos).createBlockState();
+	}
 	
 	public static boolean isSolidBlock(Material material) {
 		return material.isOccluding();

@@ -176,6 +176,29 @@ public class ArgumentParser {
 		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
 	}
 
+	@SuppressWarnings("unused")
+	private void timer(String[] args, PlayerData playerData, String label) {
+		Player player = playerData.getPlayer();
+
+		if(args.length > 0) {
+			playerData.terminateTimer();
+			return;
+		}
+
+		BlockVector3 startPosition = playerData.getFirstPosition();
+		if(startPosition == null) {
+			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
+			return;
+		}
+		BlockVector3 endPosition = playerData.getSecondPosition();
+		if(endPosition == null) {
+			MessageSender.sendMessage(player, Message.NO_END_SELECTED);
+			return;
+		}
+
+		playerData.timer(startPosition, endPosition, plugin, label);
+	}
+
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
 		switch(path.result()) {
 			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendSubtitle(player, Message.DELAY_SHORT, String.valueOf(path.delay() / 2));

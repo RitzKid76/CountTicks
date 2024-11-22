@@ -7,5 +7,8 @@ args:
     - arg: start
     - arg: stop
   - arg: define_region    # defines the region to scan inside
-  - arg: stop
+  - arg: stop             # stops all running threads
   - arg: help
+  - arg: timer            # times the delay between a start and end point manually
+    options:
+    - arg: terminate

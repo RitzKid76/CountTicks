@@ -43,9 +43,15 @@ public enum Message {
 	UNSCANNED_LOCATION(MessageType.ERROR),
 	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
 	OUT_OF_BOUNDS(MessageType.ERROR),
-	OUT_OF_BOUNDS_SHORT(MessageType.INFO);
+	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
 
-
+	TIMER_WAITING(MessageType.INFO),
+	TIMER_TIMEOUT(MessageType.WARNING),
+	START_TIMER_MODE(MessageType.INFO),
+	STOP_TIMER_MODE(MessageType.INFO),
+	NO_ACTIVE_TIMING(MessageType.INFO),
+	ALREADY_TIMING(MessageType.INFO),
+	TIMING_PROGRESS(MessageType.INFO, 1);
 
 	private final String message;
 	private final MessageType type;

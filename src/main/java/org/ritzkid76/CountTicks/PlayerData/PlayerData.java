@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -29,6 +30,7 @@ public class PlayerData {
 
 	private BukkitTask scanTask;
 	private BukkitTask inspectTask;
+	private BukkitTask timerTask;
 
 	public PlayerData(UUID u) {
 		uuid = u;
@@ -78,10 +80,18 @@ public class PlayerData {
 			return false;
 		return !inspectTask.isCancelled();
 	}
+	public boolean isTiming() {
+		if(timerTask == null)
+			return false;
+		return !timerTask.isCancelled();
+	}
 
 	private String getFormattedTimer(long difference) {
 		double seconds = (double) difference / 1000.0;
 		return String.format("%.2f", seconds);
+	}
+	private String getFormattedTicks(long difference) {
+		return String.valueOf(difference/2);
 	}
 
 	private void scanCallback(boolean success, Runnable returnTo, long startTime) {
@@ -143,7 +153,7 @@ public class PlayerData {
 		long startTime = System.currentTimeMillis();
 		scanTask = Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 			try {
-				scanCallback(graph.trace(scanTask, startTime, player, new BlockGetter()), returnTo, startTime);
+				scanCallback(graph.trace(scanTask, startTime, player), returnTo, startTime);
 			} catch (ThreadCanceledException e) {}
 		});
 	}
@@ -164,6 +174,23 @@ public class PlayerData {
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
+	}
+	public void terminateTimer() {
+		terminateTimer(false);
+	}
+	public void terminateTimer(boolean silent) {
+		Player player = getPlayer();
+
+		if(!isTiming()) {
+			if(!silent)
+				MessageSender.sendMessage(player, Message.NO_ACTIVE_TIMING);
+			return;
+		}
+
+		timerTask.cancel();
+
+		if(!silent)
+			MessageSender.sendMessage(player, Message.STOP_TIMER_MODE);
 	}
 
 	public void toggleInspector(Plugin plugin, String label) {
@@ -248,6 +275,64 @@ public class PlayerData {
 		return false;
 	}
 
+	private void timeTicks(BlockVector3 pos, BlockState startState, Plugin plugin, long startTicks) {
+		class LongWrapper {
+			long lOng;
+			LongWrapper(long l) {
+				lOng = l;
+			}
+		}
+		
+		LongWrapper timeProgress = new LongWrapper(startTicks);
+		
+		timerTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			long currentTime = System.currentTimeMillis();
+			long difference = currentTime - timeProgress.lOng;
+			if(difference >= 5000L) {
+				timeProgress.lOng = currentTime;
+				MessageSender.sendMessage(getPlayer(), Message.TIMING_PROGRESS, getFormattedTicks(getWorld().getGameTime() - startTicks));
+			}
+
+			if(startState.equals(BlockGetter.blockStateFromBlockVector3(getWorld(), pos)))
+				return;
+
+			timerTask.cancel();
+			long totalTicks = getWorld().getGameTime() - startTicks;
+			MessageSender.sendMessage(getPlayer(), Message.DELAY, getFormattedTicks(totalTicks));
+		}, 0, 1);
+	}
+
+	public void timer(BlockVector3 startPosition, BlockVector3 endPosition, Plugin plugin, String label) {
+		Player player = getPlayer();
+		
+		if(isTiming()) {
+			MessageSender.sendMessage(player, Message.ALREADY_TIMING);
+			return;
+		}
+		
+		MessageSender.sendMessage(getPlayer(), Message.TIMER_WAITING);
+
+		BlockState startPosState = BlockGetter.blockStateFromBlockVector3(getWorld(), startPosition);
+		BlockState endPosState = BlockGetter.blockStateFromBlockVector3(getWorld(), endPosition);
+
+		long startTime = System.currentTimeMillis();
+		timerTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			long currentTime = System.currentTimeMillis();
+			if(currentTime - startTime > 10000L) {
+				MessageSender.sendMessage(player, Message.TIMER_TIMEOUT);
+				timerTask.cancel();
+				return;
+			}
+			
+			if(startPosState.equals(BlockGetter.blockStateFromBlockVector3(getWorld(), startPosition)))
+				return;
+
+			timerTask.cancel();
+			MessageSender.sendMessage(getPlayer(), Message.START_TIMER_MODE);
+			timeTicks(endPosition, endPosState, plugin, getWorld().getGameTime());
+		}, 0, 1);
+	}
+
 	public RedstoneTracerGraphPath getFastestPath(BlockVector3 pos) {
 		return graph.findFastestPath(pos);
 	}
@@ -261,5 +346,6 @@ public class PlayerData {
 	public void shutdown() {
 		terminateScan(true);
 		terminateInspect(true);
+		terminateTimer(true);
 	}
 }
