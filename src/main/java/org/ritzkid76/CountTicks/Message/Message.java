@@ -44,6 +44,7 @@ public enum Message {
 	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
 	OUT_OF_BOUNDS(MessageType.ERROR),
 	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
+	PULSE(MessageType.INFO, 1),
 
 	TIMER_WAITING(MessageType.INFO),
 	TIMER_TIMEOUT(MessageType.WARNING),

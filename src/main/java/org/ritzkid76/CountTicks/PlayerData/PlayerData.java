@@ -377,9 +377,8 @@ public class PlayerData {
 
 			pulseTask.cancel();
 			long totalTicks = getWorld().getGameTime() - startTicks;
-			MessageSender.sendMessage(getPlayer(), Message.DELAY, getFormattedTicks(totalTicks));
+			MessageSender.sendMessage(getPlayer(), Message.PULSE, getFormattedTicks(totalTicks));
 		}, 0, 1);
-		
 	}
 
 	public void pulse(BlockVector3 pos, String label) {
