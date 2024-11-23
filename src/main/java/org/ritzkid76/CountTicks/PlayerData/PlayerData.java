@@ -157,7 +157,7 @@ public class PlayerData {
 		try {
 			graph = new RedstoneTracerGraph(origin, playerRegion);
 		} catch (PositionOutOfRegionBoundsException e) {
-			MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+			MessageSender.sendMessage(player, Message.START_OUT_OF_BOUNDS);
 			return;
 		} catch (BoundsUndefinedException e) {
 			MessageSender.sendMessage(player, Message.NO_SCAN_REGION, label);
@@ -283,8 +283,12 @@ public class PlayerData {
 		ArgumentParser.sendInspectorMessage(getPlayer(), graph.findFastestPath(callbackEndpoint));
 	}
 	public void count(BlockVector3 start, BlockVector3 end, String label) {
-		callbackEndpoint = end;
+		if(!playerRegion.contains(end)) {
+			MessageSender.sendMessage(getPlayer(), Message.END_OUT_OF_BOUNDS);
+			return;
+		}
 
+		callbackEndpoint = end;
 		if(scanValidation(start, this::countCallback, label))
 			return;
 		countCallback();

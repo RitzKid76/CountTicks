@@ -45,6 +45,8 @@ public enum Message {
 	OUT_OF_BOUNDS(MessageType.ERROR),
 	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
 	PULSE(MessageType.INFO, 1),
+	START_OUT_OF_BOUNDS(MessageType.ERROR),
+	END_OUT_OF_BOUNDS(MessageType.ERROR),
 
 	TIMER_WAITING(MessageType.INFO),
 	TIMER_TIMEOUT(MessageType.WARNING),
