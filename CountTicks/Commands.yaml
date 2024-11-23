@@ -12,3 +12,6 @@ args:
   - arg: timer            # times the delay between a start and end point manually
     options:
     - arg: terminate
+  - arg: pulse            # times the pulse length at a given location
+    options:
+    - arg: terminate

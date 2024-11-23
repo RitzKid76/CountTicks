@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
@@ -19,11 +18,9 @@ import com.sk89q.worldedit.regions.Region;
 
 public class ArgumentParser {
 	private final SyntaxHandler syntaxHandler;
-	private final Plugin plugin;
 
-	public ArgumentParser(File dataFolder, Plugin p) {
+	public ArgumentParser(File dataFolder) {
 		syntaxHandler = new SyntaxHandler(dataFolder);
-		plugin = p;
 	}
 
 	public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
@@ -97,7 +94,7 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.count(startPosition, endPosition, plugin, label);
+		playerData.count(startPosition, endPosition, label);
 	}
 
 	@SuppressWarnings("unused")
@@ -124,18 +121,18 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.scan(origin, plugin, label);
+		playerData.scan(origin, label);
 	}
 
 	@SuppressWarnings("unused")
 	private void inspector(String[] args, PlayerData playerData, String label) {
 		if(args.length == 0) {
-			playerData.toggleInspector(plugin, label);
+			playerData.toggleInspector(label);
 			return;
 		}
 		
 		switch(args[0]) {
-			case "start" -> playerData.inspect(plugin, label);
+			case "start" -> playerData.inspect(label);
 			case "stop" -> playerData.terminateInspect();
 		}
 	}
@@ -196,7 +193,25 @@ public class ArgumentParser {
 			return;
 		}
 
-		playerData.timer(startPosition, endPosition, plugin, label);
+		playerData.timer(startPosition, endPosition, label);
+	}
+
+	@SuppressWarnings("unused")
+	private void pulse(String[] args, PlayerData playerData, String label) {
+		Player player = playerData.getPlayer();
+
+		if(args.length > 0) {
+			playerData.terminatePulse();
+			return;
+		}
+
+		BlockVector3 pos = playerData.getFirstPosition();
+		if(pos == null) {
+			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
+			return;
+		}
+
+		playerData.pulse(pos, label);
 	}
 
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {

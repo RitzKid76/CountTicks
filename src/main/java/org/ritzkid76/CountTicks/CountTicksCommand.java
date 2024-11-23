@@ -27,9 +27,9 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	@Override
 	public void onLoad() {
 		File dataFolder = getPlugin().getDataFolder();
-		parser = new ArgumentParser(dataFolder, getPlugin());
+		parser = new ArgumentParser(dataFolder);
 
-		playerDataContainer = new PlayerDataContainer();
+		playerDataContainer = new PlayerDataContainer(getPlugin());
 
 		MessageSender.populateOptions(dataFolder);
 

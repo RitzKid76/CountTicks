@@ -51,7 +51,15 @@ public enum Message {
 	STOP_TIMER_MODE(MessageType.INFO),
 	NO_ACTIVE_TIMING(MessageType.INFO),
 	ALREADY_TIMING(MessageType.INFO),
-	TIMING_PROGRESS(MessageType.INFO, 1);
+	TIMING_PROGRESS(MessageType.INFO, 1),
+
+	PULSE_WAITING(MessageType.INFO),
+	PULSE_TIMEOUT(MessageType.WARNING),
+	START_PULSE_MODE(MessageType.INFO),
+	STOP_PULSE_MODE(MessageType.INFO),
+	NO_ACTIVE_PULSING(MessageType.INFO),
+	ALREADY_PULSING(MessageType.INFO),
+	PULSING_PROGRESS(MessageType.INFO, 1);
 
 	private final String message;
 	private final MessageType type;
