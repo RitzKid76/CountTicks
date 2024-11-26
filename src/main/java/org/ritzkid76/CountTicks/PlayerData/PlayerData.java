@@ -389,7 +389,7 @@ public class PlayerData {
 		Player player = getPlayer();
 
 		if(isPulsing()) {
-			MessageSender.sendMessage(player, Message.PULSE_WAITING);
+			MessageSender.sendMessage(player, Message.ALREADY_PULSING);
 			return;
 		}
 
