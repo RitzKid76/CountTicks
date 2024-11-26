@@ -41,9 +41,9 @@ public class PlayerData {
 	}
 
 	class LongWrapper {
-		long lOng;
+		long value;
 		LongWrapper(long l) {
-			lOng = l;
+			value = l;
 		}
 	}
 
@@ -319,9 +319,9 @@ public class PlayerData {
 		
 		timerTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			long currentTime = System.currentTimeMillis();
-			long difference = currentTime - timeProgress.lOng;
+			long difference = currentTime - timeProgress.value;
 			if(difference >= 5000L) {
-				timeProgress.lOng = currentTime;
+				timeProgress.value = currentTime;
 				MessageSender.sendMessage(getPlayer(), Message.TIMING_PROGRESS, getFormattedTicks(getWorld().getGameTime() - startTicks));
 			}
 
@@ -370,9 +370,9 @@ public class PlayerData {
 
 		pulseTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			long currentTime = System.currentTimeMillis();
-			long difference = currentTime - timeProgress.lOng;
+			long difference = currentTime - timeProgress.value;
 			if(difference > 5000L) {
-				timeProgress.lOng = currentTime;
+				timeProgress.value = currentTime;
 				MessageSender.sendMessage(getPlayer(), Message.PULSING_PROGRESS, getFormattedTicks(getWorld().getGameTime() - startTicks));
 			}
 
