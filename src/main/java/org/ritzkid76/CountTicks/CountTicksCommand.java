@@ -90,7 +90,7 @@ public class CountTicksCommand extends JavaLoaderBukkitProject {
 	public BukkitCommand[] getCommands() {
 		return new BukkitCommand[]{
 				new BukkitCommand("countticks")
-						.setUsageMessage("this should not happen .,;,;,.")
+						.setUsageMessage("See \"/countticks help\" for details.")
 						.setPermission("javaloader.countticks.command")
 						.setPermissionMessage("You do not have permission to use this command.")
 						.setAliases("ct")
