@@ -62,7 +62,15 @@ public enum Message {
 	STOP_PULSE_MODE(MessageType.INFO),
 	NO_ACTIVE_PULSING(MessageType.INFO),
 	ALREADY_PULSING(MessageType.INFO),
-	PULSING_PROGRESS(MessageType.INFO, 1);
+	PULSING_PROGRESS(MessageType.INFO, 1),
+
+	DESC_SCAN(MessageType.INFO, 1),
+	DESC_INSPECTOR(MessageType.INFO, 1),
+	DESC_DEFINE_REGION(MessageType.INFO, 1),
+	DESC_STOP(MessageType.INFO, 1),
+	DESC_HELP(MessageType.INFO, 1),
+	DESC_TIMER(MessageType.INFO, 1),
+	DESC_PULSE(MessageType.INFO, 1);
 
 	private final String message;
 	private final MessageType type;

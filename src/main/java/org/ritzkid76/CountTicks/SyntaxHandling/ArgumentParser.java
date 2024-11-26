@@ -170,7 +170,13 @@ public class ArgumentParser {
 
 	@SuppressWarnings("unused")
 	private void help(String[] args, PlayerData playerData, String label) {
-		MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
+		if(args.length == 0) {
+			MessageSender.sendHelpMessage(playerData.getPlayer(), syntaxHandler.getOptionsRoot(), label);
+			return;
+		}
+
+		String messageName = ("desc_" + args[0]).toUpperCase();
+		MessageSender.sendMessage(playerData.getPlayer(), Message.valueOf(messageName), label);
 	}
 
 	@SuppressWarnings("unused")
