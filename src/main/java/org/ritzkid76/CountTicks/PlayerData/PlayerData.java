@@ -143,6 +143,7 @@ public class PlayerData {
 		}
 
 		scanTask.cancel();
+		scanTask = null;
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_SCAN_MODE);
@@ -187,6 +188,7 @@ public class PlayerData {
 		}
 
 		inspectTask.cancel();
+		inspectTask = null;
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_INSPECT_MODE);
@@ -205,6 +207,7 @@ public class PlayerData {
 		}
 
 		timerTask.cancel();
+		timerTask = null;
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_TIMER_MODE);
@@ -223,6 +226,7 @@ public class PlayerData {
 		}
 
 		pulseTask.cancel();
+		pulseTask = null;
 
 		if(!silent)
 			MessageSender.sendMessage(player, Message.STOP_PULSE_MODE);
@@ -328,7 +332,7 @@ public class PlayerData {
 			if(startState.equals(BlockGetter.blockStateFromBlockVector3(getWorld(), pos)))
 				return;
 
-			timerTask.cancel();
+			terminateTimer(true);
 			long totalTicks = getWorld().getGameTime() - startTicks;
 			MessageSender.sendMessage(getPlayer(), Message.DELAY, getFormattedTicks(totalTicks));
 		}, 0, 1);
@@ -352,14 +356,14 @@ public class PlayerData {
 			long currentTime = System.currentTimeMillis();
 			if(currentTime - startTime > 10000L) {
 				MessageSender.sendMessage(player, Message.TIMER_TIMEOUT);
-				timerTask.cancel();
+				terminateTimer(true);
 				return;
 			}
 			
 			if(startPosState.equals(BlockGetter.blockStateFromBlockVector3(getWorld(), startPosition)))
 				return;
 
-			timerTask.cancel();
+			terminateTimer(true);
 			MessageSender.sendMessage(getPlayer(), Message.START_TIMER_MODE);
 			timeTicks(endPosition, endPosState, getWorld().getGameTime());
 		}, 0, 1);
@@ -379,7 +383,7 @@ public class PlayerData {
 			if(startState.equals(BlockGetter.blockStateFromBlockVector3(getWorld(), pos)))
 				return;
 
-			pulseTask.cancel();
+			terminatePulse();
 			long totalTicks = getWorld().getGameTime() - startTicks;
 			MessageSender.sendMessage(getPlayer(), Message.PULSE, getFormattedTicks(totalTicks));
 		}, 0, 1);
@@ -402,7 +406,7 @@ public class PlayerData {
 			long currentTime = System.currentTimeMillis();
 			if(currentTime - startTime > 10000L) {
 				MessageSender.sendMessage(player, Message.PULSE_TIMEOUT);
-				pulseTask.cancel();
+				terminatePulse(true);
 				return;
 			}
 
@@ -410,7 +414,7 @@ public class PlayerData {
 			if(startState.equals(newState))
 				return;
 
-			pulseTask.cancel();
+			terminatePulse();
 			MessageSender.sendMessage(getPlayer(), Message.START_PULSE_MODE);
 			timePulse(pos, newState, getWorld().getGameTime());
 		}, 0, 1);
