@@ -91,4 +91,8 @@ public class SyntaxHandler implements TabCompleter {
 	public SyntaxEntry getOptionsRoot() {
 		return options;
 	}
+
+	public Set<String> keys() {
+		return options.keys();
+	}
 }

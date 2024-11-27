@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.ritzkid76.CountTicks.Commands.Command;
 import org.ritzkid76.CountTicks.Exceptions.BoundsUndefinedException;
 import org.ritzkid76.CountTicks.Exceptions.PositionOutOfRegionBoundsException;
 import org.ritzkid76.CountTicks.Exceptions.ThreadCanceledException;
@@ -435,5 +436,10 @@ public class PlayerData {
 		terminateInspect(true);
 		terminateTimer(true);
 		terminatePulse(true);
+	}
+
+	public void runCommand(Command command) {
+		//TODO more involved handling for threads and garbage later
+		command.execute();
 	}
 }
