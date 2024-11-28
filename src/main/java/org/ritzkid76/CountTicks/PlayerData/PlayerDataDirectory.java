@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class PlayerDataContainer {
+public class PlayerDataDirectory {
 	private final Map<UUID, PlayerData> players = new HashMap<>();
 	private final Plugin plugin;
 
-	public PlayerDataContainer(Plugin p) {
+	public PlayerDataDirectory(Plugin p) {
 		plugin = p;
 	}
 

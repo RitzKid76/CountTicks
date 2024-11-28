@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
-import org.ritzkid76.CountTicks.PlayerData.PlayerDataContainer;
+import org.ritzkid76.CountTicks.PlayerData.PlayerDataDirectory;
 import org.ritzkid76.CountTicks.PlayerData.PlayerEventListener;
 import org.ritzkid76.CountTicks.SyntaxHandling.ArgumentParser;
 
@@ -22,14 +22,14 @@ import io.github.pieter12345.javaloader.bukkit.JavaLoaderBukkitProjectPlugin;
 
 public class CountTicksCommand extends JavaLoaderBukkitProject {
 	private ArgumentParser parser;
-	private PlayerDataContainer playerDataContainer;
+	private PlayerDataDirectory playerDataContainer;
 
 	@Override
 	public void onLoad() {
 		File dataFolder = getPlugin().getDataFolder();
 		parser = new ArgumentParser(dataFolder);
 
-		playerDataContainer = new PlayerDataContainer(getPlugin());
+		playerDataContainer = new PlayerDataDirectory(getPlugin());
 
 		MessageSender.populateOptions(dataFolder);
 
