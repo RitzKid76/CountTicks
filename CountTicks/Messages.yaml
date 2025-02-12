@@ -10,6 +10,7 @@ stopped_all: "Shutdown all current operations."
 no_start_selected: "No scan start defined.\nUses &3WorldEdit &bpos1&r."
 no_end_selected: "No scan end defined.\nUses &3WorldEdit &bpos2&r."
 no_scanned_build: "No build scanned.\nUse &3/$ &bscan&r."
+
 no_scan_region: "No region defined for scan.\nUse &3/$ &bdefine_region&r with a &3WorldEdit&r selection."
 non_cuboid_region: "Please use a &bCuboid&r region.\nUse &3//sel &bcuboid&r."
 
@@ -25,6 +26,7 @@ no_active_scan: "There is no scan in progress."
 already_scanning: "Scanning already in progress."
 currently_scanning: "There is a scan in progress. \nCancel it with &3/$ &bscan terminate&r."
 invalid_start: "The start point selected was not a redstone component."
+
 scan_progress: "&7Scanning... &b$ &3blocks&r."
 
 start_inspect_mode: "Started inspect mode."

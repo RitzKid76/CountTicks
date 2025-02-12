@@ -43,5 +43,4 @@ public class DefineRegionCommand extends Command {
 			String.valueOf(max.x()), String.valueOf(max.y()), String.valueOf(max.z())
 		);
 	}
-	
 }

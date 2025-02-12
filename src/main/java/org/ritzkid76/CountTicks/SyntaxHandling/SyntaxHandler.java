@@ -45,7 +45,7 @@ public class SyntaxHandler implements TabCompleter {
 
 	private void populateDescriptions() {
 		SyntaxEntry helpEntry = options.get("help");
-		
+
 		for(String key : options.keys()) {
 			helpEntry.add(key);
 		}

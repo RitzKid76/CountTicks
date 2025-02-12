@@ -47,7 +47,7 @@ public class RedstoneTracerGraphNode {
 		this.removeConnections(intersection);
 		other.removeConnections(intersection);
 	}
-	
+
 	public void combine(RedstoneTracerGraphNode node) {
 		removeSharedConnections(node);
 

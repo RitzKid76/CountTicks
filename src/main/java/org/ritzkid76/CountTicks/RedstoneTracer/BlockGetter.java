@@ -20,7 +20,7 @@ public class BlockGetter {
 		cache = new HashMap<>();
 		world = wld;
 	}
-	
+
 	public BlockData blockFromBlockVector3(BlockVector3 blockVector) {
 		BlockData cached = cache.get(blockVector);
 		if(cached != null)
@@ -44,7 +44,7 @@ public class BlockGetter {
 	public static BlockState blockStateFromBlockVector3(World world, BlockVector3 pos) {
 		return blockFromBlockVector3Uncached(world, pos).createBlockState();
 	}
-	
+
 	public static boolean isSolidBlock(Material material) {
 		return material.isOccluding();
 	}

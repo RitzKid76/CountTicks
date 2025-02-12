@@ -18,19 +18,20 @@ public abstract class Command {
 		this.playerData = playerData;
 		this.label = label;
 		this.syntaxHandler = syntaxHandler;
-		
+
 		player = playerData.getPlayer();
 	}
 
 	public void execute() {
 		if(cancelationScreening())
 			return;
+
 		verifiedExecute();
 	}
 
 	public boolean cancelationScreening() {
 		return false;
 	}
-	
+
 	public abstract void verifiedExecute();
 }

@@ -15,7 +15,7 @@ public class RedstoneTracerGraphNodeConnections {
 	public void addConnection(BlockVector3 connection) {
 		connections.add(connection);
 	}
-	
+
 	public void removeConnections(Set<BlockVector3> cons) {
 		connections.removeAll(cons);
 	}
