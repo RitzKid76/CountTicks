@@ -181,6 +181,8 @@ public class RedstoneTracerGraph {
 			return false;
 		}
 
+		MessageSender.sendMessage(player, Message.START_SCAN_MODE);
+
 		while (!queue.isEmpty()) {
 			if(task.isCancelled())
 				throw new ThreadCanceledException();

@@ -12,13 +12,12 @@ import java.util.stream.Collectors;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.ritzkid76.CountTicks.Commands.Command;
+import org.ritzkid76.CountTicks.Commands.CountCommand;
 import org.ritzkid76.CountTicks.Message.Message;
 import org.ritzkid76.CountTicks.Message.MessageSender;
 import org.ritzkid76.CountTicks.PlayerData.PlayerData;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPath;
 import org.ritzkid76.CountTicks.RedstoneTracer.Graph.RedstoneTracerGraphPathResult;
-
-import com.sk89q.worldedit.math.BlockVector3;
 
 public class ArgumentParser {
 	private final SyntaxHandler syntaxHandler;
@@ -97,7 +96,7 @@ public class ArgumentParser {
 		}
 
 		if(args.length == 0) {
-			count(args, playerData, label);
+			playerData.runCommand(new CountCommand(args, playerData, label, syntaxHandler));
 			return;
 		}
 
@@ -111,36 +110,10 @@ public class ArgumentParser {
 			InstantiationException |
 			IllegalAccessException |
 			IllegalArgumentException |
-			InvocationTargetException e) 
+			InvocationTargetException e)
 		{
 			throw new RuntimeException(e);
 		}
-	}
-
-	private void count(String[] args, PlayerData playerData, String label) {
-		Player player = playerData.getPlayer();
-
-		if(playerData.isScanning()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_SCANNING, label);
-			return;
-		}
-		if(playerData.isInspecting()) {
-			MessageSender.sendMessage(player, Message.CURRENTLY_INSPECTING, label);
-			return;
-		}
-
-		BlockVector3 startPosition = playerData.getFirstPosition();
-		if(startPosition == null) {
-			MessageSender.sendMessage(player, Message.NO_START_SELECTED);
-			return;
-		}
-		BlockVector3 endPosition = playerData.getSecondPosition();
-		if(endPosition == null) {
-			MessageSender.sendMessage(player, Message.NO_END_SELECTED);
-			return;
-		}
-
-		playerData.count(startPosition, endPosition, label);
 	}
 
 	public static void sendInspectorMessageSubtitle(Player player, RedstoneTracerGraphPath path) {
