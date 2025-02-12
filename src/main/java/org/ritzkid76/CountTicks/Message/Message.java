@@ -42,7 +42,7 @@ public enum Message {
 	DELAY_SHORT(MessageType.INFO, 1),
 	UNSCANNED_LOCATION(MessageType.ERROR),
 	UNSCANNED_LOCATION_SHORT(MessageType.INFO),
-	OUT_OF_BOUNDS(MessageType.ERROR),
+
 	OUT_OF_BOUNDS_SHORT(MessageType.INFO),
 	PULSE(MessageType.INFO, 1),
 	START_OUT_OF_BOUNDS(MessageType.ERROR),

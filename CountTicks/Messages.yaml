@@ -37,7 +37,7 @@ delay: "Total delay: &b$&3t&r."
 delay_short: "&b$&3t"
 unscanned_location: "The given location is not connected to the scanned area."
 unscanned_location_short: "&8no connection"
-out_of_bounds: "The given location is outside of the defined scan region."
+
 start_out_of_bounds: "The given start location is outside of the defined scan region."
 end_out_of_bounds: "The given end location is outside of the defined scan region."
 out_of_bounds_short: "&cout of scan region"

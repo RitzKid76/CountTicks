@@ -155,7 +155,7 @@ public class ArgumentParser {
 		switch(path.result()) {
 			case RedstoneTracerGraphPathResult.PATH_FOUND -> MessageSender.sendMessage(player, Message.DELAY, String.valueOf(path.delay() / 2));
 			case RedstoneTracerGraphPathResult.UNSCANNED_LOCATION -> MessageSender.sendMessage(player, Message.UNSCANNED_LOCATION);
-			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.OUT_OF_BOUNDS);
+			case RedstoneTracerGraphPathResult.OUT_OF_BOUNDS -> MessageSender.sendMessage(player, Message.END_OUT_OF_BOUNDS);
 		}
 	}
 }
