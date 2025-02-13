@@ -85,14 +85,6 @@ public class PlayerData {
 		return threadCommand.currentlyExecuting();
 	}
 
-	public boolean executionCancelCheck(String label) {
-		if(!isExecuting())
-			return false;
-
-		MessageSender.sendMessage(getPlayer(), currentlyExecuting(), label);
-		return true;
-	}
-
 	public boolean hasScanned() {
 		if(graph == null)
 			return false;

@@ -14,10 +14,14 @@ public abstract class ThreadCommand extends Command {
 	}
 	
 	public boolean isRunning() {
-		if(task == null) {
+		if(task == null)
 			return false;
-		}
+
 		return !task.isCancelled();
+	}
+
+	public boolean isExecuting() {
+		return isRunning();
 	}
 
 	public void override() {
@@ -38,6 +42,14 @@ public abstract class ThreadCommand extends Command {
 		
 		if(!silent)
 			MessageSender.sendMessage(player, stopMode());
+	}
+
+	public boolean executionCancelCheck() {
+		if(!isExecuting())
+			return false;
+
+		MessageSender.sendMessage(player, currentlyExecuting(), label);
+		return true;
 	}
 
 	public void startedTask(BukkitTask bt) {

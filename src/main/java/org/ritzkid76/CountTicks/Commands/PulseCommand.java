@@ -24,7 +24,7 @@ public class PulseCommand extends ThreadCommand {
 			return true;
 		}
 
-		if(playerData.executionCancelCheck(label))
+		if(executionCancelCheck())
 			return true;
 
 		position = playerData.getFirstPosition();

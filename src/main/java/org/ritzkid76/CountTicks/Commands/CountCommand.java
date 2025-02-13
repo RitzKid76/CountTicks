@@ -19,7 +19,7 @@ public class CountCommand extends ThreadCommand {
 
 	@Override
 	public boolean cancelationScreening() {
-		if (playerData.executionCancelCheck(label))
+		if (executionCancelCheck())
 			return true;
 
 		startPosition = playerData.getFirstPosition();
@@ -114,11 +114,11 @@ public class CountCommand extends ThreadCommand {
 	
 	@Override
 	public Message alreadyExecuting() {
-		return Message.SHOULD_NOT_HAPPEN;
+		return Message.ALREADY_SCANNING;
 	}
 	
 	@Override
 	public Message overriden() {
-		return Message.SHOULD_NOT_HAPPEN;
+		return Message.SCAN_OVERRIDEN;
 	}
 }

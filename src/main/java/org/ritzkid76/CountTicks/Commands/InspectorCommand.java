@@ -47,6 +47,20 @@ public class InspectorCommand extends ThreadCommand {
 			0, 1
 		));
 	}
+
+	@Override
+	public boolean isExecuting() {
+		if(args.length > 0) {
+			String arg = args[0];
+			if(
+				arg.equals("start") && !isRunning() ||
+				arg.equals("stop")
+			)
+				return false;
+		}
+
+		return true;
+	}
 	
 	@Override
 	public boolean shouldLinkToCurrentThread() {
@@ -85,9 +99,10 @@ public class InspectorCommand extends ThreadCommand {
 			toggleInspector();
 			return true;
 		}
-
-		if(playerData.executionCancelCheck(label))
+		
+		if(executionCancelCheck()) {
 			return true;
+		}
 
 		return false;
 	}

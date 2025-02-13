@@ -18,7 +18,7 @@ public class DefineRegionCommand extends Command {
 	@Override
 	public boolean cancelationScreening() {
 		if(playerData.isExecuting()) {
-			MessageSender.sendMessage(player, playerData.currentlyExecuting());
+			MessageSender.sendMessage(player, playerData.currentlyExecuting(), label);
 			return true;
 		}
 
