@@ -51,20 +51,16 @@ public class RedstoneWire extends Traceable {
 	}
 
 	@Override
-	public boolean filterConnection(Connection connection, ConnectionType type) {
-		if(type == ConnectionType.OUTPUTS) {
-			org.bukkit.block.data.type.RedstoneWire.Connection blockDataConnection = data.get(connection.toBlockFace());
+	public boolean filterOutputConnection(Connection connection) {
+		org.bukkit.block.data.type.RedstoneWire.Connection blockDataConnection = data.get(connection.toBlockFace());
 
-			if(blockDataConnection == null)
-				return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
+		if(blockDataConnection == null)
+			return false; // dont bother checking downwards connection. checking null since data.get(DOWN) is always null;
 
-			return
-				noConnection(blockDataConnection) ||
-				diagonalBlocked(connection.connectionDirection) ||
-				diagonalDiode(connection.connectionDirection);
-		}
-
-		return false; // dont need to filter inputs since the redstone shape isnt always correlated
+		return
+			noConnection(blockDataConnection) ||
+			diagonalBlocked(connection.connectionDirection) ||
+			diagonalDiode(connection.connectionDirection);
 	}
 
 	private static boolean noConnection(org.bukkit.block.data.type.RedstoneWire.Connection connection) {
@@ -84,9 +80,9 @@ public class RedstoneWire extends Traceable {
 		else
 			return false;
 
-		BlockVector3 testPosition = ConnectionDirection.positionFromConnectionDirection(getPosition(), testDirection);
+		BlockVector3 testPosition = ConnectionDirection.destinationFromConnectionDirection(getPosition(), testDirection);
 
-		return getter.isSolidBlock(world, testPosition);
+		return getter.isSolidBlock(testPosition);
 	}
 
 	private boolean diagonalDiode(ConnectionDirection direction) {
@@ -95,6 +91,6 @@ public class RedstoneWire extends Traceable {
 
 		BlockVector3 supportBlock = getPosition().add(BlockVector3.UNIT_MINUS_Y);
 
-		return !getter.isSolidBlock(world, supportBlock);
+		return !getter.isSolidBlock(supportBlock);
 	}
 }

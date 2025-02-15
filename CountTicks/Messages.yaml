@@ -5,11 +5,14 @@ console_use: "This command can only be used by &bplayers&r!"
 invalid_syntax: "Invalid syntax. \n Use &3/$ &b$&r."
 help: "List of commands:"
 help_listing: "&3/$ &b$"
-stopped_all: "Shutdown all current operations."
 
 no_start_selected: "No scan start defined.\nUses &3WorldEdit &bpos1&r."
 no_end_selected: "No scan end defined.\nUses &3WorldEdit &bpos2&r."
+
+stopped_all: "Shutdown all current operations."
+
 no_scanned_build: "No build scanned.\nUse &3/$ &bscan&r."
+
 no_scan_region: "No region defined for scan.\nUse &3/$ &bdefine_region&r with a &3WorldEdit&r selection."
 non_cuboid_region: "Please use a &bCuboid&r region.\nUse &3//sel &bcuboid&r."
 
@@ -19,23 +22,63 @@ set_scan_region: "Defined the scan region as:\n&3[&b$&3, &b$&3, &b$&3] &rto &3[&
 
 scan_complete: "Scan completed in &b$&3s&r with &b$&r blocks scanned."
 
-start_scan: "Starting scan..."
-stop_scan: "Canceled active scan."
-no_active_scan: "There is no scan in progress."
-already_scanning: "Scanning already in progress."
-currently_scanning: "There is a scan in progress. \nCancel it with &3/$ &bscan terminate&r."
-invalid_start: "The start point selected was not a redstone component."
-scan_progress: "&7Scanning... &b$ &3blocks&r."
-
+start_scan_mode: "Starting scan..."
 start_inspect_mode: "Started inspect mode."
+start_timer_mode: "Started timer."
+start_pulse_mode: "Started pulse."
+
+stop_scan_mode: "Canceled active scan."
 stop_inspect_mode: "Stopped inspect mode."
+stop_timer_mode: "Canceled active timer."
+stop_pulse_mode: "Canceled active pulse test."
+
+no_active_scan: "There is no scan in progress."
 no_active_inspection: "There is no inspection in progress."
+no_active_timing: "There is no timer in progress."
+no_active_pulsing: "There is no pulse inspection in progress."
+
+already_scanning: "Scanning already in progress."
 already_inspecting: "Inspection already in progress."
+already_timing: "Timing already in progress."
+already_pulsing: "Pulse inspection already in progress."
+
+currently_scanning: "There is a scan in progress. \nCancel it with &3/$ &bscan terminate&r."
 currently_inspecting: "Inspection mode in use. \nDisable it with &3/$ &binspector stop&r."
+
+timer_waiting: "Waiting on input at start position... "
+pulse_waiting: "Waiting on input at pulse check position..."
+
+timer_timeout: "Canceled timer due to no input."
+pulse_timeout: "Canceled pulse check due to no input."
+
+scan_overriden: "Shutdown scan mode due to task change."
+inspector_overriden: "Shutdown inspector mode due to task change."
+timer_overriden: "Shutdown timer mode due to task change."
+pulse_overriden: "Shutdown pulse mode due to task change."
+
+invalid_start: "The start point selected was not a redstone component."
+
+scan_progress: "&7Scanning... &b$ &3blocks&r."
+timing_progress: "&7Timing... &b$&3t&r."
+pulsing_progress: "&7Testing pulse... &b$&3t&r."
 
 delay: "Total delay: &b$&3t&r."
 delay_short: "&b$&3t"
-unscanned_location: "The given location is not connected to the scanned area."
+pulse: "Total pulse length: &b$&3t&r."
+
+unscanned_location: "The given end position is not connected to the scanned area."
 unscanned_location_short: "&8no connection"
-out_of_bounds: "The given location is outside of the defined scan region."
+
+start_out_of_bounds: "The given start location is outside of the defined scan region."
+end_out_of_bounds: "The given end location is outside of the defined scan region."
 out_of_bounds_short: "&cout of scan region"
+
+desc_scan: "Scans the builds delays from the given start location.\nUses &3WorldEdit &bpos1&r as the start."
+desc_inspector: "Shows the delay from the start location specified in &3/$ &bscan&r to the viewed block."
+desc_define_region: "Defines the region for &3/$ &bscan&r to execute in."
+desc_stop: "Stops all subcommand background processes.\nThis includes &bscan&r, &binspector&r, &btimer&r, and &bpulse&r modes."
+desc_help: "Lists all the subcommands and their syntax."
+desc_timer: "Times the delay from &3WorldEdit &bpos1&r to &bpos2&r.\nRequires manual signal input to the start position being sampled."
+desc_pulse: "Times the length of a given pulse located at &3WorldEdit &bpos1&r.\nRequires manual signal input to the location being sampled."
+
+should_not_happen: "This message should not happen. If you see this message, please notify RitzKid76 immediately with the steps leading to this bug."

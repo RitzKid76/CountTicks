@@ -35,16 +35,19 @@ public class RedstoneTracerGraphNode {
 		nodeMembers.add(member);
 	}
 
-	private void removeSharedConnections(RedstoneTracerGraphNode node) {
-		for(BlockVector3 member : nodeMembers) {
-			node.outputs.removeConnection(member);
-			node.inputs.removeConnection(member);
-		}
-		for(BlockVector3 nodeMember : node.nodeMembers) {
-			outputs.removeConnection(nodeMember);
-			inputs.removeConnection(nodeMember);
-		}
+	private void removeConnections(Set<BlockVector3> connections) {
+		inputs.removeConnections(connections);
+		outputs.removeConnections(connections);
 	}
+
+	private void removeSharedConnections(RedstoneTracerGraphNode other) {
+		Set<BlockVector3> intersection = new HashSet<>(this.nodeMembers);
+		intersection.retainAll(other.nodeMembers);
+
+		this.removeConnections(intersection);
+		other.removeConnections(intersection);
+	}
+
 	public void combine(RedstoneTracerGraphNode node) {
 		removeSharedConnections(node);
 

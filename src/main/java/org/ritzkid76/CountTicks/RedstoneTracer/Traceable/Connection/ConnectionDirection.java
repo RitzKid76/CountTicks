@@ -44,15 +44,15 @@ public enum ConnectionDirection {
 		throw new IllegalArgumentException();
 	}
 
-	public static BlockVector3 positionFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
+	public static BlockVector3 destinationFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
 		BlockVector3 offset = BlockVector3.ZERO;
-	
+
 		if(UPWARD.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_Y);
 		} else if(DOWNWARD.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_Y);
 		}
-	
+
 		if(NORTHERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_Z);
 		} else if(EASTERN.contains(direction)) {
@@ -61,6 +61,28 @@ public enum ConnectionDirection {
 			offset = offset.add(BlockVector3.UNIT_Z);
 		} else if(WESTERN.contains(direction)) {
 			offset = offset.add(BlockVector3.UNIT_MINUS_X);
+		}
+
+		return offset.add(origin);
+	}
+
+	public static BlockVector3 sourceFromConnectionDirection(BlockVector3 origin, ConnectionDirection direction) {
+		BlockVector3 offset = BlockVector3.ZERO;
+
+		if(UPWARD.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_Y);
+		} else if(DOWNWARD.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_Y);
+		}
+
+		if(NORTHERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_Z);
+		} else if(EASTERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_X);
+		} else if(SOUTHERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_MINUS_Z);
+		} else if(WESTERN.contains(direction)) {
+			offset = offset.add(BlockVector3.UNIT_X);
 		}
 	
 		return offset.add(origin);
