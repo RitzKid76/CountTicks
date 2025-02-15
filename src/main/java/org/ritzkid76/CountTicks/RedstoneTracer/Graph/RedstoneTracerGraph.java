@@ -167,8 +167,9 @@ public class RedstoneTracerGraph {
 		return output.toString();
 	}
 
-	public boolean trace(BukkitTask task, long startTime, Player player, BlockGetter getter) {
+	public boolean trace(BukkitTask task, long startTime, Player player) {
 		Traceable startTraceable;
+		BlockGetter getter = new BlockGetter(player.getWorld());
 
 		try {
 			startTraceable = TraceableFactory.traceableFromBlockVector3(world, origin, getter);
@@ -179,6 +180,8 @@ public class RedstoneTracerGraph {
 		} catch (NonTraceableStartPositionException e) {
 			return false;
 		}
+
+		MessageSender.sendMessage(player, Message.START_SCAN_MODE);
 
 		while (!queue.isEmpty()) {
 			if(task.isCancelled())

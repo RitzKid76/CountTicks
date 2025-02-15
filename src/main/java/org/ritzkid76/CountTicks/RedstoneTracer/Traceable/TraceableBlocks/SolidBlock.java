@@ -40,13 +40,32 @@ public class SolidBlock extends Traceable {
 		return material;
 	}
 
-	@Override
-	public void getInputDependentPower(Connection currentConnection, PowerType inputPowerType, Traceable source) {
-		if(!BlockGetter.isSolidBlock(source.getMaterial())) {
-			super.getInputDependentPower(currentConnection, inputPowerType, source);
-			return;
-		}
+	private boolean isTorchConnection(Material material) {
+		return (
+			material == Material.REDSTONE_TORCH ||
+			material == Material.REDSTONE_WALL_TORCH
+		);
+	}
 
-		currentConnection.updatePowerType(PowerType.NONE);
+	@Override
+	protected boolean filterInputConnection(Connection connection) {
+		ConnectionDirection direction = connection.connectionDirection;
+
+		BlockVector3 sourcePos = ConnectionDirection.sourceFromConnectionDirection(getPosition(), direction);
+		Material sourceMaterial = getter.materialFromBlockVector3(sourcePos);
+
+		if(BlockGetter.isSolidBlock(sourceMaterial))
+			return true; // solid blocks cant power other solid blocks
+
+		if(!isTorchConnection(sourceMaterial))
+			return false; // any connection other than a torch connection should operate as normal
+
+		if(
+			direction == ConnectionDirection.DOWN ||
+			ConnectionDirection.CARDINAL.contains(direction)
+		)
+			return true;
+
+		return false;
 	}
 }

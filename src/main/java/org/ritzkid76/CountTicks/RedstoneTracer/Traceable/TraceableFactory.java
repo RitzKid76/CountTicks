@@ -28,7 +28,7 @@ public class TraceableFactory {
 	}
 
 	public static Traceable traceableFromBlockVector3(World world, BlockVector3 blockVector, BlockGetter getter) {
-		BlockData blockData = getter.blockFromBlockVector3(world, blockVector);
+		BlockData blockData = getter.blockFromBlockVector3(blockVector);
 		Material blockType = blockData.getMaterial();
 
 		return createTraceable(blockType, blockData, blockVector, world, getter);

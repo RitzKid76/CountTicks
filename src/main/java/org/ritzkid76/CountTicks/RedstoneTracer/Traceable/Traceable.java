@@ -33,12 +33,16 @@ public abstract class Traceable {
 		world = wld;
 		getter = gtr;
 
-		inputs = processConnections(new HashSet<>(in), ConnectionType.INPUTS, direction);
-		outputs = processConnections(new HashSet<>(out), ConnectionType.OUTPUTS, direction);
+		inputs = processInputConnections(new HashSet<>(in), direction);
+		outputs = processOutputConnections(new HashSet<>(out), direction);
 	}
 
-	private Set<Connection> processConnections(Set<Connection> connections, ConnectionType type, BlockFace direction) {
-		connections.removeIf(c -> filterConnection(c, type));
+	private Set<Connection> processInputConnections(Set<Connection> connections, BlockFace direction) {
+		connections.removeIf(c -> filterInputConnection(c));
+		return ConnectionRotator.rotateAllConnections(connections, direction);
+	}
+	private Set<Connection> processOutputConnections(Set<Connection> connections, BlockFace direction) {
+		connections.removeIf(c -> filterOutputConnection(c));
 		return ConnectionRotator.rotateAllConnections(connections, direction);
 	}
 
@@ -53,10 +57,10 @@ public abstract class Traceable {
 		return gameTickDelay;
 	}
 
-	private Traceable getTraceableFromConnectionDirection(World world, BlockGetter getter, ConnectionDirection connectionType) {
-		BlockVector3 target = ConnectionDirection.positionFromConnectionDirection(
+	private Traceable getTraceableFromConnectionDirection(World world, BlockGetter getter, ConnectionDirection connectionDirection) {
+		BlockVector3 target = ConnectionDirection.destinationFromConnectionDirection(
 			position,
-			connectionType
+			connectionDirection
 		);
 
 		return TraceableFactory.traceableFromBlockVector3(world, target, getter);
@@ -85,7 +89,7 @@ public abstract class Traceable {
 			PowerType connectedTraceableInputPower = outputConnection.powerType;
 			if(connectedTraceableInputPower.compareTo(PowerType.NONE) <= 0)
 				continue; // no reason to have this connection if the input power is none
-				
+
 			Traceable connectedTraceable = getTraceableFromConnectionDirection(world, getter, outputConnection.connectionDirection);
 			if(connectedTraceable == null)
 				continue; // throw out invalid blocks
@@ -106,7 +110,11 @@ public abstract class Traceable {
 	public TraceableBlockData applyBlockData(BlockData blockData) {
 		return new TraceableBlockData();
 	}
-	public boolean filterConnection(Connection connection, ConnectionType type) {
+
+	protected boolean filterInputConnection(Connection connection) {
+		return false;
+	}
+	protected boolean filterOutputConnection(Connection connection) {
 		return false;
 	}
 

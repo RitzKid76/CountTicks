@@ -22,6 +22,7 @@ public class SyntaxHandler implements TabCompleter {
 		FileConfiguration yamlConfig = YamlConfiguration.loadConfiguration(yamlFile);
 
 		populateOptions(yamlConfig.getValues(false), options);
+		populateDescriptions();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,6 +39,14 @@ public class SyntaxHandler implements TabCompleter {
 			} else if(value instanceof Boolean b) {
 				focus.setRequiresParameter(b);
 			}
+		}
+	}
+
+	private void populateDescriptions() {
+		SyntaxEntry helpEntry = options.get("help");
+
+		for(String key : options.keys()) {
+			helpEntry.add(key);
 		}
 	}
 
@@ -80,5 +89,9 @@ public class SyntaxHandler implements TabCompleter {
 
 	public SyntaxEntry getOptionsRoot() {
 		return options;
+	}
+
+	public Set<String> keys() {
+		return options.keys();
 	}
 }

@@ -3,6 +3,7 @@ package org.ritzkid76.CountTicks.RedstoneTracer.Graph;
 import com.sk89q.worldedit.math.BlockVector3;
 
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class RedstoneTracerGraphNodeConnections {
 	public LinkedHashSet<BlockVector3> connections;
@@ -15,8 +16,8 @@ public class RedstoneTracerGraphNodeConnections {
 		connections.add(connection);
 	}
 
-	public void removeConnection(BlockVector3 connection) {
-		connections.remove(connection);
+	public void removeConnections(Set<BlockVector3> cons) {
+		connections.removeAll(cons);
 	}
 
 	public void combine(RedstoneTracerGraphNodeConnections connection) {

@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerEventListener implements Listener {
-	private PlayerDataContainer playerDataContainer;
+	private PlayerDataDirectory playerDataContainer;
 
-	public PlayerEventListener(PlayerDataContainer pdc) {
+	public PlayerEventListener(PlayerDataDirectory pdc) {
 		playerDataContainer = pdc;
 	}
 
